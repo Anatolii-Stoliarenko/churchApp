@@ -1,5 +1,11 @@
 <div class="form-container">
   <mat-card>
+    <img src="logo2.png" />
+    @if (typeAuthorisation() === 'register'){
+    <p class="declaration">Sign Up</p>
+    } @else {
+    <p class="declaration">Sign In</p>
+    }
     <ng-content />
     @if(errorsMessages()?.length){
     <ul>

@@ -1,0 +1,19 @@
+.inline-calendar-card {
+  width: 300px;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.available-date
+  .mat-calendar-body-cell-content {
+  background-color: #ccffcc;
+  color: green;
+  border-radius: 50%;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.reserved-date
+  .mat-calendar-body-cell-content {
+  background-color: #ffcccc;
+  color: red;
+  border-radius: 50%;
+}

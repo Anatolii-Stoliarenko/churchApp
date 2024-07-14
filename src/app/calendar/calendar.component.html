@@ -1,1 +1,15 @@
-<p>calendar works!</p>
+<mat-card class="inline-calendar-card">
+  <mat-calendar
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [selected]="selectedDate"
+    (selectedChange)="select($event)"
+    [dateClass]="dateClass"
+  ></mat-calendar>
+</mat-card>
+
+<mat-card>
+  <hour-calendar [selectedDate]="selectedDate"> </hour-calendar>
+  <!-- [selectedHours]="selectedHours[selectedDate?.toDateString()] || []"
+      (hoursChanged)="updateSelectedHours(selectedDate?.toDateString(), $event)" -->
+</mat-card>
