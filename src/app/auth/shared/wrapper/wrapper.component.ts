@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 
-import { AuthData, AuthMode } from '../wrapper.model';
+import { AuthData, AuthMode } from '../../wrapper.model';
 
 @Component({
   selector: 'app-wrapper',
@@ -31,7 +31,6 @@ export class WrapperComponent {
   typeAuthorisation = input<AuthMode>('register');
   errorsMessages = input<string[]>();
   dataAuthorisation = output<AuthData>();
-
   authorisationForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
@@ -42,13 +41,15 @@ export class WrapperComponent {
 
   initForm(): void {
     this.authorisationForm = this.fb.group({
-      userName: ['', []],
+      name: ['', []],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
   onSubmit() {
+    const authData: AuthData = this.authorisationForm.value;
+    // authData.id = '';
     this.dataAuthorisation.emit(this.authorisationForm.value);
   }
 }

@@ -1,0 +1,40 @@
+.inline-calendar-card {
+  width: 300px;
+  height: 400px;
+}
+
+p {
+  margin-left: 12px;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.available-date
+  .mat-calendar-body-cell-content {
+  background-color: #ccffcc;
+  color: green;
+  border-radius: 50%;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.reserved-full-day
+  .mat-calendar-body-cell-content {
+  background-color: #e9a7a7;
+  color: rgb(228, 82, 82);
+  border-radius: 50%;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.reserved-partial-day
+  .mat-calendar-body-cell-content {
+  background-color: #dca2e6;
+  color: rgb(197, 91, 239);
+  border-radius: 50%;
+}
+
+::ng-deep
+  .mat-calendar-body-cell.selected-date
+  .mat-calendar-body-cell-content {
+  background-color: #c0da1c;
+  color: rgb(31, 32, 23);
+  border-radius: 50%;
+}

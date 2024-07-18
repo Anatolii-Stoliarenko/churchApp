@@ -1,7 +1,8 @@
 export type AuthMode = 'register' | 'login';
 
 export interface AuthData {
-  userName: string;
+  id: string;
+  name: string;
   email: string;
   password: string;
 }

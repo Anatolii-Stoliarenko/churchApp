@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './reservation/calendar/calendar.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { RegisterComponent } from './auth/register/register.component';
 

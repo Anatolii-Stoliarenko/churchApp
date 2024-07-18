@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { WrapperComponent } from '../shared/wrapper/wrapper.component';
-import { AuthData } from '../shared/wrapper.model';
+import { AuthData } from '../wrapper.model';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,10 @@ import { AuthData } from '../shared/wrapper.model';
 export class LoginComponent {
   errorsMessages: string[] = [];
 
+  constructor(private router: Router) {}
+
   onAuthorisation(data: AuthData): void {
-    console.log(data);
+    console.log('data from login', data);
+    this.router.navigate(['/calendar']);
   }
 }
