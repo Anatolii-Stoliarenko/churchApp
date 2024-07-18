@@ -9,5 +9,12 @@
     [dateClass]="dateClass"
   ></mat-calendar>
   }
-  <p>Selected date: {{ selectedDate | date : "yyyy-MM-dd" }}</p>
+  <ul class="list">
+    <li><span class="circle available"></span> - available</li>
+    <li><span class="circle reserved-partial"></span> - partial</li>
+    <li><span class="circle reserved-full"></span> - full</li>
+  </ul>
 </mat-card>
+<p>
+  Selected date: <strong>{{ selectedDate | date : "yyyy-MM-dd" }}</strong>
+</p>

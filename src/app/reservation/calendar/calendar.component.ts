@@ -40,6 +40,7 @@ export class CalendarComponent {
   }
 
   initMaxDate() {
+    this.minDate = new Date(new Date().setHours(0, 0, 0, 0));
     this.maxDate.setFullYear(this.maxDate.getFullYear() + 1);
   }
 
@@ -52,6 +53,11 @@ export class CalendarComponent {
 
   dateClass = (date: Date) => {
     const dateString = date.toDateString();
+
+    if (date < this.minDate) {
+      return '';
+    }
+
     const reservData = this.rs.reservations.map((reservation) => ({
       ...reservation,
       dateString: new Date(reservation.date).toDateString(), //add new property

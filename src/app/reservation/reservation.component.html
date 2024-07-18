@@ -1,1 +1,4 @@
-<app-calendar></app-calendar> <app-list />
+<div class="container">
+  <app-calendar (selectedDay)="onSelectedDay($event)" class="row" />
+  <app-list class="row" [selectedDay]="selectedDay" />
+</div>

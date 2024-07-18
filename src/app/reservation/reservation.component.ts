@@ -10,4 +10,10 @@ import { ListComponent } from './list/list.component';
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
-export class ReservationComponent {}
+export class ReservationComponent {
+  selectedDay: string = '';
+
+  onSelectedDay(date: string) {
+    this.selectedDay = date;
+  }
+}
