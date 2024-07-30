@@ -1,0 +1,23 @@
+<p *ngIf="!availableHours.length">No available hours</p>
+<div *ngIf="availableHours.length">
+  <h6>Available Hours</h6>
+  <p *ngIf="availableHours.length">{{ availableHours.join(", ") }}</p>
+  <div class="container">
+    <mat-form-field>
+      <mat-label>From</mat-label>
+      <mat-select>
+        <mat-option value="one">First option</mat-option>
+        <mat-option value="two">Second option</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>To</mat-label>
+      <mat-select>
+        <mat-option value="one">First option</mat-option>
+        <mat-option value="two">Second option</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button>Reserve</button>
+  </div>
+</div>

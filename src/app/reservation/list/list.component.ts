@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 
 import { ReservationModel } from '../reservation.model';
 import { ReservationService } from '../services/reservation.service';
+import { HoursComponent } from "../hours/hours.component";
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [MatTableModule, CommonModule],
+  imports: [MatTableModule, CommonModule, HoursComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })

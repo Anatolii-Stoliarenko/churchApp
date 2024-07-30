@@ -32,17 +32,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>
-
-<div>
-  <h3>Available Hours</h3>
-  <p *ngIf="availableHours.length">{{ availableHours.join(", ") }}</p>
-  <p *ngIf="!availableHours.length">No available hours</p>
-</div>
-
-<div>
-  <h3>Partially Reserved Hours</h3>
-  <p *ngIf="partialReservedHours.length">
-    {{ partialReservedHours.join(", ") }}
-  </p>
-  <p *ngIf="!partialReservedHours.length">No partially reserved hours</p>
-</div>
+<br />
+<app-hours [selectedDay]="selectedDay" />
