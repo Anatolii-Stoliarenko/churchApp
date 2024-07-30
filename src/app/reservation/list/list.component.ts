@@ -1,9 +1,9 @@
-import { Component, OnInit, SimpleChanges, inject, input } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-
-import { ReservationService } from '../reservation.service';
-import { ReservationModel } from '../reservation.model';
 import { CommonModule } from '@angular/common';
+
+import { ReservationModel } from '../reservation.model';
+import { ReservationService } from '../services/reservation.service';
 
 @Component({
   selector: 'app-list',
@@ -14,8 +14,10 @@ import { CommonModule } from '@angular/common';
 })
 export class ListComponent implements OnInit {
   rs = inject(ReservationService);
-  selectedDay = input<string>();
+  @Input() selectedDay: string = '';
 
+  availableHours: string[] = [];
+  partialReservedHours: string[] = [];
   dataSource: ReservationModel[] = [];
   displayedColumns: string[] = ['date', 'hours', 'place', 'user'];
 
@@ -30,8 +32,12 @@ export class ListComponent implements OnInit {
   }
 
   updateDataSource(): void {
-    this.dataSource = this.rs.reservations.filter((res) => {
-      return this.selectedDay && res.date === this.selectedDay();
-    });
+    this.dataSource = this.rs.getSelectedDateHours(this.selectedDay);
+    if (this.selectedDay) {
+      this.availableHours = this.rs.getAvailableHours(this.selectedDay);
+      this.partialReservedHours = this.rs.getPartialReservedHours(
+        this.selectedDay
+      );
+    }
   }
 }

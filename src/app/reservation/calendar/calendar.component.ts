@@ -9,9 +9,9 @@ import {
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
-import { ReservationService } from '../reservation.service';
 import { DatePipe } from '@angular/common';
+
+import { ReservationService } from '../services/reservation.service';
 
 @Component({
   selector: 'app-calendar',
@@ -58,7 +58,7 @@ export class CalendarComponent {
       return '';
     }
 
-    const reservData = this.rs.reservations.map((reservation) => ({
+    const reservData = this.rs.dataService.reservations.map((reservation) => ({
       ...reservation,
       dateString: new Date(reservation.date).toDateString(), //add new property
       isFullDay: this.isFullDayReserved(reservation), //add new property
@@ -83,8 +83,7 @@ export class CalendarComponent {
   };
 
   isFullDayReserved(reservation: any): boolean {
-    const fullDayHours = this.rs.availableHours;
-    return fullDayHours.every((hour) => reservation.hours.includes(hour));
+    return this.rs.getfullDayHours(reservation);
   }
 
   select(date: Date | null) {

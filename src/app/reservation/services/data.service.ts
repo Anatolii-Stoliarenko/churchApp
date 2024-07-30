@@ -1,17 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { PlaceType, ReservationModel } from './reservation.model';
+import { PlaceType, ReservationModel } from '../reservation.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ReservationService {
-  constructor() {}
-
-  addReservation(reservations: ReservationModel) {
-    this.reservations.push(reservations);
-  }
-
+export class DataService {
   reservations: ReservationModel[] = [
     {
       date: '2024-07-19',
@@ -47,8 +40,15 @@ export class ReservationService {
       id: '',
     },
     {
-      date: '2024-07-25',
-      hours: ['08:00 - 08:30'],
+      date: '2024-07-31',
+      hours: [
+        '08:00 - 08:30',
+        '08:30 - 09:00',
+        '09:00 - 09:30',
+        '09:30 - 10:00',
+        '10:00 - 10:30',
+        '10:30 - 11:00',
+      ],
       place: PlaceType.HARCOWKA,
       user: {
         id: 'u3',
@@ -58,7 +58,7 @@ export class ReservationService {
       id: '',
     },
     {
-      date: '2024-07-27',
+      date: '2024-07-30',
       hours: [
         '00:00 - 00:30',
         '00:30 - 01:00',
@@ -72,42 +72,6 @@ export class ReservationService {
         '04:30 - 05:00',
         '05:00 - 05:30',
         '05:30 - 06:00',
-        '06:00 - 06:30',
-        '06:30 - 07:00',
-        '07:00 - 07:30',
-        '07:30 - 08:00',
-        '08:00 - 08:30',
-        '08:30 - 09:00',
-        '09:00 - 09:30',
-        '09:30 - 10:00',
-        '10:00 - 10:30',
-        '10:30 - 11:00',
-        '11:00 - 11:30',
-        '11:30 - 12:00',
-        '12:00 - 12:30',
-        '12:30 - 13:00',
-        '13:00 - 13:30',
-        '13:30 - 14:00',
-        '14:00 - 14:30',
-        '14:30 - 15:00',
-        '15:00 - 15:30',
-        '15:30 - 16:00',
-        '16:00 - 16:30',
-        '16:30 - 17:00',
-        '17:00 - 17:30',
-        '17:30 - 18:00',
-        '18:00 - 18:30',
-        '18:30 - 19:00',
-        '19:00 - 19:30',
-        '19:30 - 20:00',
-        '20:00 - 20:30',
-        '20:30 - 21:00',
-        '21:00 - 21:30',
-        '21:30 - 22:00',
-        '22:00 - 22:30',
-        '22:30 - 23:00',
-        '23:00 - 23:30',
-        '23:30 - 00:00',
       ],
       place: PlaceType.KACHETYCZNE,
       user: {
@@ -119,7 +83,7 @@ export class ReservationService {
     },
     {
       date: '2024-08-01',
-      hours: ['10:00 - 10:30', '15:30 - 16:00'],
+      hours: ['10:00 - 10:30', '10:30 - 11:00'],
       place: PlaceType.HARCOWKA,
       user: {
         id: 'u5',
@@ -130,7 +94,7 @@ export class ReservationService {
     },
     {
       date: '2024-08-05',
-      hours: ['11:00 - 11:30', '13:00 - 13:30'],
+      hours: ['11:00 - 11:30'],
       place: PlaceType.MALA_KAPLICA,
       user: {
         id: 'u6',

@@ -8,7 +8,7 @@ import { ReservationComponent } from './reservation/reservation.component';
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'calendar', component: CalendarComponent },
+  // { path: 'calendar', component: CalendarComponent },
   { path: 'reservation', component: ReservationComponent },
   // { path: '', redirectTo: '/reservation', pathMatch: 'full' }, // Default route
   { path: '**', redirectTo: '/reservation', pathMatch: 'full' }, // Wildcard route for invalid URLs
