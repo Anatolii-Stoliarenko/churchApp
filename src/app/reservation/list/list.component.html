@@ -33,10 +33,6 @@
   </table>
 </div>
 
-<div>
-  <h5>Available Hours</h5>
-  <p *ngIf="availableHours.length">{{ availableHours.join(", ") }}</p>
-  <p *ngIf="!availableHours.length">No available hours</p>
-</div>
-
-<app-time [selectedDay]="selectedDay" />
+<br />
+<app-hours [selectedDay]="selectedDay" />
+>>>>>>> origin/main
