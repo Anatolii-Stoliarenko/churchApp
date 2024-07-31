@@ -1,24 +1,52 @@
 import { Injectable } from '@angular/core';
-import { PlaceType, ReservationModel } from '../reservation.model';
+import {
+  NewReservationModel,
+  PlaceType,
+  ReservationModel,
+  TimeSlot,
+} from '../reservation.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  reservations: ReservationModel[] = [
+  NewReservations: NewReservationModel[] = [
     {
-      date: '2024-07-19',
-      hours: ['09:00 - 09:30', '19:30 - 20:00'],
-      place: PlaceType.BALKON,
-      user: {
-        id: 'u1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-      },
-      id: '',
+      id: 'r1', // Unique ID for the reservation
+      date: '2024-07-31', // Date in 'yyyy-MM-dd' format
+      startHour: '09:00', // Start time
+      endHour: '10:00', // End time
+      place: PlaceType.BALKON, // Example place
+      user: { id: 'u1', name: 'John Doe', email: 'john.doe@example.com' }, // User object
     },
     {
-      date: '2024-07-19',
+      id: 'r2', // Unique ID for the reservation
+      date: '2024-08-11', // Date in 'yyyy-MM-dd' format
+      startHour: '07:00', // Start time
+      endHour: '20:00', // End time
+      place: PlaceType.HARCOWKA, // Example place
+      user: { id: 'u3', name: 'Alice Jones', email: 'alice.jones@example.com' }, // User object
+    },
+    {
+      id: 'r3', // Unique ID for the reservation
+      date: '2024-08-15', // Date in 'yyyy-MM-dd' format
+      startHour: '09:00', // Start time
+      endHour: '13:00', // End time
+      place: PlaceType.BALKON, // Example place
+      user: { id: 'u2', name: 'Jane Smith', email: 'john.doe@example.com' }, // User object
+    },
+  ];
+
+  reservations: ReservationModel[] = [
+    {
+      id: '',
+      date: '2024-07-31',
+      hours: ['09:00 - 09:30', '19:30 - 20:00'],
+      place: PlaceType.BALKON,
+      user: { id: 'u1', name: 'John Doe', email: 'john.doe@example.com' },
+    },
+    {
+      date: '2024-08-19',
       hours: ['17:00 - 17:30'],
       place: PlaceType.HARCOWKA,
       user: {
@@ -29,7 +57,7 @@ export class DataService {
       id: '',
     },
     {
-      date: '2024-07-20',
+      date: '2024-08-20',
       hours: ['17:00 - 17:30'],
       place: PlaceType.KACHETYCZNE,
       user: {
@@ -39,80 +67,60 @@ export class DataService {
       },
       id: '',
     },
-    {
-      date: '2024-07-31',
-      hours: [
-        '08:00 - 08:30',
-        '08:30 - 09:00',
-        '09:00 - 09:30',
-        '09:30 - 10:00',
-        '10:00 - 10:30',
-        '10:30 - 11:00',
-      ],
-      place: PlaceType.HARCOWKA,
-      user: {
-        id: 'u3',
-        name: 'Alice Jones',
-        email: 'alice.jones@example.com',
-      },
-      id: '',
-    },
-    {
-      date: '2024-07-30',
-      hours: [
-        '07:00 - 07:30',
-        '07:30 - 08:00',
-        '08:00 - 08:30',
-        '08:30 - 09:00',
-        '09:00 - 09:30',
-        '09:30 - 10:00',
-        '10:00 - 10:30',
-        '10:30 - 11:00',
-      ],
-      place: PlaceType.KACHETYCZNE,
-      user: {
-        id: 'u4',
-        name: 'Bob Martin',
-        email: 'bob.martin@example.com',
-      },
-      id: '',
-    },
-    {
-      date: '2024-08-01',
-      hours: ['10:00 - 10:30', '10:30 - 11:00'],
-      place: PlaceType.HARCOWKA,
-      user: {
-        id: 'u5',
-        name: 'Chris Evans',
-        email: 'chris.evans@example.com',
-      },
-      id: '',
-    },
-    {
-      date: '2024-08-05',
-      hours: ['11:00 - 11:30'],
-      place: PlaceType.MALA_KAPLICA,
-      user: {
-        id: 'u6',
-        name: 'Maria Clark',
-        email: 'maria.clark@example.com',
-      },
-      id: '',
-    },
   ];
+
+  NewAvailableHours: TimeSlot[] = [
+    // '00:00',
+    // '00:30',
+    // '01:00',
+    // '01:30',
+    // '02:00',
+    // '02:30',
+    // '03:00',
+    // '03:30',
+    // '04:00',
+    // '04:30',
+    // '05:00',
+    // '05:30',
+    '06:00',
+    '06:30',
+    '07:00',
+    '07:30',
+    '08:00',
+    '08:30',
+    '09:00',
+    '09:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '11:30',
+    '12:00',
+    '12:30',
+    '13:00',
+    '13:30',
+    '14:00',
+    '14:30',
+    '15:00',
+    '15:30',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
+    '18:00',
+    '18:30',
+    '19:00',
+    '19:30',
+    '20:00',
+    '20:30',
+    '21:00',
+    '21:30',
+    '22:00',
+    '22:30',
+    '23:00',
+    // '23:30',
+  ];
+
   availableHours = [
-    // '00:00 - 00:30',
-    // '00:30 - 01:00',
-    // '01:00 - 01:30',
-    // '01:30 - 02:00',
-    // '02:00 - 02:30',
-    // '02:30 - 03:00',
-    // '03:00 - 03:30',
-    // '03:30 - 04:00',
-    // '04:00 - 04:30',
-    // '04:30 - 05:00',
-    // '05:00 - 05:30',
-    // '05:30 - 06:00',
     '06:00 - 06:30',
     '06:30 - 07:00',
     '07:00 - 07:30',
@@ -145,9 +153,5 @@ export class DataService {
     '20:30 - 21:00',
     '21:00 - 21:30',
     '21:30 - 22:00',
-    // '22:00 - 22:30',
-    // '22:30 - 23:00',
-    // '23:00 - 23:30',
-    // '23:30 - 00:00',
   ];
 }

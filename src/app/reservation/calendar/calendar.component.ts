@@ -58,11 +58,13 @@ export class CalendarComponent {
       return '';
     }
 
-    const reservData = this.rs.dataService.reservations.map((reservation) => ({
-      ...reservation,
-      dateString: new Date(reservation.date).toDateString(), //add new property
-      isFullDay: this.isFullDayReserved(reservation), //add new property
-    }));
+    const reservData = this.rs.dataService.NewReservations.map(
+      (reservation) => ({
+        ...reservation,
+        dateString: new Date(reservation.date).toDateString(), //add new property
+        isFullDay: this.isFullDayReserved(reservation), //add new property
+      })
+    );
 
     if (
       this.selectedDate &&
