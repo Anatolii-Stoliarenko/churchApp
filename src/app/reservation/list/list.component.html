@@ -34,15 +34,9 @@
 </div>
 
 <div>
-  <h3>Available Hours</h3>
+  <h5>Available Hours</h5>
   <p *ngIf="availableHours.length">{{ availableHours.join(", ") }}</p>
   <p *ngIf="!availableHours.length">No available hours</p>
 </div>
 
-<div>
-  <h3>Partially Reserved Hours</h3>
-  <p *ngIf="partialReservedHours.length">
-    {{ partialReservedHours.join(", ") }}
-  </p>
-  <p *ngIf="!partialReservedHours.length">No partially reserved hours</p>
-</div>
+<app-time [selectedDay]="selectedDay" />

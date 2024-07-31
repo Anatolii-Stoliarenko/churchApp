@@ -1,0 +1,21 @@
+<div class="container">
+  <mat-form-field>
+    <mat-label>From</mat-label>
+    <mat-select [(ngModel)]="selectedStartTime" [disabled]="!permitSelect">
+      <mat-option *ngFor="let time of availableHours" [value]="time">
+        {{ time }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>To</mat-label>
+    <mat-select [(ngModel)]="selectedEndTime" [disabled]="!permitSelect">
+      <mat-option *ngFor="let time of availableHours" [value]="time">
+        {{ time }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button (click)="reserve()">Reserve</button>
+</div>

@@ -20,6 +20,16 @@ export class ReservationService {
     return fullDayHours.every((hour) => reservation.hours.includes(hour));
   }
 
+  getAvailableHoursSplit(date: string): string[] {
+    const reservedHours = this.dataService.reservations
+      .filter((res) => res.date === date)
+      .flatMap((res) => res.hours);
+    const available = this.dataService.availableHours.filter(
+      (hour) => !reservedHours.includes(hour)
+    );
+    reservedHours.sort();
+    return available;
+  }
   getAvailableHours(date: string): string[] {
     const reservedHours = this.dataService.reservations
       .filter((res) => res.date === date)
