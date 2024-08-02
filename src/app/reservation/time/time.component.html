@@ -19,7 +19,11 @@
 
   <mat-form-field>
     <mat-label>Place</mat-label>
-    <mat-select [(ngModel)]="selectedPlace" [disabled]="!selectedDay">
+    <mat-select
+      [(ngModel)]="selectedPlace"
+      (selectionChange)="onPlaceChange()"
+      [disabled]="!selectedDay"
+    >
       <mat-option *ngFor="let place of places" [value]="place">
         {{ place }}
       </mat-option>

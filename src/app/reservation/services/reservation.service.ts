@@ -2,19 +2,41 @@ import { Injectable, inject } from '@angular/core';
 
 import { UtilsService } from './utils.service';
 import { DataService } from './data.service';
-import { NewReservationModel, ReservationModel } from '../reservation.model';
+import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
-  utilsService = inject(UtilsService);
-  dataService = inject(DataService);
+  us = inject(UtilsService);
+  ds = inject(DataService);
+  private localStorageKey = 'reservation';
 
-  // new version
+  constructor() {
+    this.loadReservations();
+  }
 
-  addReservation(reservations: NewReservationModel) {
-    this.dataService.NewReservations.push(reservations);
+  private saveReservations() {
+    localStorage.setItem(
+      this.localStorageKey,
+      JSON.stringify(this.ds.reservations)
+    );
+  }
+
+  private loadReservations() {
+    const data = localStorage.getItem(this.localStorageKey);
+    if (data) {
+      this.ds.reservations = JSON.parse(data);
+    }
+  }
+
+  addReservation(reservations: ReservationModel) {
+    this.ds.reservations.push(reservations);
+    this.saveReservations();
+  }
+
+  getReservation() {
+    return this.ds.reservations;
   }
 
   getfullDayHours(reservation: ReservationModel): boolean {
@@ -23,80 +45,73 @@ export class ReservationService {
     return false;
   }
 
-  getAllReservation() {
-    return this.dataService.NewReservations;
+  getHours(
+    date: string,
+    place?: PlaceType,
+    user?: UserModel,
+    type: 'reserved' | 'available' = 'available'
+  ): string[] {
+    if (type === 'reserved') {
+      return this.getReservedHours(date, place, user);
+    } else {
+      return this.getAvailableHours(date, place, user);
+    }
   }
 
-  getSelectedDateHoursNew(selectedDay: string): NewReservationModel[] {
-    return this.dataService.NewReservations.filter((res) => {
+  getReservedHours(
+    date: string,
+    place?: PlaceType,
+    user?: UserModel
+  ): string[] {
+    return this.ds.reservations
+      .filter(
+        (reservation) =>
+          reservation.date === date &&
+          reservation.place === place &&
+          (!user || reservation.user.id === user.id)
+      )
+      .flatMap((reservation) =>
+        this.us.getTimeRangeArray(reservation.startHour, reservation.endHour)
+      );
+  }
+
+  getAvailableHours(
+    date: string,
+    place?: PlaceType,
+    user?: UserModel
+  ): string[] {
+    const reservedHours = this.getReservedHours(date, place, user);
+    return this.ds.availableHours.filter(
+      (hour) => !reservedHours.includes(hour)
+    );
+  }
+
+  getAllHoursBySelectedDay(selectedDay: string): ReservationModel[] {
+    return this.ds.reservations.filter((res) => {
       return res.date === selectedDay;
     });
   }
 
-  getHoures(date: string, availableHours: boolean): string[] {
-    const reservedHours = this.dataService.NewReservations.filter(
-      (res) => res.date === date
-    )
-      .map((res) =>
-        this.utilsService.getTimeRangeArray(res.startHour, res.endHour)
-      )
+  getAvailableHoursOld(date: string): string[] {
+    return this.getHouresOld(date, true);
+  }
+
+  getReservedHoursOld(date: string): string[] {
+    return this.getHouresOld(date, false);
+  }
+
+  getHouresOld(date: string, isAvailableHours: boolean): string[] {
+    const reservedHours = this.ds.reservations
+      .filter((res) => res.date === date)
+      .map((res) => this.us.getTimeRangeArray(res.startHour, res.endHour))
       .flat();
 
-    const allHours = this.dataService.NewAvailableHours;
+    const allHours = this.ds.availableHours;
 
     return allHours.filter((hour) =>
-      availableHours
+      isAvailableHours
         ? !reservedHours.includes(hour)
         : reservedHours.includes(hour)
     );
-  }
-
-  getAvailableHoursNew(date: string): string[] {
-    return this.getHoures(date, true);
-  }
-
-  getPartialReservedHoursNew(date: string): string[] {
-    return this.getHoures(date, false);
-  }
-
-  //old version
-
-  getAvailableHoursSplit(date: string): string[] {
-    const reservedHours = this.dataService.reservations
-      .filter((res) => res.date === date)
-      .flatMap((res) => res.hours);
-    const available = this.dataService.availableHours.filter(
-      (hour) => !reservedHours.includes(hour)
-    );
-    reservedHours.sort();
-    return available;
-  }
-  getAvailableHours(date: string): string[] {
-    const reservedHours = this.dataService.reservations
-      .filter((res) => res.date === date)
-      .flatMap((res) => res.hours);
-    const available = this.dataService.availableHours.filter(
-      (hour) => !reservedHours.includes(hour)
-    );
-    reservedHours.sort();
-    return this.utilsService.mergeTimeSlots(available);
-  }
-
-  getPartialReservedHours(date: string): string[] {
-    const reservedHours = this.dataService.reservations
-      .filter((res) => res.date === date)
-      .flatMap((res) => res.hours);
-    reservedHours.sort();
-    return this.utilsService.mergeTimeSlots(reservedHours);
-  }
-
-  getSelectedDateHours(selectedDay: string): ReservationModel[] {
-    return this.dataService.reservations.filter((res) => {
-      return res.date === selectedDay;
-    });
-  }
-
-  getReservation(): ReservationModel[] {
-    return this.dataService.reservations;
   }
 }

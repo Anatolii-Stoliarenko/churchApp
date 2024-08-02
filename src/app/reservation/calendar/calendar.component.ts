@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Output,
   inject,
 } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -12,6 +10,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 
 import { ReservationService } from '../services/reservation.service';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-calendar',
@@ -23,17 +22,15 @@ import { ReservationService } from '../services/reservation.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  @Output() selectedDay = new EventEmitter<string>();
+  rs = inject(ReservationService);
+  cdr = inject(ChangeDetectorRef);
+  sharedService = inject(SharedService);
+
   showCalendar = true;
   selectedDate: Date | null = null;
   minDate: Date = new Date();
   maxDate: Date = new Date();
   currentViewDate: Date = new Date();
-
-  rs = inject(ReservationService);
-  cdr = inject(ChangeDetectorRef);
-
-  constructor() {}
 
   ngOnInit(): void {
     this.initMaxDate();
@@ -44,11 +41,11 @@ export class CalendarComponent {
     this.maxDate.setFullYear(this.maxDate.getFullYear() + 1);
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  select(date: Date | null) {
+    if (!date) return;
+    this.selectedDate = date;
+    this.sharedService.setSelectedDay(this.formatDate(date));
+    this.refreshCalendar();
   }
 
   dateClass = (date: Date) => {
@@ -58,13 +55,11 @@ export class CalendarComponent {
       return '';
     }
 
-    const reservData = this.rs.dataService.NewReservations.map(
-      (reservation) => ({
-        ...reservation,
-        dateString: new Date(reservation.date).toDateString(), //add new property
-        isFullDay: this.isFullDayReserved(reservation), //add new property
-      })
-    );
+    const reservData = this.rs.ds.reservations.map((reservation) => ({
+      ...reservation,
+      dateString: new Date(reservation.date).toDateString(), //add new property
+      isFullDay: this.isFullDayReserved(reservation), //add new property
+    }));
 
     if (
       this.selectedDate &&
@@ -88,13 +83,11 @@ export class CalendarComponent {
     return this.rs.getfullDayHours(reservation);
   }
 
-  select(date: Date | null) {
-    if (!date) return;
-
-    this.selectedDate = date;
-    console.log(this.formatDate(this.selectedDate));
-    this.selectedDay.emit(this.formatDate(this.selectedDate));
-    this.refreshCalendar();
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   refreshCalendar() {
