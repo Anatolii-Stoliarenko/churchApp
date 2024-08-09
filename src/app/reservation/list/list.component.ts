@@ -2,6 +2,8 @@ import { ApplicationRef, Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import { ReservationModel } from '../reservation.model';
 import { ReservationService } from '../services/reservation.service';
@@ -11,7 +13,13 @@ import { SharedService } from '../services/shared.service';
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [MatTableModule, CommonModule, TimeComponent],
+  imports: [
+    MatTableModule,
+    CommonModule,
+    TimeComponent,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
@@ -32,6 +40,7 @@ export class ListComponent implements OnInit {
     'endHour',
     'place',
     'user',
+    'actions',
   ];
 
   ngOnInit(): void {
@@ -43,8 +52,7 @@ export class ListComponent implements OnInit {
 
     this.subscription.push(
       this.sharedService.reservationMade$.subscribe(() => {
-        console.log('must be refresh');
-        this.appRef.tick(); // Ensure Angular's change detection is triggered
+        // this.appRef.tick(); // Ensure Angular's change detection is triggered
       })
     );
 
@@ -60,5 +68,30 @@ export class ListComponent implements OnInit {
     if (selectedDay) {
       this.dataSource = this.rs.getAllHoursBySelectedDay(selectedDay);
     }
+  }
+  reject(reservation: ReservationModel): void {
+    // Logic for rejecting reservation (for admins)
+    console.log('Reject reservation', reservation);
+  }
+
+  approve(reservation: ReservationModel): void {
+    // Logic for approving reservation (for admins)
+    console.log('Approve reservation', reservation);
+  }
+
+  viewDetails(reservation: ReservationModel): void {
+    // Logic for viewing details
+    console.log('View details for', reservation);
+  }
+
+  edit(reservation: ReservationModel): void {
+    // Logic for editing reservation
+    console.log('Edit reservation', reservation);
+  }
+
+  delete(reservation: ReservationModel): void {
+    // Logic for deleting reservation
+    this.rs.deleteReservation(reservation.id);
+    this.updateDataSource(); // Refresh the table after deletion
   }
 }

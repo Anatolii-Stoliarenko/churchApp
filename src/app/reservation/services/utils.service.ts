@@ -1,9 +1,29 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilsService {
+  snackBar = inject(MatSnackBar);
+
+  showSnackBar(
+    message: string,
+    panelClass: string,
+    duration: number = 3000
+  ): void {
+    this.snackBar.open(message, 'Close', {
+      duration: duration,
+      panelClass: [panelClass],
+      // horizontalPosition: 'center',
+      // verticalPosition: 'top',
+    });
+  }
+
+  generateId(): string {
+    return Math.random().toString(36) + Date.now().toString(36);
+  }
+
   getTimeRangeArray(start: string, end: string): string[] {
     const times = [];
     let currentTime = start;
@@ -25,6 +45,4 @@ export class UtilsService {
 
     return date.toTimeString().substr(0, 5);
   }
-
-  
 }

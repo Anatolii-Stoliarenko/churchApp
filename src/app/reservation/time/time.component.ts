@@ -1,7 +1,7 @@
 import {
-  ChangeDetectorRef,
   Component,
-  Input,
+  OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   inject,
@@ -10,33 +10,28 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 import { ReservationService } from '../services/reservation.service';
-import { ReservationModel, PlaceType } from '../reservation.model';
+import { PlaceType } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
-import { Subscription } from 'rxjs';
+import { UtilsService } from '../services/utils.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-time',
   standalone: true,
-  imports: [
-    MatSelectModule,
-    MatButtonModule,
-    CommonModule,
-    FormsModule,
-    MatSnackBarModule,
-  ],
+  imports: [MatSelectModule, MatButtonModule, CommonModule, FormsModule],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })
-export class TimeComponent implements OnInit {
+export class TimeComponent implements OnInit, OnDestroy, OnChanges {
   selectedDay = '';
-  rs = inject(ReservationService);
+  reserveService = inject(ReservationService);
+  utilService = inject(UtilsService);
   sharedService = inject(SharedService);
-  cdr = inject(ChangeDetectorRef);
+  router = inject(Router);
 
-  snackBar = inject(MatSnackBar);
   availableHours: string[] = [];
   selectedStartTime: string = '';
   selectedEndTime: string = '';
@@ -45,13 +40,7 @@ export class TimeComponent implements OnInit {
   subscription: Subscription[] = [];
 
   ngOnInit(): void {
-    this.subscription.push(
-      this.sharedService.selectedDay$.subscribe(() => {
-        this.selectedDay = this.sharedService.getSelectedDay();
-        this.updateDataSource();
-      })
-    );
-
+    this.initObservables();
     this.updateDataSource();
   }
 
@@ -65,8 +54,17 @@ export class TimeComponent implements OnInit {
     }
   }
 
+  initObservables(): void {
+    this.subscription.push(
+      this.sharedService.selectedDay$.subscribe(() => {
+        this.selectedDay = this.sharedService.getSelectedDay();
+        this.updateDataSource();
+      })
+    );
+  }
+
   updateDataSource(): void {
-    this.availableHours = this.rs.getHours(
+    this.availableHours = this.reserveService.getHours(
       this.selectedDay,
       this.selectedPlace
     );
@@ -81,26 +79,32 @@ export class TimeComponent implements OnInit {
     this.selectedEndTime = '';
     this.updateDataSource();
   }
+  reloadComponent() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
 
   reserve() {
-    const newReservation: ReservationModel = {
-      id: 'new', // Generate or assign an ID appropriately
+    const newReservation = {
+      id: this.utilService.generateId(), // Generate or assign an ID appropriately
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
-      place: this.selectedPlace, // Use the selected place
-      user: {
-        id: 'u1', // Example user ID, modify as needed
-        name: 'Example User',
-        email: 'example.user@example.com',
-      },
+      place: this.selectedPlace,
     };
-    this.resetComponentState();
-    this.sharedService.notifyReservationMade();
-    this.rs.addReservation(newReservation);
-    this.snackBar.open('Reservation saved successfully!', 'Close', {
-      duration: 3000,
-    });
-    // this.cdr.detectChanges();
+    if (!this.reserveService.hasConflict(newReservation)) {
+      this.resetComponentState();
+      this.sharedService.notifyReservationMade();
+      this.reserveService.addReservation(newReservation);
+      this.reloadComponent();
+    } else {
+      this.resetComponentState();
+      this.utilService.showSnackBar(
+        'Conflict detected! Reservation failed.',
+        'error-snackbar'
+      );
+    }
   }
 }

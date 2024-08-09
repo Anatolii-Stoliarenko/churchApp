@@ -1,6 +1,6 @@
 export type AuthMode = 'register' | 'login';
 
-export interface AuthData {
+export interface AuthUserModel {
   id: string;
   name: string;
   email: string;

@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.actions button {
+  font-weight: bold;
+}
+
+.actions span {
+  margin-right: 1rem;
+}

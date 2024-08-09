@@ -1,22 +1,47 @@
-import { Component } from '@angular/core';
-
-import { AuthData } from '../wrapper.model';
-import { WrapperComponent } from '../shared/wrapper/wrapper.component';
+import { Component, inject } from '@angular/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
+import { AuthUserModel } from '../auth.model';
+import { WrapperComponent } from '../shared/wrapper/wrapper.component';
+import { AuthService } from '../auth.service';
+import { UtilsService } from '../../reservation/services/utils.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [WrapperComponent],
+  imports: [WrapperComponent, MatSnackBarModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-  constructor(private router: Router) {}
+  authService = inject(AuthService);
+  utilsService = inject(UtilsService);
+  snackBar = inject(MatSnackBar);
+  router = inject(Router);
+
+  constructor() {}
   errorsMessages: string[] = [];
 
-  onAuthorisation(data: AuthData): void {
-    console.log(data);
-    this.router.navigate(['/calendar']);
+  register(data: AuthUserModel): void {
+    const newUser = this.authService.register(
+      data.name,
+      data.email,
+      data.password
+    );
+
+    if (newUser) {
+      this.utilsService.showSnackBar(
+        'Registration successful!',
+        'success-snackbar'
+      );
+      this.router.navigate(['/reservation']);
+    } else {
+      this.utilsService.showSnackBar(
+        'Registration failed. Email already exists.',
+        'error-snackbar'
+      );
+      this.router.navigate(['/login']);
+    }
   }
 }

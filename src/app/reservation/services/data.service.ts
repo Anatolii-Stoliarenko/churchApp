@@ -7,28 +7,28 @@ import { PlaceType, ReservationModel, TimeSlot } from '../reservation.model';
 export class DataService {
   reservations: ReservationModel[] = [
     {
-      id: 'r1', // Unique ID for the reservation
-      date: '2024-07-31', // Date in 'yyyy-MM-dd' format
-      startHour: '09:00', // Start time
-      endHour: '10:00', // End time
-      place: PlaceType.BALKON, // Example place
-      user: { id: 'u1', name: 'John Doe', email: 'john.doe@example.com' }, // User object
+      id: 'r1',
+      date: '2024-08-14',
+      startHour: '09:00',
+      endHour: '10:00',
+      place: PlaceType.BALKON,
+      user: { id: 'u1', name: 'John Doe', email: 'john.doe@example.com' },
     },
     {
-      id: 'r2', // Unique ID for the reservation
-      date: '2024-08-11', // Date in 'yyyy-MM-dd' format
-      startHour: '07:00', // Start time
-      endHour: '20:00', // End time
-      place: PlaceType.HARCOWKA, // Example place
-      user: { id: 'u3', name: 'Alice Jones', email: 'alice.jones@example.com' }, // User object
+      id: 'r2',
+      date: '2024-08-11',
+      startHour: '07:00',
+      endHour: '20:00',
+      place: PlaceType.HARCOWKA,
+      user: { id: 'u3', name: 'Alice Jones', email: 'alice.jones@example.com' },
     },
     {
-      id: 'r3', // Unique ID for the reservation
-      date: '2024-08-15', // Date in 'yyyy-MM-dd' format
-      startHour: '09:00', // Start time
-      endHour: '13:00', // End time
-      place: PlaceType.BALKON, // Example place
-      user: { id: 'u2', name: 'Jane Smith', email: 'john.doe@example.com' }, // User object
+      id: 'r3',
+      date: '2024-08-25',
+      startHour: '09:00',
+      endHour: '13:00',
+      place: PlaceType.BALKON,
+      user: { id: 'u2', name: 'Jane Smith', email: 'john.doe@example.com' },
     },
   ];
 
