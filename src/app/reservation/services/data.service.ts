@@ -8,7 +8,7 @@ export class DataService {
   reservations: ReservationModel[] = [
     {
       id: 'r1',
-      date: '2024-08-14',
+      date: '2024-08-25',
       startHour: '09:00',
       endHour: '10:00',
       place: PlaceType.BALKON,
@@ -16,7 +16,7 @@ export class DataService {
     },
     {
       id: 'r2',
-      date: '2024-08-11',
+      date: '2024-08-22',
       startHour: '07:00',
       endHour: '20:00',
       place: PlaceType.HARCOWKA,
@@ -24,7 +24,7 @@ export class DataService {
     },
     {
       id: 'r3',
-      date: '2024-08-25',
+      date: '2024-08-29',
       startHour: '09:00',
       endHour: '13:00',
       place: PlaceType.BALKON,

@@ -20,8 +20,17 @@ export class AuthService {
     this.loadLoggedInUserFromLocalStorage();
   }
 
-  //Cheking is user LoggedIn or not
-  private loadLoggedInUserFromLocalStorage(): void {
+  isAdmin(): boolean {
+    return true;
+  }
+
+  isLoggedIn(): boolean {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    return !!loggedInUser; // Return true if user is logged in, false otherwise
+  }
+
+  //Set user as asObservable
+  loadLoggedInUserFromLocalStorage(): void {
     const loggedInUserJson = localStorage.getItem('loggedInUser');
     if (loggedInUserJson) {
       const user = JSON.parse(loggedInUserJson) as AuthUserModel;
@@ -30,7 +39,7 @@ export class AuthService {
   }
 
   //Load all users from LocalStorage
-  private loadUsersFromLocalStorage() {
+  loadUsersFromLocalStorage() {
     const savedUsers = localStorage.getItem('users');
     if (savedUsers) {
       this.users = JSON.parse(savedUsers);

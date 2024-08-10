@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -24,10 +24,9 @@ import { SharedService } from '../services/shared.service';
   styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
-  rs = inject(ReservationService);
+  reservationService = inject(ReservationService);
   sharedService = inject(SharedService);
-  private subscription: Subscription[] = [];
-  appRef = inject(ApplicationRef);
+  subscription: Subscription[] = [];
 
   startHour = '';
   endHour = '';
@@ -52,7 +51,7 @@ export class ListComponent implements OnInit {
 
     this.subscription.push(
       this.sharedService.reservationMade$.subscribe(() => {
-        // this.appRef.tick(); // Ensure Angular's change detection is triggered
+        this.updateDataSource();
       })
     );
 
@@ -66,7 +65,8 @@ export class ListComponent implements OnInit {
   updateDataSource(): void {
     const selectedDay = this.sharedService.getSelectedDay();
     if (selectedDay) {
-      this.dataSource = this.rs.getAllHoursBySelectedDay(selectedDay);
+      this.dataSource =
+        this.reservationService.getAllHoursBySelectedDay(selectedDay);
     }
   }
   reject(reservation: ReservationModel): void {
@@ -91,7 +91,8 @@ export class ListComponent implements OnInit {
 
   delete(reservation: ReservationModel): void {
     // Logic for deleting reservation
-    this.rs.deleteReservation(reservation.id);
+    this.reservationService.deleteReservation(reservation.id);
+    this.sharedService.notifyReservationMade();
     this.updateDataSource(); // Refresh the table after deletion
   }
 }

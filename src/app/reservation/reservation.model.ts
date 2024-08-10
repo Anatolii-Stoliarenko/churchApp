@@ -1,3 +1,15 @@
+export interface ReservationModel {
+  id: string;
+  date: string; // The selected date in 'yyyy-MM-dd' format
+  startHour: string;
+  endHour: string;
+  place: PlaceType;
+  user: UserModel;
+  commets?: Comment[];
+  status?: ReservationStatus; // The status of the reservation (Pending, Approved, Rejected)
+  approvalInfo?: ApprovalInfo;
+}
+
 export enum PlaceType {
   BALKON = 'Balkon',
   DUZA_KAPLICA = 'Duża kaplica',
@@ -10,15 +22,26 @@ export interface UserModel {
   id: string;
   name: string;
   email: string;
+  phone?: string;
+  contactEmail?: string;
 }
 
-export interface ReservationModel {
-  id: string;
-  date: string; // The selected date in 'yyyy-MM-dd' format
-  startHour: string; // e.g., '09:00'
-  endHour: string; // e.g., '10:00'
-  place: PlaceType;
-  user: UserModel;
+export interface Comment {
+  user: string; // Name of the user who made the comment
+  comment: string; // The comment text
+  dateTime: Date; // The date and time the comment was made
+}
+
+export enum ReservationStatus {
+  PENDING = 'Pending', // When the reservation is made but not yet reviewed by the admin
+  APPROVED = 'Approved', // When the admin has approved the reservation
+  REJECTED = 'Rejected', // When the admin has rejected the reservation
+}
+
+export interface ApprovalInfo {
+  approvedBy: string; // Name or ID of the admin who approved/rejected the reservation
+  approvalDate: Date; // The date and time when the reservation was approved/rejected
+  comments?: string; // Optional comments from the admin regarding the approval/rejection
 }
 
 export type TimeSlot =

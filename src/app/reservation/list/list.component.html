@@ -38,9 +38,9 @@
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef class="centered-header">Actions</th>
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let reservation">
-        <button
+        <!-- <button
           mat-icon-button
           color="primary"
           (click)="viewDetails(reservation)"
@@ -49,7 +49,7 @@
         </button>
         <button mat-icon-button color="primary" (click)="edit(reservation)">
           <mat-icon>edit</mat-icon>
-        </button>
+        </button> -->
         <button mat-icon-button color="primary" (click)="delete(reservation)">
           <mat-icon>delete</mat-icon>
         </button>

@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { UtilsService } from './utils.service';
 import { DataService } from './data.service';
-import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 import { AuthService } from '../../auth/auth.service';
+import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,32 +12,39 @@ export class ReservationService {
   utilsService = inject(UtilsService);
   dataService = inject(DataService);
   authService = inject(AuthService);
-  router = inject(Router);
+
   currentUser: UserModel | null = null;
   localStorageKey = 'reservation';
 
   constructor() {
-    this.loadReservations();
+    this.loadAllReservationsFromLocallStorage();
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser() {
     this.authService.loggedInUser$.subscribe((user) => {
       this.currentUser = user;
     });
   }
 
-  private saveReservations() {
+  private loadAllReservationsFromLocallStorage() {
+    const data = localStorage.getItem(this.localStorageKey);
+    if (data) {
+      this.dataService.reservations = JSON.parse(data);
+    }
+  }
+  private saveReservationsInLocallStorage() {
     localStorage.setItem(
       this.localStorageKey,
       JSON.stringify(this.dataService.reservations)
     );
   }
 
-  private loadReservations() {
-    const data = localStorage.getItem(this.localStorageKey);
-    if (data) {
-      this.dataService.reservations = JSON.parse(data);
-    }
-  }
   //cheking conflicts reservation
-  hasConflict(newReservation: Omit<ReservationModel, 'user'>): boolean {
+  hasConflict(newReservation: Omit<ReservationModel, 'user' | 'id'>): boolean {
+    if (newReservation.startHour === newReservation.endHour) {
+      return true; // If start and end times are the same, consider it a conflict
+    }
     return this.dataService.reservations.some((existingReservation) => {
       return (
         existingReservation.date === newReservation.date &&
@@ -66,33 +72,47 @@ export class ReservationService {
     );
   }
 
-  addReservation(reservation: Omit<ReservationModel, 'user'>) {
+  addReservation(reservation: Omit<ReservationModel, 'user' | 'id'>) {
     if (this.currentUser) {
       const newReservation: ReservationModel = {
         ...reservation,
-        user: this.currentUser, // Use currentUser for the reservation
+        id: this.utilsService.generateId(),
+        user: this.currentUser,
       };
       this.dataService.reservations.push(newReservation);
-      this.saveReservations();
+      this.saveReservationsInLocallStorage();
       this.utilsService.showSnackBar(
         'Reservation saved successfully!',
         'custom-snackbar'
       );
     } else {
       this.utilsService.showSnackBar(
-        'No user is logged in. Cannot create reservation.',
+        'Reservation faild. Cannot create reservation.',
         'error-snackbar'
       );
-      console.error('No user is logged in. Cannot create reservation.');
-      this.router.navigate(['/login']);
+      console.error('Reservation faild. Cannot create reservation.');
     }
   }
+
+  // Method to update an existing reservation
+  updateReservation(updatedReservation: ReservationModel): void {
+    const index = this.dataService.reservations.findIndex(
+      (res) => res.id === updatedReservation.id
+    );
+
+    if (index !== -1) {
+      this.dataService.reservations[index] = updatedReservation;
+      this.saveReservationsInLocallStorage();
+    } else {
+      console.error(`Reservation with ID ${updatedReservation.id} not found.`);
+    }
+  } 
 
   deleteReservation(id: string): void {
     this.dataService.reservations = this.dataService.reservations.filter(
       (reservation) => reservation.id !== id
     );
-    this.saveReservations(); // Save updated reservations list (if necessary)
+    this.saveReservationsInLocallStorage(); // Save updated reservations list (if necessary)
   }
 
   getReservation() {
@@ -153,30 +173,5 @@ export class ReservationService {
     return this.dataService.reservations.filter((res) => {
       return res.date === selectedDay;
     });
-  }
-
-  getAvailableHoursOld(date: string): string[] {
-    return this.getHouresOld(date, true);
-  }
-
-  getReservedHoursOld(date: string): string[] {
-    return this.getHouresOld(date, false);
-  }
-
-  getHouresOld(date: string, isAvailableHours: boolean): string[] {
-    const reservedHours = this.dataService.reservations
-      .filter((res) => res.date === date)
-      .map((res) =>
-        this.utilsService.getTimeRangeArray(res.startHour, res.endHour)
-      )
-      .flat();
-
-    const allHours = this.dataService.availableHours;
-
-    return allHours.filter((hour) =>
-      isAvailableHours
-        ? !reservedHours.includes(hour)
-        : reservedHours.includes(hour)
-    );
   }
 }

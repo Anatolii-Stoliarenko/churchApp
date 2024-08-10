@@ -11,12 +11,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { ReservationService } from '../services/reservation.service';
 import { PlaceType } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-time',
@@ -59,6 +59,10 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
       this.sharedService.selectedDay$.subscribe(() => {
         this.selectedDay = this.sharedService.getSelectedDay();
         this.updateDataSource();
+      }),
+
+      this.sharedService.reservationMade$.subscribe(() => {
+        this.updateDataSource();
       })
     );
   }
@@ -86,9 +90,8 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  reserve() {
+  addReservation() {
     const newReservation = {
-      id: this.utilService.generateId(), // Generate or assign an ID appropriately
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
@@ -96,9 +99,10 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
     };
     if (!this.reserveService.hasConflict(newReservation)) {
       this.resetComponentState();
-      this.sharedService.notifyReservationMade();
       this.reserveService.addReservation(newReservation);
-      this.reloadComponent();
+      this.sharedService.notifyReservationMade();
+      this.updateDataSource();
+      // this.reloadComponent();
     } else {
       this.resetComponentState();
       this.utilService.showSnackBar(
