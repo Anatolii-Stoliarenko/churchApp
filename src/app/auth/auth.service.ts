@@ -9,7 +9,10 @@ import { AuthUserModel } from './auth.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private users: AuthUserModel[] = [];
+  private users: AuthUserModel[] = [
+    { id: '1', name: 'admin', email: 'admin@gmail.com', password: '12345678' },
+  ];
+
   private utils = inject(UtilsService);
 
   private loggedInUserSubject = new BehaviorSubject<AuthUserModel | null>(null);
