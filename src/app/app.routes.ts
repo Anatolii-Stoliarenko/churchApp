@@ -13,5 +13,5 @@ export const routes: Routes = [
     component: ReservationComponent,
     canActivate: [authGuard],
   },
-  { path: '**', redirectTo: '/reservation', pathMatch: 'full' }, // Wildcard route for invalid URLs
+  { path: '**', redirectTo: '/login', pathMatch: 'full' }, // Wildcard route for invalid URLs
 ];

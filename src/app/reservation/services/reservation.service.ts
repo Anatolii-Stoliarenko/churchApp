@@ -3,7 +3,12 @@ import { Injectable, inject } from '@angular/core';
 import { UtilsService } from './utils.service';
 import { DataService } from './data.service';
 import { AuthService } from '../../auth/auth.service';
-import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
+import {
+  PlaceType,
+  ReservationModel,
+  TimeSlot,
+  UserModel,
+} from '../reservation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -54,7 +59,13 @@ export class ReservationService {
           existingReservation.endHour,
           newReservation.startHour,
           newReservation.endHour
-        )
+        ) &&
+        this.dataService.availableTimeSlots.indexOf(
+          newReservation.startHour as TimeSlot
+        ) <=
+          this.dataService.availableTimeSlots.indexOf(
+            newReservation.endHour as TimeSlot
+          )
       );
     });
   }
@@ -106,7 +117,7 @@ export class ReservationService {
     } else {
       console.error(`Reservation with ID ${updatedReservation.id} not found.`);
     }
-  } 
+  }
 
   deleteReservation(id: string): void {
     this.dataService.reservations = this.dataService.reservations.filter(
