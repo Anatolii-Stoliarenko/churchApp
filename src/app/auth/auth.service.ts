@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 // import * as bcrypt from 'bcryptjs';
 
 import { UtilsService } from '../reservation/services/utils.service';
@@ -9,12 +10,12 @@ import { AuthUserModel } from './auth.model';
   providedIn: 'root',
 })
 export class AuthService {
-  localStorageKey = 'register';
   private users: AuthUserModel[] = [
     { id: '1', name: 'admin', email: 'admin@gmail.com', password: '12345678' },
   ];
 
-  private utils = inject(UtilsService);
+  private utilsService = inject(UtilsService);
+  router = inject(Router);
 
   private loggedInUserSubject = new BehaviorSubject<AuthUserModel | null>(null);
   loggedInUser$ = this.loggedInUserSubject.asObservable();
@@ -62,37 +63,44 @@ export class AuthService {
     this.clearLoggedInUserFromLocalStorage();
   }
 
-  register(
-    name: string,
-    email: string,
-    password: string
-  ): AuthUserModel | null {
-    if (this.users.find((user) => user.email === email)) {
-      window.alert('User with this email already exists.');
-      return null;
+  register(data: AuthUserModel): void {
+    if (this.users.find((user) => user.email === data.email)) {
+      this.utilsService.showSnackBar(
+        'Registration failed. Email already exists.',
+        'error-snackbar'
+      );
+      this.router.navigate(['/login']);
+      return;
     }
-    // const hashedPassword = bcrypt.hashSync(password, 10); // Hash the password
     const newUser: AuthUserModel = {
-      id: this.utils.generateId(),
-      name,
-      email,
-      password, //:hashedPassword
+      id: this.utilsService.generateId(),
+      name: data.name,
+      email: data.email,
+      password: data.password, //:hashedPassword
     };
 
     this.users.push(newUser);
     this.saveUsers();
     this.saveLoggedInUserToLocalStorage(newUser);
-    return newUser;
+    this.utilsService.showSnackBar(
+      'Registration successful!',
+      'success-snackbar'
+    );
+    this.router.navigate(['/reservation']);
   }
 
-  login(email: string, password: string): AuthUserModel | null {
-    const user = this.findUserByEmailAndPassword(email, password);
+  login(data: Omit<AuthUserModel, 'name'>): void {
+    const user = this.findUserByEmailAndPassword(data.email, data.password);
     if (user) {
       this.loggedInUserSubject.next(user);
       this.saveLoggedInUserToLocalStorage(user); // Save logged-in user to localStorage
-      return user;
+      this.utilsService.showSnackBar('Login successful!', 'custom-snackbar');
+      this.router.navigate(['/reservation']);
     } else {
-      return null;
+      this.utilsService.showSnackBar(
+        'Login failed. Invalid email or password.',
+        'error-snackbar'
+      );
     }
   }
 

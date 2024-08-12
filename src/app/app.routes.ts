@@ -7,6 +7,7 @@ import { authGuard } from './auth/auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Default route redirects to login
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   {
