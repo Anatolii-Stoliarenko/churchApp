@@ -4,6 +4,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { authGuard } from './auth/auth.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -13,5 +14,6 @@ export const routes: Routes = [
     component: ReservationComponent,
     canActivate: [authGuard],
   },
-  { path: '**', redirectTo: '/login', pathMatch: 'full' }, // Wildcard route for invalid URLs
+  { path: '404', component: NotFoundComponent }, // 404 Route
+  { path: '**', redirectTo: '/404', pathMatch: 'full' }, // Wildcard Route
 ];

@@ -9,6 +9,7 @@ import { AuthUserModel } from './auth.model';
   providedIn: 'root',
 })
 export class AuthService {
+  localStorageKey = 'register';
   private users: AuthUserModel[] = [
     { id: '1', name: 'admin', email: 'admin@gmail.com', password: '12345678' },
   ];
@@ -21,6 +22,21 @@ export class AuthService {
   constructor() {
     this.loadUsersFromLocalStorage();
     this.loadLoggedInUserFromLocalStorage();
+  }
+
+  //Load all users from LocalStorage
+  loadUsersFromLocalStorage() {
+    const savedUsers = localStorage.getItem('users');
+    if (savedUsers) {
+      let storedUsers = JSON.parse(savedUsers);
+      if (Array.isArray(storedUsers)) {
+        this.users.push(...storedUsers);
+      }
+    }
+  }
+
+  private saveUsers(): void {
+    localStorage.setItem('users', JSON.stringify(this.users));
   }
 
   isAdmin(): boolean {
@@ -39,18 +55,6 @@ export class AuthService {
       const user = JSON.parse(loggedInUserJson) as AuthUserModel;
       this.loggedInUserSubject.next(user);
     }
-  }
-
-  //Load all users from LocalStorage
-  loadUsersFromLocalStorage() {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      this.users = JSON.parse(savedUsers);
-    }
-  }
-
-  private saveUsers(): void {
-    localStorage.setItem('users', JSON.stringify(this.users));
   }
 
   logout(): void {
