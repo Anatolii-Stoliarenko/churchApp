@@ -1,1 +1,32 @@
-<p>reservation-detail-dialog works!</p>
+<div class="reservation-detail">
+  <h6>Reservation Details</h6>
+
+  <div class="reservation-info">
+    <p><strong>Date:</strong> {{ reservation.date }}</p>
+    <p>
+      <strong>Time:</strong> {{ reservation.startHour }} -
+      {{ reservation.endHour }}
+    </p>
+    <p><strong>Place:</strong> {{ reservation.place }}</p>
+    <p><strong>Reservator:</strong> {{ reservation.user.name }}</p>
+    <p><strong>Contact:</strong> ({{ reservation.user.email }})</p>
+    <p><strong>Status:</strong> {{ reservation.status || "Pending" }}</p>
+
+    <div *ngIf="reservation.comments && reservation.comments.length > 0">
+      <h3>Comments:</h3>
+      <ul>
+        <li *ngFor="let comment of reservation.comments">
+          <strong>{{ comment.user }}:</strong> {{ comment.comment }} ({{
+            comment.date
+          }})
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="reservation-actions">
+    <button mat-raised-button color="primary" (click)="closeDialog()">
+      Close
+    </button>
+  </div>
+</div>

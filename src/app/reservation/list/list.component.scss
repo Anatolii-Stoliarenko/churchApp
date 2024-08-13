@@ -1,6 +1,6 @@
-/* reservation-table.component.css */
 .mat-table {
-  width: 600px;
+  width: 350px;
+  padding-bottom: 10px;
 }
 
 th.mat-header-cell,
@@ -15,4 +15,22 @@ td.mat-cell {
 
 .centered-header {
   text-align: center;
+}
+
+.approved-row {
+  background-color: #c8e6c9; /* Light green */
+}
+
+.pending-row {
+  background-color: #fff9c4; /* Light yellow */
+}
+
+.rejected-row {
+  background-color: #ffcdd2; /* Light red */
+}
+
+.inline-calendar-card {
+  width: 400px;
+  margin: 20px 20px 0px 20px;
+  border-radius: 20%;
 }

@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 
 import { ReservationService } from '../services/reservation.service';
 import { SharedService } from '../services/shared.service';
+import { ReservationModel } from '../reservation.model';
 
 @Component({
   selector: 'app-calendar',
@@ -22,9 +23,9 @@ import { SharedService } from '../services/shared.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  rs = inject(ReservationService);
-  cdr = inject(ChangeDetectorRef);
+  reservationService = inject(ReservationService);
   sharedService = inject(SharedService);
+  cdr = inject(ChangeDetectorRef);
 
   showCalendar = true;
   selectedDate: Date | null = null;
@@ -55,11 +56,13 @@ export class CalendarComponent {
       return '';
     }
 
-    const reservData = this.rs.dataService.reservations.map((reservation) => ({
-      ...reservation,
-      dateString: new Date(reservation.date).toDateString(), //add new property
-      isFullDay: this.isFullDayReserved(reservation), //add new property
-    }));
+    const reservData = this.reservationService.dataService.reservations.map(
+      (reservation) => ({
+        ...reservation,
+        dateString: new Date(reservation.date).toDateString(), //add new property
+        isFullDay: this.isFullDayReserved(reservation), //add new property
+      })
+    );
 
     if (
       this.selectedDate &&
@@ -79,8 +82,8 @@ export class CalendarComponent {
     return 'available-date';
   };
 
-  isFullDayReserved(reservation: any): boolean {
-    return this.rs.getfullDayHours(reservation);
+  isFullDayReserved(reservation: ReservationModel): boolean {
+    return false;
   }
 
   formatDate(date: Date): string {

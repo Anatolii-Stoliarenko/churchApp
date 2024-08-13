@@ -1,12 +1,18 @@
 .container {
-  flex-direction: row;
+  margin: 20px;
+  width: 400px;
+  display: flex;
+  flex-direction: column; /* Align children vertically */
+  align-items: center; /* Center the elements horizontally */
 }
 
-mat-form-field {
-  margin-right: 10px;
+.full-width {
+  width: 100%; /* Ensure each element takes full width */
+  max-width: 400px; /* Optional: Set a maximum width for the elements */
+  margin-bottom: 15px; /* Add spacing between the elements */
 }
 
-button {
-  margin-bottom: 15px;
+.inline-calendar-card {
+  width: 400px;
+  margin: 20px;
 }
-

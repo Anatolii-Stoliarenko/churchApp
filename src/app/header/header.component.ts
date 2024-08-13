@@ -14,15 +14,10 @@ import { AuthService } from '../auth/auth.service';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  loggedInUser: AuthUserModel | null = null;
   authService = inject(AuthService);
   router = inject(Router);
 
-  constructor() {
-    this.authService.loggedInUser$.subscribe((user) => {
-      this.loggedInUser = user;
-    });
-  }
+  constructor() {}
 
   logout(): void {
     this.authService.logout();

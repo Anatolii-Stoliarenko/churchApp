@@ -1,71 +1,114 @@
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" class="mat-table">
-    <!-- Date Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.date }}</td>
-    </ng-container>
+<mat-card class="inline-calendar-card">
+  <ng-container *ngIf="dataSource.length > 0">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-table">
+        <!-- Date Column -->
+        <!-- <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.date }}</td>
+        </ng-container> -->
 
-    <!-- startHour Column -->
-    <ng-container matColumnDef="startHour">
-      <th mat-header-cell *matHeaderCellDef>From</th>
-      <td mat-cell *matCellDef="let reservation">
-        {{ reservation.startHour }}
-      </td>
-    </ng-container>
+        <!-- startHour Column -->
+        <ng-container matColumnDef="startHour">
+          <th mat-header-cell *matHeaderCellDef class="centered-header">
+            From
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.startHour }}
+          </td>
+        </ng-container>
 
-    <!-- startHour Column -->
-    <ng-container matColumnDef="endHour">
-      <th mat-header-cell *matHeaderCellDef>To</th>
-      <td mat-cell *matCellDef="let reservation">
-        {{ reservation.endHour }}
-      </td>
-    </ng-container>
+        <!-- startHour Column -->
+        <ng-container matColumnDef="endHour">
+          <th mat-header-cell *matHeaderCellDef class="centered-header">To</th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.endHour }}
+          </td>
+        </ng-container>
 
-    <!-- Place Column -->
-    <ng-container matColumnDef="place">
-      <th mat-header-cell *matHeaderCellDef>Place</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.place }}</td>
-    </ng-container>
+        <!-- Place Column -->
+        <ng-container matColumnDef="place">
+          <th mat-header-cell *matHeaderCellDef class="centered-header">
+            Place
+          </th>
+          <td mat-cell *matCellDef="let reservation" class="centered-header">
+            {{ reservation.place }}
+          </td>
+        </ng-container>
 
-    <!-- User Column -->
-    <ng-container matColumnDef="user">
-      <th mat-header-cell *matHeaderCellDef>Customer</th>
-      <td mat-cell *matCellDef="let reservation">
-        {{ reservation.user.name }}
-      </td>
-    </ng-container>
+        <!-- User Column -->
+        <!-- <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>Reservator</th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.user.name }}
+          </td>
+        </ng-container> -->
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let reservation">
-        <!-- <button
-          mat-icon-button
-          color="primary"
-          (click)="viewDetails(reservation)"
-        >
-          <mat-icon>visibility</mat-icon>
-        </button>
-        <button mat-icon-button color="primary" (click)="edit(reservation)">
-          <mat-icon>edit</mat-icon>
-        </button> -->
-        <button mat-icon-button color="primary" (click)="delete(reservation)">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <!-- <button mat-icon-button color="primary" (click)="approve(reservation)">
-          <mat-icon>check_circle</mat-icon>
-        </button>
-        <button mat-icon-button color="primary" (click)="reject(reservation)">
-          <mat-icon>cancel</mat-icon>
-        </button> -->
-      </td>
-    </ng-container>
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="centered-header">
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="viewDetails(reservation)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</div>
+            <!-- creator's reservation buttons -->
+            <ng-container
+              *ngIf="
+                isReservationCreatedByCurrentUser(reservation) ||
+                (roleService.currentUserRole$ | async) === 'admin' ||
+                (roleService.currentUserRole$ | async) === 'moderator'
+              "
+            >
+              <!-- <button mat-icon-button color="primary" (click)="edit(reservation)">
+                <mat-icon>edit</mat-icon>
+              </button> -->
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="delete(reservation)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-container>
 
-<br />
-<app-time />
+            <!-- admin's buttons -->
+            <ng-container
+              *ngIf="
+                (roleService.currentUserRole$ | async) === 'admin' ||
+                (roleService.currentUserRole$ | async) === 'moderator'
+              "
+            >
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="approve(reservation)"
+              >
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="reject(reservation)"
+              >
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [ngClass]="getRowClass(row)"
+        ></tr>
+      </table></div
+  ></ng-container>
+</mat-card>

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 
-import { WrapperComponent } from '../shared/wrapper/wrapper.component';
+import { WrapperComponent } from '../wrapper/wrapper.component';
 import { AuthUserModel } from '../auth.model';
 import { AuthService } from '../auth.service';
 

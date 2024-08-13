@@ -5,103 +5,82 @@ import { Router } from '@angular/router';
 
 import { UtilsService } from '../reservation/services/utils.service';
 import { AuthUserModel } from './auth.model';
+import { DefaultUsers } from '../config/default-users';
+import { UserRole } from './user-role.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private users: AuthUserModel[] = [
-    { id: '1', name: 'admin', email: 'admin@gmail.com', password: '12345678' },
-  ];
+  private currentUserSubject = new BehaviorSubject<AuthUserModel | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
-  private utilsService = inject(UtilsService);
+  utilsService = inject(UtilsService);
   router = inject(Router);
 
-  private loggedInUserSubject = new BehaviorSubject<AuthUserModel | null>(null);
-  loggedInUser$ = this.loggedInUserSubject.asObservable();
+  private users: AuthUserModel[] = DefaultUsers;
 
   constructor() {
     this.loadUsersFromLocalStorage();
-    this.loadLoggedInUserFromLocalStorage();
-  }
-
-  //Load all users from LocalStorage
-  loadUsersFromLocalStorage() {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      let storedUsers = JSON.parse(savedUsers);
-      if (Array.isArray(storedUsers)) {
-        this.users.push(...storedUsers);
-      }
-    }
-  }
-
-  private saveUsers(): void {
-    localStorage.setItem('users', JSON.stringify(this.users));
-  }
-
-  isAdmin(): boolean {
-    return true;
-  }
-
-  isLoggedIn(): boolean {
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    return !!loggedInUser; // Return true if user is logged in, false otherwise
-  }
-
-  //Set user as asObservable
-  loadLoggedInUserFromLocalStorage(): void {
-    const loggedInUserJson = localStorage.getItem('loggedInUser');
-    if (loggedInUserJson) {
-      const user = JSON.parse(loggedInUserJson) as AuthUserModel;
-      this.loggedInUserSubject.next(user);
-    }
-  }
-
-  logout(): void {
-    this.loggedInUserSubject.next(null);
-    this.clearLoggedInUserFromLocalStorage();
+    this.getLoggedInUserFromAsObservable();
   }
 
   register(data: AuthUserModel): void {
-    if (this.users.find((user) => user.email === data.email)) {
-      this.utilsService.showSnackBar(
-        'Registration failed. Email already exists.',
-        'error-snackbar'
+    if (this.isEmailTaken(data.email)) {
+      this.utilsService.snackBarError(
+        'Registration failed. Email already exists.'
       );
-      this.router.navigate(['/login']);
       return;
     }
-    const newUser: AuthUserModel = {
-      id: this.utilsService.generateId(),
-      name: data.name,
-      email: data.email,
-      password: data.password, //:hashedPassword
-    };
 
-    this.users.push(newUser);
-    this.saveUsers();
+    const newUser = this.createNewUser(data);
+
+    this.saveUser(newUser);
     this.saveLoggedInUserToLocalStorage(newUser);
-    this.utilsService.showSnackBar(
-      'Registration successful!',
-      'success-snackbar'
-    );
+    this.utilsService.snackBarSuccess('Registration successful!');
     this.router.navigate(['/reservation']);
   }
 
   login(data: Omit<AuthUserModel, 'name'>): void {
     const user = this.findUserByEmailAndPassword(data.email, data.password);
-    if (user) {
-      this.loggedInUserSubject.next(user);
-      this.saveLoggedInUserToLocalStorage(user); // Save logged-in user to localStorage
-      this.utilsService.showSnackBar('Login successful!', 'custom-snackbar');
-      this.router.navigate(['/reservation']);
-    } else {
-      this.utilsService.showSnackBar(
-        'Login failed. Invalid email or password.',
-        'error-snackbar'
+    if (!user) {
+      this.utilsService.snackBarError(
+        'Login failed. Invalid email or password.'
       );
+      return;
     }
+    this.saveLoggedInUserToLocalStorage(user);
+    this.utilsService.snackBarSuccess('Login successful!');
+    this.router.navigate(['/reservation']);
+  }
+
+  logout(): void {
+    this.clearLoggedInUserFromLocalStorage();
+  }
+
+  private saveUsersToLocallStorage(): void {
+    localStorage.setItem('users', JSON.stringify(this.users));
+  }
+
+  private createNewUser(data: AuthUserModel): AuthUserModel {
+    const newUser: AuthUserModel = {
+      id: this.utilsService.generateId(),
+      name: data.name,
+      email: data.email,
+      password: data.password, //:hashedPassword
+      role: UserRole.USER,
+    };
+
+    return newUser;
+  }
+
+  private saveUser(newUser: AuthUserModel): void {
+    this.users.push(newUser);
+    this.saveLoggedInUserToLocalStorage(newUser);
+  }
+
+  private isEmailTaken(email: string): boolean {
+    return this.users.some((user) => user.email === email);
   }
 
   private findUserByEmailAndPassword(
@@ -115,11 +94,36 @@ export class AuthService {
     );
   }
 
+  private loadUsersFromLocalStorage() {
+    const savedUsers = localStorage.getItem('users');
+    if (savedUsers) {
+      let storedUsers = JSON.parse(savedUsers);
+      if (Array.isArray(storedUsers)) {
+        this.users.push(...storedUsers);
+      }
+    }
+  }
+
   private clearLoggedInUserFromLocalStorage(): void {
     localStorage.removeItem('loggedInUser');
+    this.currentUserSubject.next(null);
   }
 
   private saveLoggedInUserToLocalStorage(user: AuthUserModel): void {
     localStorage.setItem('loggedInUser', JSON.stringify(user));
+    this.getLoggedInUserFromAsObservable();
+  }
+
+  private getLoggedInUserFromAsObservable(): void {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+      const user = JSON.parse(loggedInUser) as AuthUserModel;
+      this.currentUserSubject.next(user);
+    }
+  }
+
+  isLoggedIn(): boolean {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    return !!loggedInUser; // Return true if user is logged in, false otherwise
   }
 }

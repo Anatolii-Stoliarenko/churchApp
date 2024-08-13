@@ -1,14 +1,28 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-import { ReservationModel } from '../reservation.model';
+import {
+  ReservationModel,
+  ReservationStatus,
+  UserModel,
+} from '../reservation.model';
 import { ReservationService } from '../services/reservation.service';
 import { TimeComponent } from '../time/time.component';
 import { SharedService } from '../services/shared.service';
+import { RoleService } from '../../auth/role.service';
+import { AuthService } from '../../auth/auth.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-list',
@@ -19,26 +33,31 @@ import { SharedService } from '../services/shared.service';
     TimeComponent,
     MatButtonModule,
     MatIconModule,
+    ReservationDetailDialogComponent,
+    MatDialogModule,
+    MatCardModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit {
+  dialog = inject(MatDialog);
   reservationService = inject(ReservationService);
+  roleService = inject(RoleService);
   sharedService = inject(SharedService);
+  authService = inject(AuthService);
+
+  currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
 
-  startHour = '';
-  endHour = '';
-  availableHours: string[] = [];
-  partialReservedHours: string[] = [];
   dataSource: ReservationModel[] = [];
   displayedColumns: string[] = [
-    'date',
+    // 'date',
     'startHour',
     'endHour',
     'place',
-    'user',
+    // 'user',
     'actions',
   ];
 
@@ -55,6 +74,13 @@ export class ListComponent implements OnInit {
       })
     );
 
+    this.subscription.push(
+      this.authService.currentUser$.subscribe((user) => {
+        this.currentUser = user;
+        this.updateDataSource();
+      })
+    );
+
     this.updateDataSource();
   }
 
@@ -62,37 +88,59 @@ export class ListComponent implements OnInit {
     this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
+  openDialog(reservation: ReservationModel) {
+    this.dialog.open(ReservationDetailDialogComponent, {
+      width: '250px',
+      data: reservation,
+    });
+  }
+
+  getRowClass(reservation: ReservationModel): string {
+    if (!reservation.status) {
+      return '';
+    }
+    switch (reservation.status) {
+      case ReservationStatus.APPROVED:
+        return 'approved-row';
+      case ReservationStatus.PENDING:
+        return 'pending-row';
+      case ReservationStatus.REJECTED:
+        return 'rejected-row';
+    }
+  }
+
+  isReservationCreatedByCurrentUser(reservation: ReservationModel): boolean {
+    return this.currentUser?.id === reservation.user.id;
+  }
+
   updateDataSource(): void {
     const selectedDay = this.sharedService.getSelectedDay();
     if (selectedDay) {
       this.dataSource =
-        this.reservationService.getAllHoursBySelectedDay(selectedDay);
+        this.reservationService.getAllReservationsBySelectedDay(selectedDay);
     }
   }
+
   reject(reservation: ReservationModel): void {
-    // Logic for rejecting reservation (for admins)
-    console.log('Reject reservation', reservation);
+    this.reservationService.setReservationStatus(
+      reservation,
+      ReservationStatus.REJECTED
+    );
   }
 
   approve(reservation: ReservationModel): void {
-    // Logic for approving reservation (for admins)
-    console.log('Approve reservation', reservation);
+    this.reservationService.setReservationStatus(
+      reservation,
+      ReservationStatus.APPROVED
+    );
   }
 
   viewDetails(reservation: ReservationModel): void {
-    // Logic for viewing details
     console.log('View details for', reservation);
-  }
-
-  edit(reservation: ReservationModel): void {
-    // Logic for editing reservation
-    console.log('Edit reservation', reservation);
+    this.openDialog(reservation);
   }
 
   delete(reservation: ReservationModel): void {
-    // Logic for deleting reservation
-    this.reservationService.deleteReservation(reservation.id);
-    this.sharedService.notifyReservationMade();
-    this.updateDataSource(); // Refresh the table after deletion
+    this.reservationService.deleteReservation(reservation);
   }
 }

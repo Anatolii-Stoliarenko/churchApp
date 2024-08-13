@@ -1,34 +1,67 @@
-import { Injectable } from '@angular/core';
-import { PlaceType, ReservationModel, TimeSlot } from '../reservation.model';
+import { inject, Injectable } from '@angular/core';
+import {
+  PlaceType,
+  ReservationModel,
+  ReservationStatus,
+  TimeSlot,
+} from '../reservation.model';
+import {
+  AdminConfig,
+  ModeratorConfig,
+  DefaultUserConfig,
+} from '../../config/users-config';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
+  utilsService = inject(UtilsService);
+
   reservations: ReservationModel[] = [
     {
-      id: 'r1',
+      id: this.utilsService.generateId(),
       date: '2024-08-25',
       startHour: '09:00',
       endHour: '10:00',
       place: PlaceType.BALKON,
-      user: { id: 'u1', name: 'John Doe', email: 'john.doe@example.com' },
+      user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
+      status: ReservationStatus.APPROVED,
     },
     {
-      id: 'r2',
+      id: this.utilsService.generateId(),
+      date: '2024-08-25',
+      startHour: '09:00',
+      endHour: '10:00',
+      place: PlaceType.KACHETYCZNE,
+      user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
+      status: ReservationStatus.PENDING,
+    },
+    {
+      id: this.utilsService.generateId(),
       date: '2024-08-22',
       startHour: '07:00',
       endHour: '20:00',
       place: PlaceType.HARCOWKA,
-      user: { id: 'u3', name: 'Alice Jones', email: 'alice.jones@example.com' },
+      user: {
+        id: '2',
+        name: ModeratorConfig.NAME,
+        email: ModeratorConfig.EMAIL,
+      },
+      status: ReservationStatus.REJECTED,
     },
     {
-      id: 'r3',
+      id: this.utilsService.generateId(),
       date: '2024-08-29',
       startHour: '09:00',
       endHour: '13:00',
       place: PlaceType.BALKON,
-      user: { id: 'u2', name: 'Jane Smith', email: 'john.doe@example.com' },
+      user: {
+        id: '3',
+        name: DefaultUserConfig.NAME,
+        email: DefaultUserConfig.EMAIL,
+      },
+      status: ReservationStatus.PENDING,
     },
   ];
 

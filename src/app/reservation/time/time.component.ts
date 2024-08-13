@@ -17,11 +17,18 @@ import { ReservationService } from '../services/reservation.service';
 import { PlaceType } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-time',
   standalone: true,
-  imports: [MatSelectModule, MatButtonModule, CommonModule, FormsModule],
+  imports: [
+    MatSelectModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+  ],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })
@@ -83,12 +90,6 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
     this.selectedEndTime = '';
     this.updateDataSource();
   }
-  reloadComponent() {
-    const currentUrl = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentUrl]);
-    });
-  }
 
   addReservation() {
     const newReservation = {
@@ -105,10 +106,7 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
       // this.reloadComponent();
     } else {
       this.resetComponentState();
-      this.utilService.showSnackBar(
-        'Conflict detected! Reservation failed.',
-        'error-snackbar'
-      );
+      this.utilService.snackBarError('Conflict detected! Reservation failed.');
     }
   }
 }

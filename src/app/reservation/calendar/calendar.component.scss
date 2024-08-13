@@ -1,6 +1,6 @@
 .inline-calendar-card {
-  width: 300px;
-  // height: 400px;
+  width: 400px;
+  margin: 20px;
 }
 
 p {
@@ -11,7 +11,7 @@ p {
 ::ng-deep
   .mat-calendar-body-cell.available-date
   .mat-calendar-body-cell-content {
-  background-color: #5df75d;
+  background-color: #ccffcc;
   color: green;
   border-radius: 50%;
 }
@@ -19,7 +19,7 @@ p {
 ::ng-deep
   .mat-calendar-body-cell.reserved-full-day
   .mat-calendar-body-cell-content {
-  background-color: #fa5c5c;
+  background-color: #ff8888;
   color: rgb(180, 5, 5);
   border-radius: 50%;
 }
@@ -27,7 +27,7 @@ p {
 ::ng-deep
   .mat-calendar-body-cell.reserved-partial-day
   .mat-calendar-body-cell-content {
-  background-color: #e569fa;
+  background-color: #f1a5ff;
   color: rgb(120, 0, 168);
   border-radius: 50%;
 }
@@ -60,13 +60,13 @@ p {
 }
 
 .available {
-  background-color: #5df75d;
+  background-color: #ccffcc;
 }
 
 .reserved-full {
-  background-color: #fa5c5c;
+  background-color: #ff8888;
 }
 
 .reserved-partial {
-  background-color: #e569fa;
+  background-color: #f1a5ff;
 }

@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SNACKBAR_CLASSES } from '../../config/snack-bar.config';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UtilsService {
   snackBar = inject(MatSnackBar);
 
-  showSnackBar(
+  snackBarSuccess(message: string): void {
+    this.showSnackBar(message, SNACKBAR_CLASSES.SUCCESS);
+  }
+
+  snackBarError(message: string): void {
+    this.showSnackBar(message, SNACKBAR_CLASSES.ERROR);
+    console.error(message);
+  }
+
+  private showSnackBar(
     message: string,
     panelClass: string,
     duration: number = 3000

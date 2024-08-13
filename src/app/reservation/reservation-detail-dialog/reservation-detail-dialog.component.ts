@@ -1,52 +1,36 @@
-import { Component, inject, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject, Inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 
-import { ReservationModel, ReservationStatus } from '../reservation.model';
-import { ReservationService } from '../services/reservation.service';
-import { AuthService } from '../../auth/auth.service';
+import { ReservationModel, UserModel } from '../reservation.model';
 
 @Component({
   selector: 'app-reservation-detail-dialog',
   templateUrl: './reservation-detail-dialog.component.html',
   styleUrls: ['./reservation-detail-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatButtonModule,
+    CommonModule,
+  ],
 })
-export class ReservationDetailDialogComponent implements OnInit {
-  isAdmin: boolean | null = null;
-  authService = inject(AuthService); // Assuming this service manages user roles
+export class ReservationDetailDialogComponent {
+  dialogRef = inject(MatDialogRef<ReservationDetailDialogComponent>);
+  reservation: ReservationModel = inject(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<ReservationDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public reservation: ReservationModel,
-    private reservationService: ReservationService
-  ) {}
-
-  ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin(); // Determine if the current user is an admin
-  }
-
-  onNoClick(): void {
+  closeDialog() {
     this.dialogRef.close();
-  }
-
-  confirmReservation(): void {
-    this.reservation.status = ReservationStatus.APPROVED;
-    this.reservation.approvalInfo = {
-      approvedBy: 'test',
-      approvalDate: new Date(),
-      comments: 'Reservation approved by admin.',
-    };
-    this.reservationService.updateReservation(this.reservation);
-    this.dialogRef.close(this.reservation);
-  }
-
-  rejectReservation(): void {
-    this.reservation.status = ReservationStatus.REJECTED;
-    this.reservation.approvalInfo = {
-      approvedBy: 'test',
-      approvalDate: new Date(),
-      comments: 'Reservation rejected by admin.',
-    };
-    this.reservationService.updateReservation(this.reservation);
-    this.dialogRef.close(this.reservation);
   }
 }

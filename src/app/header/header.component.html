@@ -6,13 +6,15 @@
   </div>
 
   <div class="actions">
-    <ng-container *ngIf="!loggedInUser; else loggedTemplate">
+    <ng-container
+      *ngIf="!(authService.currentUser$ | async); else loggedTemplate"
+    >
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     </ng-container>
 
     <ng-template #loggedTemplate>
-      <span>{{ loggedInUser?.name }}</span>
+      <span>{{ (authService.currentUser$ | async)?.name }}</span>
       <button mat-button (click)="logout()">Logout</button>
     </ng-template>
   </div>

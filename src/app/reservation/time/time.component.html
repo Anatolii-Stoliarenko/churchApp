@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-form-field>
+  <mat-form-field class="full-width">
     <mat-label>From</mat-label>
     <mat-select [(ngModel)]="selectedStartTime" [disabled]="!selectedDay">
       <mat-option *ngFor="let time of availableHours" [value]="time">
@@ -8,7 +8,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field class="full-width">
     <mat-label>To</mat-label>
     <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
       <mat-option *ngFor="let time of availableHours" [value]="time">
@@ -17,7 +17,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field class="full-width">
     <mat-label>Place</mat-label>
     <mat-select
       [(ngModel)]="selectedPlace"
@@ -32,6 +32,7 @@
 
   <button
     mat-raised-button
+    class="full-width"
     [disabled]="!selectedStartTime || !selectedEndTime || !selectedPlace"
     (click)="addReservation()"
   >
