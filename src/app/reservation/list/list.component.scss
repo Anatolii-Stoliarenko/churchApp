@@ -1,16 +1,6 @@
-.mat-table {
-  width: 350px;
-  padding-bottom: 10px;
-}
-
 th.mat-header-cell,
 td.mat-cell {
   padding: 8px;
-}
-
-.mat-elevation-z8 {
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .centered-header {
@@ -29,8 +19,40 @@ td.mat-cell {
   background-color: #ffcdd2; /* Light red */
 }
 
-.inline-calendar-card {
-  width: 400px;
-  margin: 20px 20px 0px 20px;
-  border-radius: 20%;
+#reservation_place {
+  width: 10px;
+  overflow-wrap: break-word;
+}
+
+.pending {
+  background-color: #fff9c4;
+}
+
+.aproved {
+  background-color: #c8e6c9;
+}
+
+.rejected {
+  background-color: #ffcdd2;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.list {
+  display: flex; /* Enables flexbox layout */
+  justify-content: space-between; /* Distributes items with equal space between them */
+  align-items: center; /* Centers items vertically if needed */
+  margin: 5px 15px 5px;
+  background-color: inherit;
+}
+
+li {
+  display: inline-block;
+  font-size: 12px;
 }

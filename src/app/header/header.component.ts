@@ -23,4 +23,11 @@ export class HeaderComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  login(): void {
+    this.router.navigate(['/login']);
+  }
+  register(): void {
+    this.router.navigate(['/register']);
+  }
 }

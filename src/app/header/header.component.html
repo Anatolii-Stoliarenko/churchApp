@@ -9,8 +9,8 @@
     <ng-container
       *ngIf="!(authService.currentUser$ | async); else loggedTemplate"
     >
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
+      <button mat-button (click)="login()">Login</button>
+      <button mat-button (click)="register()">Register</button>
     </ng-container>
 
     <ng-template #loggedTemplate>

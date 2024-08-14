@@ -1,9 +1,5 @@
-.inline-calendar-card {
-  width: 400px;
-  margin: 20px;
-}
-
 p {
+  text-align: center;
   margin-left: 12px;
   font-size: 12px;
 }
@@ -41,14 +37,15 @@ p {
 }
 
 .list {
-  list-style-type: none;
-  padding-left: 12px;
+  display: flex; /* Enables flexbox layout */
+  justify-content: space-between; /* Distributes items with equal space between them */
+  align-items: center; /* Centers items vertically if needed */
+  margin: 10px 15px 0px;
 }
 
-.list li {
+li {
   display: inline-block;
-  margin-right: 20px; /* Space between items */
-  font-size: 12px; /* Reduced text size */
+  font-size: 12px;
 }
 
 .circle {
@@ -69,4 +66,8 @@ p {
 
 .reserved-partial {
   background-color: #f1a5ff;
+}
+
+mat-calendar {
+  width: 100%;
 }

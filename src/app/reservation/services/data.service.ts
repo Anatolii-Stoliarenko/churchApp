@@ -52,6 +52,19 @@ export class DataService {
     },
     {
       id: this.utilsService.generateId(),
+      date: '2024-08-22',
+      startHour: '07:00',
+      endHour: '20:00',
+      place: PlaceType.MALA_KAPLICA,
+      user: {
+        id: '1',
+        name: AdminConfig.NAME,
+        email: ModeratorConfig.EMAIL,
+      },
+      status: ReservationStatus.PENDING,
+    },
+    {
+      id: this.utilsService.generateId(),
       date: '2024-08-29',
       startHour: '09:00',
       endHour: '13:00',

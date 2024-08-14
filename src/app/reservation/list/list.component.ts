@@ -1,14 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
 
 import {
   ReservationModel,
@@ -22,7 +19,7 @@ import { RoleService } from '../../auth/role.service';
 import { AuthService } from '../../auth/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
-import { MatCardModule } from '@angular/material/card';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-list',
@@ -36,6 +33,7 @@ import { MatCardModule } from '@angular/material/card';
     ReservationDetailDialogComponent,
     MatDialogModule,
     MatCardModule,
+    MatMenuModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -135,12 +133,28 @@ export class ListComponent implements OnInit {
     );
   }
 
+  pennding(reservation: ReservationModel): void {
+    this.reservationService.setReservationStatus(
+      reservation,
+      ReservationStatus.PENDING
+    );
+  }
+
   viewDetails(reservation: ReservationModel): void {
     console.log('View details for', reservation);
     this.openDialog(reservation);
   }
 
   delete(reservation: ReservationModel): void {
-    this.reservationService.deleteReservation(reservation);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // User clicked "Delete", proceed with deletion
+        this.reservationService.deleteReservation(reservation);
+      }
+    });
   }
 }

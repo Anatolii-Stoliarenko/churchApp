@@ -14,10 +14,11 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { ReservationService } from '../services/reservation.service';
-import { PlaceType } from '../reservation.model';
+import { PlaceType, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-time',
@@ -35,6 +36,7 @@ import { MatCardModule } from '@angular/material/card';
 export class TimeComponent implements OnInit, OnDestroy, OnChanges {
   selectedDay = '';
   reserveService = inject(ReservationService);
+  authService = inject(AuthService);
   utilService = inject(UtilsService);
   sharedService = inject(SharedService);
   router = inject(Router);
@@ -44,21 +46,30 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
   selectedEndTime: string = '';
   selectedPlace: PlaceType = PlaceType.DUZA_KAPLICA;
   places = Object.values(PlaceType);
+
+  currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
 
   ngOnInit(): void {
     this.initObservables();
     this.updateDataSource();
-  }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach((subscription) => subscription.unsubscribe());
+    this.subscription.push(
+      this.authService.currentUser$.subscribe((user) => {
+        this.currentUser = user;
+        this.updateDataSource();
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedDay']) {
       this.updateDataSource();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
   initObservables(): void {
