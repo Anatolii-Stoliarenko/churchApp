@@ -1,3 +1,5 @@
+@import "../../../styles/variables";
+
 p {
   text-align: center;
   margin-left: 12px;
@@ -7,7 +9,7 @@ p {
 ::ng-deep
   .mat-calendar-body-cell.available-date
   .mat-calendar-body-cell-content {
-  background-color: #ccffcc;
+  background-color: $aproved;
   color: green;
   border-radius: 50%;
 }
@@ -31,7 +33,7 @@ p {
 ::ng-deep
   .mat-calendar-body-cell.selected-date
   .mat-calendar-body-cell-content {
-  background-color: #f6ef14;
+  background-color: $pending;
   color: rgb(31, 32, 23);
   border-radius: 50%;
 }
@@ -57,17 +59,21 @@ li {
 }
 
 .available {
-  background-color: #ccffcc;
+  background-color: $aproved;
 }
 
 .reserved-full {
-  background-color: #ff8888;
+  background-color: $rejected;
 }
 
 .reserved-partial {
   background-color: #f1a5ff;
 }
 
-mat-calendar {
-  width: 100%;
+.card {
+  width: auto;
+}
+
+p {
+  font-weight: bold;
 }

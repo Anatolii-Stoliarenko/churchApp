@@ -17,19 +17,12 @@ import { ReservationService } from '../services/reservation.service';
 import { PlaceType, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
-import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-time',
   standalone: true,
-  imports: [
-    MatSelectModule,
-    MatButtonModule,
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-  ],
+  imports: [MatSelectModule, MatButtonModule, CommonModule, FormsModule],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })

@@ -1,9 +1,24 @@
 .container {
-  width: auto;
+  width: inherit;
   margin: 0 5px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+  grid-template-rows: auto auto;
+  gap: 2%; /* Control spacing between the form fields */
 }
 
-mat-form-field,
+// .forms mat-form-field:nth-child(1),
+// .forms mat-form-field:nth-child(2) {
+//   grid-column: span 1; /* Each field in the first row spans one column */
+// }
+
+mat-form-field:nth-child(3) {
+  grid-column: span 2; /* The third field spans across both columns */
+  width: 100%; /* Ensure the third field takes the full width */
+}
+
 button {
-  width: 100%; /* Ensure each element takes full width */
+  grid-column: span 2; /* The third field spans across both columns */
+  width: 100%; /* Ensure the third field takes the full width */
 }

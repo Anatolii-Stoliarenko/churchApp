@@ -1,0 +1,10 @@
+// Utility classes (e.g., text-center, margin-top)
+::ng-deep .success-snackbar {
+  background-color: #4caf50 !important; /* Green color */
+  color: white; /* Text color */
+}
+
+::ng-deep.error-snackbar {
+  background-color: #fb3636 !important; /* Green color */
+  color: white; /* Text color */
+}

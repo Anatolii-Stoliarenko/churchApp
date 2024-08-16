@@ -1,10 +1,8 @@
+@import "../../../styles/variables";
+
 th.mat-header-cell,
 td.mat-cell {
   padding: 8px;
-}
-
-.centered-header {
-  text-align: center;
 }
 
 .approved-row {
@@ -25,15 +23,15 @@ td.mat-cell {
 }
 
 .pending {
-  background-color: #fff9c4;
+  background-color: $pending;
 }
 
 .aproved {
-  background-color: #c8e6c9;
+  background-color: $aproved;
 }
 
 .rejected {
-  background-color: #ffcdd2;
+  background-color: $rejected;
 }
 
 .circle {
