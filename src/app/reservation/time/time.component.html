@@ -1,8 +1,18 @@
 <div class="container" *ngIf="true">
   <mat-form-field>
     <mat-label>From</mat-label>
-    <mat-select [(ngModel)]="selectedStartTime" [disabled]="!selectedDay">
-      <mat-option *ngFor="let time of availableHours" [value]="time">
+    <mat-select
+      [(ngModel)]="selectedStartTime"
+      (selectionChange)="onStartTimeChange()"
+      [disabled]="!selectedDay"
+    >
+      <mat-option
+        *ngFor="
+          let time of allTemplateHours.slice(0, allTemplateHours.length - 1)
+        "
+        [value]="time"
+        [disabled]="!isHourAvailable(time)"
+      >
         {{ time }}
       </mat-option>
     </mat-select>
@@ -11,7 +21,7 @@
   <mat-form-field>
     <mat-label>To</mat-label>
     <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
-      <mat-option *ngFor="let time of availableHours" [value]="time">
+      <mat-option *ngFor="let time of filteredToHours" [value]="time">
         {{ time }}
       </mat-option>
     </mat-select>

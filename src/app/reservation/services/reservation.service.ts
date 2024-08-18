@@ -202,7 +202,18 @@ export class ReservationService {
       : this.getAvailableHours(date, place, user);
   }
 
-  private getReservedHours(
+  private getAvailableHours(
+    date: string,
+    place?: PlaceType,
+    user?: UserModel
+  ): string[] {
+    const reservedHours = this.getReservedHours(date, place, user);
+    return this.dataService.availableHours.filter(
+      (hour) => !reservedHours.includes(hour)
+    );
+  }
+
+  getReservedHours(
     date: string,
     place?: PlaceType,
     user?: UserModel
@@ -214,23 +225,20 @@ export class ReservationService {
           reservation.place === place &&
           (!user || reservation.user.id === user.id)
       )
-      .flatMap((reservation) =>
-        this.utilsService.getTimeRangeArray(
-          reservation.startHour,
-          reservation.endHour
-        )
-      );
-  }
+      .flatMap((reservation) => {
+        const startIndex = this.dataService.availableHours.indexOf(
+          reservation.startHour as TimeSlot
+        );
+        const endIndex = this.dataService.availableHours.indexOf(
+          reservation.endHour as TimeSlot
+        );
 
-  private getAvailableHours(
-    date: string,
-    place?: PlaceType,
-    user?: UserModel
-  ): string[] {
-    const reservedHours = this.getReservedHours(date, place, user);
-    return this.dataService.availableHours.filter(
-      (hour) => !reservedHours.includes(hour)
-    );
+        if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+          return this.dataService.availableHours.slice(startIndex, endIndex);
+        }
+
+        return [];
+      });
   }
 
   private timeRangesOverlap(
@@ -249,5 +257,9 @@ export class ReservationService {
     return this.dataService.reservations.filter(
       (res) => res.date === selectedDay
     );
+  }
+
+  getAllTemplateHour() {
+    return this.dataService.availableHours;
   }
 }

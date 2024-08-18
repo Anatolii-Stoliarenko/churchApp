@@ -11,10 +11,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 import { ReservationService } from '../services/reservation.service';
-import { PlaceType, UserModel } from '../reservation.model';
+import {
+  PlaceType,
+  ReservationModel,
+  TimeSlot,
+  UserModel,
+} from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
@@ -26,17 +30,18 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })
-export class TimeComponent implements OnInit, OnDestroy, OnChanges {
-  selectedDay = '';
+export class TimeComponent implements OnInit, OnDestroy {
   reserveService = inject(ReservationService);
   authService = inject(AuthService);
   utilService = inject(UtilsService);
   sharedService = inject(SharedService);
-  router = inject(Router);
 
+  selectedDay = '';
   availableHours: string[] = [];
+  allTemplateHours: string[] = this.reserveService.getAllTemplateHour();
   selectedStartTime: string = '';
   selectedEndTime: string = '';
+  filteredToHours: string[] = [];
   selectedPlace: PlaceType = PlaceType.DUZA_KAPLICA;
   places = Object.values(PlaceType);
 
@@ -45,20 +50,7 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.initObservables();
-    this.updateDataSource();
-
-    this.subscription.push(
-      this.authService.currentUser$.subscribe((user) => {
-        this.currentUser = user;
-        this.updateDataSource();
-      })
-    );
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedDay']) {
-      this.updateDataSource();
-    }
+    this.updateAvailableHours();
   }
 
   ngOnDestroy(): void {
@@ -69,48 +61,115 @@ export class TimeComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.push(
       this.sharedService.selectedDay$.subscribe(() => {
         this.selectedDay = this.sharedService.getSelectedDay();
-        this.updateDataSource();
+        this.updateAvailableHours();
       }),
 
       this.sharedService.reservationMade$.subscribe(() => {
-        this.updateDataSource();
+        this.updateAvailableHours();
+      }),
+
+      this.authService.currentUser$.subscribe((user) => {
+        this.currentUser = user;
+        this.updateAvailableHours();
       })
     );
   }
 
-  updateDataSource(): void {
+  onStartTimeChange(): void {
+    if (this.selectedStartTime) {
+      // Get all available hours after the selected start time
+      const startTimeIndex = this.allTemplateHours.indexOf(
+        this.selectedStartTime
+      );
+
+      this.filteredToHours = this.allTemplateHours.slice(startTimeIndex + 1);
+
+      // Get all reserved hours for the selected day and place
+      const reservedHours = this.reserveService.getReservedHours(
+        this.selectedDay,
+        this.selectedPlace
+      );
+
+      if (reservedHours.length > 0) {
+        // Find the first reserved hour that comes after the selected start time
+        const nextReservedHourIndex = this.allTemplateHours.findIndex(
+          (hour) =>
+            reservedHours.includes(hour) &&
+            this.allTemplateHours.indexOf(hour) > startTimeIndex
+        );
+
+        // If there is a reserved hour after the start time, limit the filteredToHours array
+        if (nextReservedHourIndex !== -1) {
+          this.filteredToHours = this.filteredToHours.slice(
+            0,
+            nextReservedHourIndex - startTimeIndex
+          );
+        }
+      }
+    }
+  }
+
+  updateAvailableHours(): void {
     this.availableHours = this.reserveService.getHours(
       this.selectedDay,
       this.selectedPlace
     );
   }
 
+  isHourAvailable(time: string): boolean {
+    return this.availableHours.includes(time);
+  }
+
   onPlaceChange() {
-    this.updateDataSource();
+    this.updateAvailableHours();
+    this.resetComponentState();
   }
 
   resetComponentState(): void {
     this.selectedStartTime = '';
     this.selectedEndTime = '';
-    this.updateDataSource();
+    this.updateAvailableHours();
   }
 
-  addReservation() {
+  createNewReservation() {
     const newReservation = {
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
       place: this.selectedPlace,
     };
-    if (!this.reserveService.hasConflict(newReservation)) {
-      this.resetComponentState();
-      this.reserveService.addReservation(newReservation);
-      this.sharedService.notifyReservationMade();
-      this.updateDataSource();
-      // this.reloadComponent();
+
+    return newReservation;
+  }
+
+  addReservation(): void {
+    const newReservation = this.createNewReservation();
+
+    if (this.isReservationConflictFree(newReservation)) {
+      this.reservation(newReservation);
     } else {
-      this.resetComponentState();
-      this.utilService.snackBarError('Conflict detected! Reservation failed.');
+      this.handleReservationConflict();
     }
+  }
+
+  private isReservationConflictFree(
+    reservation: Omit<ReservationModel, 'user' | 'id'>
+  ): boolean {
+    return !this.reserveService.hasConflict(reservation);
+  }
+
+  private reservation(
+    reservation: Omit<ReservationModel, 'user' | 'id'>
+  ): void {
+    this.reserveService.addReservation(reservation);
+    this.utilService.snackBarSuccess('Reservation created successfully!');
+    this.resetComponentState();
+    this.sharedService.notifyReservationMade();
+    this.updateAvailableHours();
+  }
+
+  private handleReservationConflict(): void {
+    this.utilService.snackBarError('Conflict detected! Reservation failed.');
+    this.resetComponentState();
   }
 }

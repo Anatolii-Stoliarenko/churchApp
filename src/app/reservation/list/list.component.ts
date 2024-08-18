@@ -1,11 +1,13 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import {
   ReservationModel,
@@ -17,7 +19,6 @@ import { TimeComponent } from '../time/time.component';
 import { SharedService } from '../services/shared.service';
 import { RoleService } from '../../auth/role.service';
 import { AuthService } from '../../auth/auth.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
@@ -34,12 +35,17 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
     MatDialogModule,
     MatCardModule,
     MatMenuModule,
+    MatSortModule,
+    MatSort,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit {
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+  dataSource: MatTableDataSource<ReservationModel>;
+
   dialog = inject(MatDialog);
   reservationService = inject(ReservationService);
   roleService = inject(RoleService);
@@ -49,7 +55,7 @@ export class ListComponent implements OnInit {
   currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
 
-  dataSource: ReservationModel[] = [];
+  // dataSource: ReservationModel[] = [];
   displayedColumns: string[] = [
     // 'date',
     'startHour',
@@ -59,7 +65,15 @@ export class ListComponent implements OnInit {
     'actions',
   ];
 
+  constructor() {
+    this.dataSource = new MatTableDataSource<ReservationModel>([]);
+  }
+
   ngOnInit(): void {
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+    });
+
     this.subscription.push(
       this.sharedService.selectedDay$.subscribe(() => {
         this.updateDataSource();
@@ -80,6 +94,12 @@ export class ListComponent implements OnInit {
     );
 
     this.updateDataSource();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    console.log('Sort initialized:', this.sort);
+    console.log('DataSource:', this.dataSource);
   }
 
   ngOnDestroy(): void {
@@ -114,7 +134,7 @@ export class ListComponent implements OnInit {
   updateDataSource(): void {
     const selectedDay = this.sharedService.getSelectedDay();
     if (selectedDay) {
-      this.dataSource =
+      this.dataSource.data =
         this.reservationService.getAllReservationsBySelectedDay(selectedDay);
     }
   }
