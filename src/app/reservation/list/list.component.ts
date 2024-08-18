@@ -86,7 +86,7 @@ export class ListComponent implements OnInit {
     this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
-  openDialog(reservation: ReservationModel) {
+  openDialogDetails(reservation: ReservationModel) {
     this.dialog.open(ReservationDetailDialogComponent, {
       width: '250px',
       data: reservation,
@@ -142,7 +142,7 @@ export class ListComponent implements OnInit {
 
   viewDetails(reservation: ReservationModel): void {
     console.log('View details for', reservation);
-    this.openDialog(reservation);
+    this.openDialogDetails(reservation);
   }
 
   delete(reservation: ReservationModel): void {

@@ -17,10 +17,10 @@ export class ConfirmationDialogComponent {
   constructor(private dialogRef: MatDialogRef<ConfirmationDialogComponent>) {}
 
   onConfirm(): void {
-    this.dialogRef.close(true); // Close the dialog and return true
+    this.dialogRef.close(true);
   }
 
   onCancel(): void {
-    this.dialogRef.close(false); // Close the dialog and return false
+    this.dialogRef.close(false);
   }
 }
