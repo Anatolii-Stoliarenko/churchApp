@@ -10,11 +10,18 @@ import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-time',
   standalone: true,
-  imports: [MatSelectModule, MatButtonModule, CommonModule, FormsModule],
+  imports: [
+    MatSelectModule,
+    MatButtonModule,
+    CommonModule,
+    FormsModule,
+    MatInputModule,
+  ],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })
@@ -32,6 +39,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   filteredToHours: string[] = [];
   selectedPlace: PlaceType = PlaceType.DUZA_KAPLICA;
   places = Object.values(PlaceType);
+  comment = '';
 
   currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
@@ -49,7 +57,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.subscription.push(
       this.sharedService.selectedDay$.subscribe(() => {
         this.selectedDay = this.sharedService.getSelectedDay();
-        this.updateAvailableHours();
+        this.resetComponentState();
       }),
 
       this.sharedService.reservationMade$.subscribe(() => {
@@ -58,7 +66,7 @@ export class TimeComponent implements OnInit, OnDestroy {
 
       this.authService.currentUser$.subscribe((user) => {
         this.currentUser = user;
-        this.updateAvailableHours();
+        this.resetComponentState();
       })
     );
   }
@@ -116,15 +124,17 @@ export class TimeComponent implements OnInit, OnDestroy {
   resetComponentState(): void {
     this.selectedStartTime = '';
     this.selectedEndTime = '';
+    this.comment = '';
     this.updateAvailableHours();
   }
 
   createNewReservation() {
-    const newReservation = {
+    const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
       place: this.selectedPlace,
+      comments: this.comment,
     };
 
     return newReservation;

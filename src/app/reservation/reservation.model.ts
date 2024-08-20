@@ -5,7 +5,7 @@ export interface ReservationModel {
   endHour: string;
   place: PlaceType;
   user: UserModel;
-  comments?: Comment[];
+  comments?: string;
   status?: ReservationStatus; // The status of the reservation (Pending, Approved, Rejected)
   approvalInfo?: ApprovalInfo;
 }
@@ -24,12 +24,6 @@ export interface UserModel {
   email: string;
   phone?: string;
   contactEmail?: string;
-}
-
-export interface Comment {
-  user: string; // Name of the user who made the comment
-  comment: string; // The comment text
-  date: Date; // The date and time the comment was made
 }
 
 export enum ReservationStatus {
