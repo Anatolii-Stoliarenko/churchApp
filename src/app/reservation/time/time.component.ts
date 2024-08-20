@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -13,12 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { ReservationService } from '../services/reservation.service';
-import {
-  PlaceType,
-  ReservationModel,
-  TimeSlot,
-  UserModel,
-} from '../reservation.model';
+import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';

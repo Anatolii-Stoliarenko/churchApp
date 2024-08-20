@@ -1,10 +1,11 @@
-.header {
+header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   margin-bottom: 1rem;
-  background-color: #f8f9fa;
+  // background-color: #f8f9fa;
 }
 
 .logo img {
@@ -22,4 +23,8 @@
 
 .actions span {
   margin-right: 1rem;
+}
+
+span {
+  font-weight: bold;
 }

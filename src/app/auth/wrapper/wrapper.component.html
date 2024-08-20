@@ -1,6 +1,8 @@
-<div class="form-container">
+<div class="form-container login">
   <mat-card>
-    <img src="logo2.png" />
+    <a href="/reservation">
+      <img src="logo2.png" alt="Logo" />
+    </a>
     @if (typeAuthorisation() === 'register'){
     <p class="declaration">Sign Up</p>
     } @else {
@@ -52,7 +54,7 @@
       </mat-form-field>
 
       <button
-        mat-raised-button
+        mat-flat-button
         color="primary"
         type="submit"
         [disabled]="authorisationForm.invalid"

@@ -1,10 +1,10 @@
-<mat-card class="card">
+<mat-card appearance="outlined">
   @if (showCalendar){
-  <ul class="list">
-    <li><span class="circle available"></span> - available</li>
-    <li><span class="circle reserved-partial"></span> - partial</li>
-    <li><span class="circle reserved-full"></span> - full</li>
-  </ul>
+  <!-- <ul class="list">
+      <li><span class="circle available"></span> - available</li>
+      <li><span class="circle reserved-partial"></span> - partial</li>
+      <li><span class="circle reserved-full"></span> - full</li>
+    </ul> -->
   <mat-calendar
     [minDate]="minDate"
     [maxDate]="maxDate"
@@ -16,6 +16,6 @@
   }
 
   <p>
-    <strong>{{ selectedDate | date : "yyyy-MM-dd" }}</strong>
+    <strong> {{ selectedDate | date : "yyyy-MM-dd" }}</strong>
   </p>
 </mat-card>

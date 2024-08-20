@@ -1,4 +1,4 @@
-<div class="container" *ngIf="true">
+<div class="container" *ngIf="selectedDay">
   <mat-form-field>
     <mat-label>From</mat-label>
     <mat-select
@@ -41,7 +41,7 @@
   </mat-form-field>
 
   <button
-    mat-raised-button
+    mat-flat-button
     [disabled]="
       !selectedStartTime || !selectedEndTime || !selectedPlace || !currentUser
     "
