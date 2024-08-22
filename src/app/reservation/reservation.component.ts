@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { CalendarComponent } from './calendar/calendar.component';
 import { ListComponent } from './list/list.component';
 import { HeaderComponent } from '../header/header.component';
-import { RouterOutlet } from '@angular/router';
 import { TimeComponent } from './time/time.component';
-import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-reservation',
@@ -16,7 +15,6 @@ import { MatSelectModule } from '@angular/material/select';
     HeaderComponent,
     RouterOutlet,
     TimeComponent,
-    MatSelectModule,
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',

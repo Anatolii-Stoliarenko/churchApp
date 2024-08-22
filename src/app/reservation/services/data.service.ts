@@ -18,65 +18,65 @@ import { UtilsService } from './utils.service';
 export class DataService {
   utilsService = inject(UtilsService);
 
-  reservations: ReservationModel[] = [
-    {
-      id: this.utilsService.generateId(),
-      date: '2024-08-25',
-      startHour: '09:00',
-      endHour: '10:00',
-      place: PlaceType.BALKON,
-      user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
-      status: ReservationStatus.APPROVED,
-    },
-    {
-      id: this.utilsService.generateId(),
-      date: '2024-08-25',
-      startHour: '09:00',
-      endHour: '10:00',
-      place: PlaceType.KACHETYCZNE,
-      user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
-      status: ReservationStatus.PENDING,
-    },
-    {
-      id: this.utilsService.generateId(),
-      date: '2024-08-22',
-      startHour: '07:00',
-      endHour: '20:00',
-      place: PlaceType.HARCOWKA,
-      user: {
-        id: '2',
-        name: ModeratorConfig.NAME,
-        email: ModeratorConfig.EMAIL,
-      },
-      status: ReservationStatus.REJECTED,
-    },
-    {
-      id: this.utilsService.generateId(),
-      date: '2024-08-22',
-      startHour: '07:00',
-      endHour: '20:00',
-      place: PlaceType.MALA_KAPLICA,
-      user: {
-        id: '1',
-        name: AdminConfig.NAME,
-        email: ModeratorConfig.EMAIL,
-      },
-      status: ReservationStatus.PENDING,
-    },
-    {
-      id: this.utilsService.generateId(),
-      date: '2024-08-29',
-      startHour: '09:00',
-      endHour: '13:00',
-      place: PlaceType.BALKON,
-      user: {
-        id: '3',
-        name: DefaultUserConfig.NAME,
-        email: DefaultUserConfig.EMAIL,
-      },
-      status: ReservationStatus.PENDING,
-    },
-  ];
+  // reservations: ReservationModel[] = [
+  // {
+  //   id: this.utilsService.generateId(),
+  //   date: '2024-08-25',
+  //   startHour: '09:00',
+  //   endHour: '10:00',
+  //   place: PlaceType.BALKON,
+  //   user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
+  //   status: ReservationStatus.APPROVED,
+  // },
+  // {
+  //   id: this.utilsService.generateId(),
+  //   date: '2024-08-29',
+  //   startHour: '09:00',
+  //   endHour: '10:00',
+  //   place: PlaceType.KACHETYCZNE,
+  //   user: { id: '1', name: AdminConfig.NAME, email: AdminConfig.EMAIL },
+  //   status: ReservationStatus.PENDING,
+  // },
+  // {
+  //   id: this.utilsService.generateId(),
+  //   date: '2024-08-27',
+  //   startHour: '07:00',
+  //   endHour: '20:00',
+  //   place: PlaceType.HARCOWKA,
+  //   user: {
+  //     id: '2',
+  //     name: ModeratorConfig.NAME,
+  //     email: ModeratorConfig.EMAIL,
+  //   },
+  //   status: ReservationStatus.PENDING,
+  // },
+  // {
+  //   id: this.utilsService.generateId(),
+  //   date: '2024-08-30',
+  //   startHour: '07:00',
+  //   endHour: '20:00',
+  //   place: PlaceType.MALA_KAPLICA,
+  //   user: {
+  //     id: '1',
+  //     name: AdminConfig.NAME,
+  //     email: ModeratorConfig.EMAIL,
+  //   },
+  //   status: ReservationStatus.PENDING,
+  // },
+  // {
+  //   id: this.utilsService.generateId(),
+  //   date: '2024-08-29',
+  //   startHour: '09:00',
+  //   endHour: '13:00',
+  //   place: PlaceType.BALKON,
+  //   user: {
+  //     id: '3',
+  //     name: DefaultUserConfig.NAME,
+  //     email: DefaultUserConfig.EMAIL,
+  //   },
+  //   status: ReservationStatus.PENDING,
+  // },
+  // ];
 
   availableHours: TimeSlot[] = [
     // '00:00',

@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { UtilsService } from './utils.service';
 import { DataService } from './data.service';
@@ -11,27 +12,87 @@ import {
   UserModel,
 } from '../reservation.model';
 import { RoleService } from '../../auth/role.service';
-import { Subscription } from 'rxjs';
-import { SNACKBAR_CLASSES } from '../../config/snack-bar.config';
 import { SharedService } from './shared.service';
+import { ApiService } from '../../services/api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
+  private reservationsSubject = new BehaviorSubject<ReservationModel[]>([]);
+  reservations$: Observable<ReservationModel[]> =
+    this.reservationsSubject.asObservable();
+
   utilsService = inject(UtilsService);
   sharedService = inject(SharedService);
   dataService = inject(DataService);
   authService = inject(AuthService);
   roleService = inject(RoleService);
+  apiService = inject(ApiService);
+
+  reservations: ReservationModel[] = [];
+
   private currentUserSubscription: Subscription | undefined;
 
   currentUser: UserModel | null = null;
   localStorageKey = 'reservation';
 
   constructor() {
-    this.loadAllReservationsFromLocallStorage();
+    this.loadAllReservationsFromAPI();
     this.loadCurrentUser();
+  }
+
+  // Load reservations from  API
+  loadAllReservationsFromAPI(): void {
+    this.apiService.loadAllReservations().subscribe((reservations) => {
+      if (reservations) {
+        this.reservationsSubject.next(reservations);
+        this.reservations = reservations;
+        console.log('successful download of reservations from the API');
+        this.sharedService.notifyReservationMade();
+        this.reservationsSubject.next(reservations);
+      }
+    });
+  }
+
+  // Save reservations to the API
+  saveReservationsToAPI(): void {
+    this.apiService.saveReservations(this.reservations).subscribe({
+      next: (reservations) => {
+        if (reservations && Array.isArray(reservations)) {
+          this.reservations = reservations;
+          console.log('Reservations saved successfully');
+          this.reservationsSubject.next(reservations);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to save reservations', error);
+      },
+      complete: () => {
+        this.sharedService.notifyReservationMade();
+        console.log('Reservation save process complete');
+      },
+    });
+  }
+
+  // Add reservation to the API
+  addReservationsToAPI(newReservatio: ReservationModel): void {
+    this.apiService.addReservation(newReservatio).subscribe({
+      next: (reservations) => {
+        if (reservations && Array.isArray(reservations)) {
+          this.reservations = reservations;
+          console.log('Reservation added successfully');
+          this.reservationsSubject.next(reservations);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to add reservations', error);
+      },
+      complete: () => {
+        this.sharedService.notifyReservationMade();
+        console.log('Reservation adding process complete');
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -47,7 +108,7 @@ export class ReservationService {
   }
 
   getReservations(): ReservationModel[] {
-    return this.dataService.reservations;
+    return this.reservations;
   }
 
   addReservation(reservation: Omit<ReservationModel, 'user' | 'id'>): void {
@@ -74,26 +135,22 @@ export class ReservationService {
   }
 
   private saveNewReservation(reservation: ReservationModel): void {
-    this.dataService.reservations = [
-      ...this.dataService.reservations,
-      reservation,
-    ];
-    this.saveReservationsInLocallStorage();
+    this.reservations = [...this.reservations, reservation];
+    this.saveReservationsToAPI();
   }
 
   updateReservation(updatedReservation: ReservationModel): void {
-    const found = this.dataService.reservations.some(
+    const found = this.reservations.some(
       (reservation) => reservation.id === updatedReservation.id
     );
 
     if (found) {
-      this.dataService.reservations = this.dataService.reservations.map(
-        (reservation) =>
-          reservation.id === updatedReservation.id
-            ? updatedReservation
-            : reservation
+      this.reservations = this.reservations.map((reservation) =>
+        reservation.id === updatedReservation.id
+          ? updatedReservation
+          : reservation
       );
-      this.saveReservationsInLocallStorage();
+      this.saveReservationsToAPI();
       this.utilsService.snackBarSuccess('Reservation updated successfully!');
     } else {
       this.utilsService.snackBarError('Failed to update reservation!');
@@ -101,13 +158,14 @@ export class ReservationService {
   }
 
   deleteReservation(delitedReservation: ReservationModel): void {
-    const initialLength = this.dataService.reservations.length;
+    const initialLength = this.reservations.length;
 
-    this.dataService.reservations = this.dataService.reservations.filter(
+    this.reservations = this.reservations.filter(
       (reservation) => reservation.id !== delitedReservation.id
     );
-    if (this.dataService.reservations.length < initialLength) {
-      this.saveReservationsInLocallStorage();
+    if (this.reservations.length < initialLength) {
+      // this.saveReservationsInLocallStorage();
+      this.saveReservationsToAPI();
       this.utilsService.snackBarSuccess('Reservation deleted successfully!');
     } else {
       this.utilsService.snackBarError('Failed to delete reservation!');
@@ -123,7 +181,7 @@ export class ReservationService {
   }
 
   private findIndexReservation(reservation: ReservationModel): number {
-    const index = this.dataService.reservations.findIndex(
+    const index = this.reservations.findIndex(
       (res) => res.id === reservation.id
     );
 
@@ -141,8 +199,9 @@ export class ReservationService {
     const index = this.findIndexReservation(reservation);
 
     if (index !== -1) {
-      this.dataService.reservations[index].status = newStatus;
-      this.saveReservationsInLocallStorage();
+      this.reservations[index].status = newStatus;
+      // this.saveReservationsInLocallStorage();
+      this.saveReservationsToAPI();
       this.utilsService.snackBarSuccess(
         'Reservation status saved successfully!'
       );
@@ -151,27 +210,12 @@ export class ReservationService {
     }
   }
 
-  private loadAllReservationsFromLocallStorage(): void {
-    const data = localStorage.getItem(this.localStorageKey);
-    if (data) {
-      this.dataService.reservations = JSON.parse(data);
-    }
-  }
-
-  private saveReservationsInLocallStorage(): void {
-    localStorage.setItem(
-      this.localStorageKey,
-      JSON.stringify(this.dataService.reservations)
-    );
-    this.sharedService.notifyReservationMade();
-  }
-
   // Checking conflicts reservation
   hasConflict(newReservation: Omit<ReservationModel, 'user' | 'id'>): boolean {
     if (newReservation.startHour === newReservation.endHour) {
       return true; // If start and end times are the same, consider it a conflict
     }
-    return this.dataService.reservations.some((existingReservation) => {
+    return this.reservations.some((existingReservation) => {
       return (
         existingReservation.date === newReservation.date &&
         existingReservation.place === newReservation.place &&
@@ -218,7 +262,7 @@ export class ReservationService {
     place?: PlaceType,
     user?: UserModel
   ): string[] {
-    return this.dataService.reservations
+    return this.reservations
       .filter(
         (reservation) =>
           reservation.date === date &&
@@ -254,12 +298,26 @@ export class ReservationService {
   }
 
   getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {
-    return this.dataService.reservations.filter(
-      (res) => res.date === selectedDay
-    );
+    return this.reservations.filter((res) => res.date === selectedDay);
   }
 
   getAllTemplateHour() {
     return this.dataService.availableHours;
+  }
+
+  private loadAllReservationsFromLocallStorage(): void {
+    const data = localStorage.getItem(this.localStorageKey);
+    if (data) {
+      this.reservations = JSON.parse(data);
+    }
+    this.sharedService.notifyReservationMade();
+  }
+
+  private saveReservationsInLocallStorage(): void {
+    localStorage.setItem(
+      this.localStorageKey,
+      JSON.stringify(this.reservations)
+    );
+    this.sharedService.notifyReservationMade();
   }
 }

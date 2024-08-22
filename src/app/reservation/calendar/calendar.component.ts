@@ -3,11 +3,13 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
+  OnInit,
 } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 import { ReservationService } from '../services/reservation.service';
 import { SharedService } from '../services/shared.service';
@@ -19,10 +21,10 @@ import { ReservationModel } from '../reservation.model';
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  imports: [MatCardModule, MatDatepickerModule, DatePipe],
+  imports: [MatCardModule, MatDatepickerModule, DatePipe, CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
   reservationService = inject(ReservationService);
   sharedService = inject(SharedService);
   cdr = inject(ChangeDetectorRef);
@@ -33,8 +35,23 @@ export class CalendarComponent {
   maxDate: Date = new Date();
   currentViewDate: Date = new Date();
 
+  reservations: ReservationModel[] = [];
+  subscription: Subscription | undefined;
+
+  // @Input() reservation: ReservationModel[] = [];
+
+  subscriptions: Subscription[] = [];
+
   ngOnInit(): void {
     this.initMaxDate();
+
+    this.subscription = this.reservationService.reservations$.subscribe(
+      (reservations) => {
+        this.reservations = reservations;
+        this.refreshCalendar();
+        this.cdr.markForCheck();
+      }
+    );
   }
 
   initMaxDate() {
@@ -56,7 +73,7 @@ export class CalendarComponent {
       return '';
     }
 
-    const reservData = this.reservationService.dataService.reservations.map(
+    const reservData = this.reservationService.reservations.map(
       (reservation) => ({
         ...reservation,
         dateString: new Date(reservation.date).toDateString(), //add new property

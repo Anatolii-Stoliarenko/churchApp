@@ -3,9 +3,8 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ReservationComponent } from './reservation/reservation.component';
-import { authGuard } from './auth/auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { ReservationDetailDialogComponent } from './reservation/reservation-detail-dialog/reservation-detail-dialog.component';
+import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'reservation', pathMatch: 'full' }, // Default route redirects to login
@@ -14,10 +13,7 @@ export const routes: Routes = [
   {
     path: 'reservation',
     component: ReservationComponent,
-  },
-  {
-    path: 'detail',
-    component: ReservationDetailDialogComponent,
+    // canActivate: [authGuard],
   },
   { path: '404', component: NotFoundComponent }, // 404 Route
   { path: '**', redirectTo: '/404', pathMatch: 'full' }, // Wildcard Route

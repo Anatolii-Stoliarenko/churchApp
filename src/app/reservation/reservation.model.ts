@@ -6,8 +6,7 @@ export interface ReservationModel {
   place: PlaceType;
   user: UserModel;
   comments?: string;
-  status?: ReservationStatus; // The status of the reservation (Pending, Approved, Rejected)
-  approvalInfo?: ApprovalInfo;
+  status?: ReservationStatus;
 }
 
 export enum PlaceType {
@@ -27,15 +26,8 @@ export interface UserModel {
 }
 
 export enum ReservationStatus {
-  PENDING = 'Pending', // When the reservation is made but not yet reviewed by the admin
-  APPROVED = 'Approved', // When the admin has approved the reservation
-  REJECTED = 'Rejected', // When the admin has rejected the reservation
-}
-
-export interface ApprovalInfo {
-  approvedBy: string; // Name or ID of the admin who approved/rejected the reservation
-  approvalDate: Date; // The date and time when the reservation was approved/rejected
-  comments?: string; // Optional comments from the admin regarding the approval/rejection
+  PENDING = 'Pending', 
+  APPROVED = 'Approved', 
 }
 
 export type TimeSlot =

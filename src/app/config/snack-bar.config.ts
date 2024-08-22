@@ -3,17 +3,23 @@ export enum SNACKBAR_CLASSES {
   ERROR = 'error-snackbar',
 }
 
+export enum SNACKBAR_POSITION {
+  BOTTOM = 'bottom',
+  CENTER = 'center',
+  TOP = 'top',
+}
+
 export const SNACKBAR_CONFIG = {
   success: {
-    duration: 3000,
+    duration: 4000,
     panelClass: [SNACKBAR_CLASSES.SUCCESS],
-    horizontalPosition: 'center',
-    verticalPosition: 'bottom',
+    horizontalPosition: SNACKBAR_POSITION.CENTER,
+    verticalPosition: SNACKBAR_POSITION.BOTTOM,
   },
   error: {
-    duration: 3000,
+    duration: 4000,
     panelClass: [SNACKBAR_CLASSES.ERROR],
-    horizontalPosition: 'center',
-    verticalPosition: 'bottom',
+    horizontalPosition: SNACKBAR_POSITION.CENTER,
+    verticalPosition: SNACKBAR_POSITION.BOTTOM,
   },
 };

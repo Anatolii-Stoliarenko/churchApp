@@ -122,8 +122,6 @@ export class ListComponent implements OnInit {
         return 'approved-row';
       case ReservationStatus.PENDING:
         return 'pending-row';
-      case ReservationStatus.REJECTED:
-        return 'rejected-row';
     }
   }
 
@@ -137,13 +135,6 @@ export class ListComponent implements OnInit {
       this.dataSource.data =
         this.reservationService.getAllReservationsBySelectedDay(selectedDay);
     }
-  }
-
-  reject(reservation: ReservationModel): void {
-    this.reservationService.setReservationStatus(
-      reservation,
-      ReservationStatus.REJECTED
-    );
   }
 
   approve(reservation: ReservationModel): void {
@@ -172,7 +163,6 @@ export class ListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // User clicked "Delete", proceed with deletion
         this.reservationService.deleteReservation(reservation);
       }
     });
