@@ -1,5 +1,5 @@
-import { AuthUserModel } from '../auth/auth.model';
-import { UserRole } from '../auth/user-role.enum';
+import { AuthUserModel, UserRole } from '../auth/auth.model';
+
 import {
   AdminConfig,
   DefaultUserConfig as DefaultUserConfig,

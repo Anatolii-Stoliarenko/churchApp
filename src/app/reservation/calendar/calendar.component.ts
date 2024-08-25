@@ -38,8 +38,6 @@ export class CalendarComponent implements OnInit {
   reservations: ReservationModel[] = [];
   subscription: Subscription | undefined;
 
-  // @Input() reservation: ReservationModel[] = [];
-
   subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
@@ -55,7 +53,23 @@ export class CalendarComponent implements OnInit {
   }
 
   initMaxDate() {
-    this.minDate = new Date(new Date().setHours(0, 0, 0, 0));
+    // this.minDate = new Date(new Date().setHours(0, 0, 0, 0));
+    // this.maxDate.setFullYear(this.maxDate.getFullYear() + 1);
+    const today = new Date();
+
+    // Set minDate to one year before today
+    this.minDate = new Date(
+      today.getFullYear() - 1,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    // Initialize maxDate to today if not already set
+    if (!this.maxDate) {
+      this.maxDate = new Date(today);
+    }
+
+    // Set maxDate to one year from today
     this.maxDate.setFullYear(this.maxDate.getFullYear() + 1);
   }
 

@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 // import * as bcrypt from 'bcryptjs';
 
 import { UtilsService } from '../reservation/services/utils.service';
-import { AuthUserModel } from './auth.model';
+import { AuthUserModel, UserRole } from './auth.model';
 import { DefaultUsers } from '../config/default-users';
-import { UserRole } from './user-role.enum';
 
 @Injectable({
   providedIn: 'root',

@@ -10,13 +10,14 @@
 }
 
 mat-form-field:nth-child(3) {
-  grid-column: span 2; /* The third field spans across both columns */
+  grid-column: span 1; /* The third field spans across both columns */
   width: 100%; /* Ensure the third field takes the full width */
 }
 
-mat-form-field:nth-child(4) {
+mat-form-field:nth-child(5) {
   grid-column: span 2; /* The third field spans across both columns */
   width: 100%; /* Ensure the third field takes the full width */
+  margin-bottom: 15px;
 }
 
 button {

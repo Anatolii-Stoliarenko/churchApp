@@ -70,9 +70,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.dataSource.sort = this.sort;
-    });
+    this.dataSource.sort = this.sort;
 
     this.subscription.push(
       this.sharedService.selectedDay$.subscribe(() => {
@@ -138,17 +136,27 @@ export class ListComponent implements OnInit {
   }
 
   approve(reservation: ReservationModel): void {
-    this.reservationService.setReservationStatus(
-      reservation,
-      ReservationStatus.APPROVED
-    );
+    const id = reservation.id;
+    if (!id) {
+      console.error('Reservation ID is undefined');
+      return;
+    }
+    const partialUpdate = {
+      status: ReservationStatus.APPROVED,
+    };
+    this.reservationService.updateReservation(id, partialUpdate);
   }
 
   pennding(reservation: ReservationModel): void {
-    this.reservationService.setReservationStatus(
-      reservation,
-      ReservationStatus.PENDING
-    );
+    const id = reservation.id;
+    if (!id) {
+      console.error('Reservation ID is undefined');
+      return;
+    }
+    const partialUpdate = {
+      status: ReservationStatus.PENDING,
+    };
+    this.reservationService.updateReservation(id, partialUpdate);
   }
 
   viewDetails(reservation: ReservationModel): void {
@@ -163,7 +171,7 @@ export class ListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.reservationService.deleteReservation(reservation);
+        this.reservationService.deleteReservation(reservation.id);
       }
     });
   }

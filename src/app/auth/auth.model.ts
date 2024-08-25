@@ -1,5 +1,3 @@
-import { UserRole } from './user-role.enum';
-
 export type AuthMode = 'register' | 'login';
 
 export interface AuthUserModel {
@@ -10,3 +8,8 @@ export interface AuthUserModel {
   role?: UserRole;
 }
 
+export enum UserRole {
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  USER = 'user',
+}

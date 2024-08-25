@@ -1,4 +1,9 @@
-<div class="container" *ngIf="selectedDay && currentUser">
+<div
+  class="container"
+  *ngIf="
+    selectedDay && currentUser && sharedService.isSelectedDayTodayOrFuture()
+  "
+>
   <mat-form-field>
     <mat-label>From</mat-label>
     <mat-select
@@ -41,14 +46,40 @@
   </mat-form-field>
 
   <mat-form-field>
+    <mat-label>Repeat</mat-label>
+    <mat-select [(ngModel)]="selectedWeek">
+      <mat-option *ngFor="let week of weekOptions" [value]="week">
+        {{ week }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
     <mat-label>Comment</mat-label>
-    <textarea matInput [(ngModel)]="comment" maxlength="250"></textarea>
+    <textarea
+      matInput
+      [(ngModel)]="comment"
+      maxlength="250"
+      minlength="10"
+      #commentInput="ngModel"
+      required
+    ></textarea>
+    <mat-hint align="start">Minimum 10 characters</mat-hint>
+    <mat-hint align="end">{{ comment.length || 0 }} / 250</mat-hint>
+
+    <mat-error *ngIf="commentInput.invalid && commentInput.touched">
+      Comment must be at least 10 characters long.
+    </mat-error>
   </mat-form-field>
 
   <button
     mat-flat-button
     [disabled]="
-      !selectedStartTime || !selectedEndTime || !selectedPlace || !currentUser
+      !selectedStartTime ||
+      !selectedEndTime ||
+      !selectedPlace ||
+      !currentUser ||
+      commentInput.invalid
     "
     (click)="addReservation()"
   >

@@ -20,7 +20,7 @@ export class UtilsService {
   private showSnackBar(
     message: string,
     panelClass: string,
-    duration: number = 3000
+    duration: number = 5000
   ): void {
     this.snackBar.open(message, 'Close', {
       duration: duration,
@@ -33,6 +33,4 @@ export class UtilsService {
   generateId(): string {
     return Math.random().toString(36) + Date.now().toString(36);
   }
-
-
 }

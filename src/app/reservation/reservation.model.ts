@@ -26,8 +26,12 @@ export interface UserModel {
 }
 
 export enum ReservationStatus {
-  PENDING = 'Pending', 
-  APPROVED = 'Approved', 
+  PENDING = 'Pending',
+  APPROVED = 'Approved',
+}
+
+export interface ApiResponse {
+  message: string;
 }
 
 export type TimeSlot =

@@ -4,13 +4,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
 
 import { ReservationService } from '../services/reservation.service';
 import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-time',
@@ -31,6 +31,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   utilService = inject(UtilsService);
   sharedService = inject(SharedService);
 
+  // selectedPlaces: PlaceType[] = [];
   selectedDay = '';
   availableHours: string[] = [];
   allTemplateHours: string[] = this.reserveService.getAllTemplateHour();
@@ -40,20 +41,24 @@ export class TimeComponent implements OnInit, OnDestroy {
   selectedPlace: PlaceType = PlaceType.DUZA_KAPLICA;
   places = Object.values(PlaceType);
   comment = '';
+  weekOptions = Array.from(
+    { length: 12 },
+    (_, i) => `${i + 1} week${i + 1 > 1 ? 's' : ''}`
+  );
+  selectedWeek: string = ''; // This will hold the selected value
 
   currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
 
   ngOnInit(): void {
-    this.initObservables();
-    this.updateAvailableHours();
+    this.initValues();
   }
 
   ngOnDestroy(): void {
     this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
-  initObservables(): void {
+  initValues(): void {
     this.subscription.push(
       this.sharedService.selectedDay$.subscribe(() => {
         this.selectedDay = this.sharedService.getSelectedDay();
@@ -69,6 +74,8 @@ export class TimeComponent implements OnInit, OnDestroy {
         this.resetComponentState();
       })
     );
+
+    this.updateAvailableHours();
   }
 
   onStartTimeChange(): void {
@@ -105,13 +112,6 @@ export class TimeComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateAvailableHours(): void {
-    this.availableHours = this.reserveService.getHours(
-      this.selectedDay,
-      this.selectedPlace
-    );
-  }
-
   isHourAvailable(time: string): boolean {
     return this.availableHours.includes(time);
   }
@@ -121,33 +121,23 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.resetComponentState();
   }
 
-  resetComponentState(): void {
-    this.selectedStartTime = '';
-    this.selectedEndTime = '';
-    this.comment = '';
-    this.updateAvailableHours();
+  addReservation(): void {
+    const newReservation: Omit<ReservationModel, 'user' | 'id'> =
+      this.createNewReservation();
+
+    this.isReservationConflictFree(newReservation)
+      ? this.reservation(newReservation)
+      : this.handleReservationConflict();
   }
 
-  createNewReservation() {
-    const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
+  private createNewReservation() {
+    return {
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
       place: this.selectedPlace,
       comments: this.comment,
     };
-
-    return newReservation;
-  }
-
-  addReservation(): void {
-    const newReservation = this.createNewReservation();
-
-    if (this.isReservationConflictFree(newReservation)) {
-      this.reservation(newReservation);
-    } else {
-      this.handleReservationConflict();
-    }
   }
 
   private isReservationConflictFree(
@@ -159,15 +149,26 @@ export class TimeComponent implements OnInit, OnDestroy {
   private reservation(
     reservation: Omit<ReservationModel, 'user' | 'id'>
   ): void {
-    this.reserveService.addReservation(reservation);
-    this.utilService.snackBarSuccess('Reservation created successfully!');
+    this.reserveService.addReservations(reservation);
     this.resetComponentState();
-    this.sharedService.notifyReservationMade();
-    this.updateAvailableHours();
   }
 
   private handleReservationConflict(): void {
     this.utilService.snackBarError('Conflict detected! Reservation failed.');
     this.resetComponentState();
+  }
+
+  private resetComponentState(): void {
+    this.selectedStartTime = '';
+    this.selectedEndTime = '';
+    this.comment = '';
+    this.updateAvailableHours();
+  }
+
+  private updateAvailableHours(): void {
+    this.availableHours = this.reserveService.getHours(
+      this.selectedDay,
+      this.selectedPlace
+    );
   }
 }

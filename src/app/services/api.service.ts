@@ -2,7 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ReservationModel } from '../reservation/reservation.model';
+import {
+  ApiResponse,
+  ReservationModel,
+} from '../reservation/reservation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,39 +16,24 @@ export class ApiService {
   // private apiUrl = 'http://localhost:3000';
   private apiUrl = 'https://reservation-api-gamma.vercel.app';
 
-  // Load all reservations
-  loadAllReservations(): Observable<ReservationModel[]> {
+  getAllReservations(): Observable<ReservationModel[]> {
     return this.http.get<ReservationModel[]>(this.apiUrl + '/reservations');
   }
 
-  saveReservations(
-    reservations: ReservationModel[]
-  ): Observable<ReservationModel[]> {
-    return this.http.post<ReservationModel[]>(
-      this.apiUrl + '/reservations/save',
-      reservations
-    );
-  }
-
-  // Add a new reservation
-  addReservation(
-    reservation: ReservationModel
-  ): Observable<ReservationModel[]> {
-    return this.http.post<ReservationModel[]>(
+  addNewReservation(reservation: ReservationModel): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
       this.apiUrl + '/reservations',
       reservation
     );
   }
 
-  // Delete a reservation
-  deleteReservation(id: string): Observable<void> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<void>(url);
+  deleteReservation(id: string): Observable<ApiResponse> {
+    const url = `${this.apiUrl}/reservations/${id}`;
+    return this.http.delete<ApiResponse>(url);
   }
 
-  // Update an existing reservation
-  updateReservation(reservation: ReservationModel): Observable<void> {
-    const url = `${this.apiUrl}/${reservation.id}`;
-    return this.http.put<void>(url, reservation);
+  updateReservation(id: string, partialUpdate: any): Observable<ApiResponse> {
+    const url = `${this.apiUrl}/reservations/${id}`;
+    return this.http.patch<ApiResponse>(url, partialUpdate);
   }
 }
