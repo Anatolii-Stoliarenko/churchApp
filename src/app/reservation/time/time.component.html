@@ -4,6 +4,7 @@
     selectedDay && currentUser && sharedService.isSelectedDayTodayOrFuture()
   "
 >
+  <!-- From -->
   <mat-form-field>
     <mat-label>From</mat-label>
     <mat-select
@@ -23,6 +24,7 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- To -->
   <mat-form-field>
     <mat-label>To</mat-label>
     <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
@@ -32,6 +34,7 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Places -->
   <mat-form-field>
     <mat-label>Place</mat-label>
     <mat-select
@@ -45,15 +48,17 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Repeat -->
   <mat-form-field>
     <mat-label>Repeat</mat-label>
-    <mat-select [(ngModel)]="selectedWeek">
+    <mat-select [(ngModel)]="selectedWeek" [disabled]="userRole != 'admin'">
       <mat-option *ngFor="let week of weekOptions" [value]="week">
         {{ week }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
+  <!-- Comment -->
   <mat-form-field>
     <mat-label>Comment</mat-label>
     <textarea
@@ -72,6 +77,7 @@
     </mat-error>
   </mat-form-field>
 
+  <!-- Button -->
   <button
     mat-flat-button
     [disabled]="

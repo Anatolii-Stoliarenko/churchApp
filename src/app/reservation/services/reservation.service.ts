@@ -13,6 +13,8 @@ import {
 } from '../reservation.model';
 import { SharedService } from './shared.service';
 import { ApiService } from '../../services/api.service';
+import { RoleService } from '../../auth/role.service';
+import { UserRole } from '../../auth/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,28 +29,36 @@ export class ReservationService {
   dataService = inject(DataService);
   authService = inject(AuthService);
   apiService = inject(ApiService);
+  roleService = inject(RoleService);
 
   reservations: ReservationModel[] = [];
 
-  private currentUserSubscription: Subscription | undefined;
+  Subscription: Subscription[] = [];
 
   currentUser: UserModel | null = null;
   localStorageKey = 'reservation';
+  userRole: UserRole | null | undefined;
 
   constructor() {
+    this.initValues();
     this.loadReservations();
-    this.loadCurrentUser();
   }
 
   ngOnDestroy(): void {
-    this.currentUserSubscription?.unsubscribe();
+    this.Subscription.forEach((sub) => sub.unsubscribe());
   }
 
-  private loadCurrentUser(): void {
-    this.currentUserSubscription = this.authService.currentUser$.subscribe(
-      (user) => {
+  private initValues(): void {
+    this.Subscription.push(
+      this.authService.currentUser$.subscribe((user) => {
         this.currentUser = user;
-      }
+      })
+    );
+
+    this.Subscription.push(
+      this.roleService.currentUserRole$.subscribe((role) => {
+        this.userRole = role;
+      })
     );
   }
 
@@ -129,7 +139,10 @@ export class ReservationService {
       ...reservation,
       id: this.utilsService.generateId(),
       user: this.currentUser!,
-      status: ReservationStatus.PENDING,
+      status:
+        this.userRole === UserRole.ADMIN
+          ? ReservationStatus.APPROVED
+          : ReservationStatus.PENDING,
     };
   }
 
@@ -156,6 +169,18 @@ export class ReservationService {
           )
       );
     });
+  }
+
+  private timeRangesOverlap(
+    start1: string,
+    end1: string,
+    start2: string,
+    end2: string
+  ): boolean {
+    return (
+      (start1 <= start2 && end1 > start2) || // Case 1: New start within existing range
+      (start2 <= start1 && end2 > start1) // Case 2: Existing start within new range
+    );
   }
 
   getHours(
@@ -206,18 +231,6 @@ export class ReservationService {
 
         return [];
       });
-  }
-
-  private timeRangesOverlap(
-    start1: string,
-    end1: string,
-    start2: string,
-    end2: string
-  ): boolean {
-    return (
-      (start1 <= start2 && end1 > start2) || // Case 1: New start within existing range
-      (start2 <= start1 && end2 > start1) // Case 2: Existing start within new range
-    );
   }
 
   getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {

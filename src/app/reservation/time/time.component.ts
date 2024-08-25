@@ -11,6 +11,8 @@ import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
+import { UserRole } from '../../auth/auth.model';
+import { RoleService } from '../../auth/role.service';
 
 @Component({
   selector: 'app-time',
@@ -30,6 +32,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   utilService = inject(UtilsService);
   sharedService = inject(SharedService);
+  roleService = inject(RoleService);
 
   // selectedPlaces: PlaceType[] = [];
   selectedDay = '';
@@ -49,6 +52,7 @@ export class TimeComponent implements OnInit, OnDestroy {
 
   currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
+  userRole: UserRole | null | undefined;
 
   ngOnInit(): void {
     this.initValues();
@@ -72,6 +76,10 @@ export class TimeComponent implements OnInit, OnDestroy {
       this.authService.currentUser$.subscribe((user) => {
         this.currentUser = user;
         this.resetComponentState();
+      }),
+
+      this.roleService.currentUserRole$.subscribe((role) => {
+        this.userRole = role;
       })
     );
 
@@ -121,13 +129,35 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.resetComponentState();
   }
 
-  addReservation(): void {
-    const newReservation: Omit<ReservationModel, 'user' | 'id'> =
-      this.createNewReservation();
+  async addReservation(): Promise<void> {
+    const repeatInterval = this.getWeekInterval();
+    let currentDate = new Date(this.selectedDay);
 
-    this.isReservationConflictFree(newReservation)
-      ? this.reservation(newReservation)
-      : this.handleReservationConflict();
+    for (let i = 0; i < repeatInterval; i++) {
+      const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
+        ...this.createNewReservation(),
+        date: currentDate.toISOString().split('T')[0],
+      };
+
+      if (this.isReservationConflictFree(newReservation)) {
+        try {
+          await this.reservation(newReservation); // Wait for each reservation to complete
+        } catch (error) {
+          this.utilService.snackBarError('Reservation failed.');
+          console.error('Reservation error:', error);
+          break; // Stop the loop if an error occurs
+        }
+      } else {
+        this.handleReservationConflict();
+        break; // Stop if there's a conflict
+      }
+
+      currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
+    }
+  }
+
+  private getWeekInterval(): number {
+    return parseInt(this.selectedWeek.split(' ')[0], 10) || 1; // Default to 1 if no repeat interval is selected
   }
 
   private createNewReservation() {
@@ -150,7 +180,6 @@ export class TimeComponent implements OnInit, OnDestroy {
     reservation: Omit<ReservationModel, 'user' | 'id'>
   ): void {
     this.reserveService.addReservations(reservation);
-    this.resetComponentState();
   }
 
   private handleReservationConflict(): void {
