@@ -1,4 +1,4 @@
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -10,7 +10,7 @@ import {
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
-import { ReservationModel, UserModel } from '../reservation.model';
+import { ReservationModel } from '../reservation.model';
 
 @Component({
   selector: 'app-reservation-detail-dialog',
@@ -28,9 +28,13 @@ import { ReservationModel, UserModel } from '../reservation.model';
 })
 export class ReservationDetailDialogComponent {
   dialogRef = inject(MatDialogRef<ReservationDetailDialogComponent>);
-  reservation: ReservationModel = inject(MAT_DIALOG_DATA);
+  reservation: any = inject(MAT_DIALOG_DATA);
 
-  closeDialog() {
-    this.dialogRef.close();
+  onConfirm(): void {
+    this.dialogRef.close(true);
+  }
+
+  onCancel(): void {
+    this.dialogRef.close(false);
   }
 }

@@ -3,16 +3,23 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { repeat, Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ReservationService } from '../services/reservation.service';
-import { PlaceType, ReservationModel, UserModel } from '../reservation.model';
+import {
+  PlaceType,
+  ReservationModel,
+  ReservationStatus,
+  UserModel,
+} from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
 import { UserRole } from '../../auth/auth.model';
 import { RoleService } from '../../auth/role.service';
+import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
 
 @Component({
   selector: 'app-time',
@@ -53,6 +60,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   currentUser: UserModel | null = null;
   subscription: Subscription[] = [];
   userRole: UserRole | null | undefined;
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.initValues();
@@ -84,6 +92,29 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
 
     this.updateAvailableHours();
+  }
+
+  openConfirmDialogDetails() {
+    const confirmReservation = {
+      ...this.createNewReservation(),
+      status:
+        this.userRole === UserRole.ADMIN
+          ? ReservationStatus.APPROVED
+          : ReservationStatus.PENDING,
+      user: this.currentUser,
+      repeat: this.selectedWeek,
+      caller: 'reserve',
+    };
+    const dialogRef = this.dialog.open(ReservationDetailDialogComponent, {
+      width: '250px',
+      data: confirmReservation,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.addReservation();
+      }
+    });
   }
 
   onStartTimeChange(): void {
@@ -154,6 +185,7 @@ export class TimeComponent implements OnInit, OnDestroy {
 
       currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
     }
+    this.resetComponentState();
   }
 
   private getWeekInterval(): number {
@@ -191,6 +223,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.selectedStartTime = '';
     this.selectedEndTime = '';
     this.comment = '';
+    this.selectedWeek = '';
     this.updateAvailableHours();
   }
 

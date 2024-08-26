@@ -11,21 +11,32 @@
     <p><strong>Reservator:</strong> {{ reservation.user.name }}</p>
     <p><strong>Contact:</strong> ({{ reservation.user.email }})</p>
     <p><strong>Status:</strong> {{ reservation.status || "Pending" }}</p>
-    <p *ngIf="reservation.comments?.length ? true : false">
+    <p *ngIf="reservation.comments?.length ? true : false" class="comments">
       <strong>Comment:</strong> {{ reservation.comments }}
     </p>
 
-    <!-- <div *ngIf="reservation.comments && reservation.comments.length > 0">
-      <h6>Comments:</h6>
-      <ul>
-        <li *ngFor="let comment of reservation.comments">
-          {{ comment }}
-        </li>
-      </ul>
-    </div> -->
-  </div>
+    <ng-container
+      class="reservation-actions"
+      *ngIf="
+        reservation.caller && reservation.caller.length > 0;
+        else closeOnly
+      "
+    >
+      <p *ngIf="reservation.repeat ? true : false">
+        <strong>Repeat:</strong> ({{ reservation.repeat }})
+      </p>
+      <div mat-dialog-actions>
+        <button mat-flat-button (click)="onCancel()">Close</button>
+        <button mat-button color="warn" (click)="onConfirm()">Reserve</button>
+      </div>
+    </ng-container>
 
-  <div class="reservation-actions">
-    <button mat-button color="primary" (click)="closeDialog()">Close</button>
+    <ng-template #closeOnly>
+      <div class="reservation-actions">
+        <button mat-flat-button color="primary" (click)="onCancel()">
+          Close
+        </button>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -1,6 +1,6 @@
 .reservation-detail {
   border: 1px solid #ddd;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   background-color: #f9f9f9;
 }
@@ -29,6 +29,7 @@ h6 {
 .reservation-actions {
   display: flex;
   justify-content: right; /* Centers the button horizontally */
+  margin-top: 25px;
 }
 
 button {
@@ -37,4 +38,12 @@ button {
 
 strong {
   font-weight: bold;
+}
+
+.comments {
+  word-wrap: break-word;
+}
+
+p:last-child {
+  margin-bottom: 50px;
 }
