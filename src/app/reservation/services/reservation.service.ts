@@ -71,7 +71,10 @@ export class ReservationService {
       next: (response) => {
         this.reservations = response;
         this.reservationsSubject.next(response);
-        console.log('successful download of reservations from the API');
+        console.log(
+          '%csuccessful download reservations from API',
+          'color: green; font-weight: bold;'
+        );
       },
       error: (error) => {
         console.error('Failed to load reservations', error);
