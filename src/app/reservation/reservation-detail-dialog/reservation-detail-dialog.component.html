@@ -8,8 +8,12 @@
       {{ reservation.endHour }}
     </p>
     <p><strong>Place:</strong> {{ reservation.place }}</p>
-    <p><strong>Reservator:</strong> {{ reservation.user.name }}</p>
-    <p><strong>Contact:</strong> ({{ reservation.user.email }})</p>
+    <p>
+      <strong class="comments">Reservator:</strong> {{ reservation.user.name }}
+    </p>
+    <p>
+      <strong class="comments">Contact:</strong> ({{ reservation.user.email }})
+    </p>
     <p><strong>Status:</strong> {{ reservation.status || "Pending" }}</p>
     <p *ngIf="reservation.comments?.length ? true : false" class="comments">
       <strong>Comment:</strong> {{ reservation.comments }}

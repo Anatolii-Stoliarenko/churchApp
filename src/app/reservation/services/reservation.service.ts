@@ -75,7 +75,7 @@ export class ReservationService {
       },
       error: (error) => {
         console.error('Failed to load reservations', error);
-        this.utilsService.snackBarError(error.message);
+        this.utilsService.snackBarError('Failed to load reservations');
       },
       complete: () => {
         this.sharedService.notifyReservationMade();
@@ -92,7 +92,7 @@ export class ReservationService {
       },
       error: (error) => {
         console.error('Failed to add reservation', error);
-        this.utilsService.snackBarError(error.message);
+        this.utilsService.snackBarError('Failed to add reservation');
       },
       complete: () => {
         this.loadReservations();
@@ -108,7 +108,7 @@ export class ReservationService {
       },
       error: (error) => {
         console.error('Failed to update reservation', error);
-        this.utilsService.snackBarError(error.message);
+        this.utilsService.snackBarError('Failed to update reservation');
       },
       complete: () => {
         this.loadReservations();
@@ -124,7 +124,7 @@ export class ReservationService {
       },
       error: (error) => {
         console.error('Failed to delete reservation', error);
-        this.utilsService.snackBarError(error.message);
+        this.utilsService.snackBarError('Failed to delete reservation');
       },
       complete: () => {
         this.loadReservations();

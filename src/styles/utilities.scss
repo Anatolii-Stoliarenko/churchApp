@@ -1,10 +1,16 @@
-// Utility classes (e.g., text-center, margin-top)
-::ng-deep .success-snackbar {
-  background-color: #4caf50 !important; /* Green color */
-  color: white; /* Text color */
+//snack-bar
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #4caf50;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
 }
 
-::ng-deep.error-snackbar {
-  background-color: #fb3636 !important; /* Green color */
-  color: white; /* Text color */
+.mat-mdc-snack-bar-container {
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #fb3636;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
 }
