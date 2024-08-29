@@ -4,8 +4,11 @@ import { Observable } from 'rxjs';
 
 import {
   ApiResponse,
+  CreateReservationModel,
   ReservationModel,
+  ResponseReservationModel,
 } from '../reservation/reservation.model';
+import { LoginResponse, User } from '../auth/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,27 +16,41 @@ import {
 export class ApiService {
   private http = inject(HttpClient);
 
-  // private apiUrl = 'http://localhost:3000';
-  private apiUrl = 'https://reservation-api-gamma.vercel.app';
+  private apiUrl = 'http://localhost:3000';
+  // private apiUrl = 'https://reservation-api-gamma.vercel.app';
 
-  getAllReservations(): Observable<ReservationModel[]> {
-    return this.http.get<ReservationModel[]>(this.apiUrl + '/reservations');
+  private reservationsUrl = this.apiUrl + '/reservations';
+  private registerUrl = this.apiUrl + '/register';
+  private loginUrl = this.apiUrl + '/login';
+
+  //Register
+  register(user: User): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.registerUrl, user);
   }
 
-  addNewReservation(reservation: ReservationModel): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(
-      this.apiUrl + '/reservations',
-      reservation
-    );
+  //login
+  login(user: User): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.loginUrl, user);
+  }
+
+  //Reservations
+  getAllReservations(): Observable<ResponseReservationModel> {
+    return this.http.get<ResponseReservationModel>(this.reservationsUrl);
+  }
+
+  addNewReservation(
+    reservation: CreateReservationModel
+  ): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.reservationsUrl, reservation);
   }
 
   deleteReservation(id: string): Observable<ApiResponse> {
-    const url = `${this.apiUrl}/reservations/${id}`;
+    const url = `${this.reservationsUrl}/${id}`;
     return this.http.delete<ApiResponse>(url);
   }
 
   updateReservation(id: string, partialUpdate: any): Observable<ApiResponse> {
-    const url = `${this.apiUrl}/reservations/${id}`;
+    const url = `${this.reservationsUrl}/${id}`;
     return this.http.patch<ApiResponse>(url, partialUpdate);
   }
 }

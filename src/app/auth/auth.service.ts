@@ -1,128 +1,95 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-// import * as bcrypt from 'bcryptjs';
 
 import { UtilsService } from '../reservation/services/utils.service';
-import { AuthUserModel, UserRole } from './auth.model';
-import { DefaultUsers } from '../config/default-users';
+import { User } from './auth.model';
+import { ApiService } from '../services/api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<AuthUserModel | null>(null);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   utilsService = inject(UtilsService);
+  api = inject(ApiService);
   router = inject(Router);
 
-  private users: AuthUserModel[] = DefaultUsers;
-
   constructor() {
-    this.loadUsersFromLocalStorage();
-    this.getLoggedInUserFromAsObservable();
+    this.loadCurrentUseFromLocalStorage();
   }
 
-  register(data: AuthUserModel): void {
-    if (this.isEmailTaken(data.email)) {
-      this.utilsService.snackBarError(
-        'Registration failed. Email already exists.'
-      );
-      return;
-    }
-
-    const newUser = this.createNewUser(data);
-
-    this.saveUser(newUser);
-    this.saveLoggedInUserToLocalStorage(newUser);
-    this.utilsService.snackBarSuccess('Registration successful!');
-    this.router.navigate(['/reservation']);
-  }
-
-  login(data: Omit<AuthUserModel, 'name'>): void {
-    const user = this.findUserByEmailAndPassword(data.email, data.password);
-    if (!user) {
-      this.utilsService.snackBarError(
-        'Login failed. Invalid email or password.'
-      );
-      return;
-    }
-    this.saveLoggedInUserToLocalStorage(user);
-    this.utilsService.snackBarSuccess('Login successful!');
-    this.router.navigate(['/reservation']);
-  }
-
-  logout(): void {
-    this.clearLoggedInUserFromLocalStorage();
-  }
-
-  private saveUsersToLocallStorage(): void {
-    localStorage.setItem('users', JSON.stringify(this.users));
-  }
-
-  private createNewUser(data: AuthUserModel): AuthUserModel {
-    const newUser: AuthUserModel = {
-      id: this.utilsService.generateId(),
-      name: data.name,
-      email: data.email,
-      password: data.password, //:hashedPassword
-      role: UserRole.USER,
-    };
-
-    return newUser;
-  }
-
-  private saveUser(newUser: AuthUserModel): void {
-    this.users.push(newUser);
-    this.saveLoggedInUserToLocalStorage(newUser);
-  }
-
-  private isEmailTaken(email: string): boolean {
-    return this.users.some((user) => user.email === email);
-  }
-
-  private findUserByEmailAndPassword(
-    email: string,
-    password: string
-  ): AuthUserModel | null {
-    return (
-      this.users.find(
-        (user) => user.email === email && user.password === password
-      ) || null
-    );
-  }
-
-  private loadUsersFromLocalStorage() {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      let storedUsers = JSON.parse(savedUsers);
-      if (Array.isArray(storedUsers)) {
-        this.users.push(...storedUsers);
-      }
-    }
-  }
-
-  private clearLoggedInUserFromLocalStorage(): void {
-    localStorage.removeItem('loggedInUser');
-    this.currentUserSubject.next(null);
-  }
-
-  private saveLoggedInUserToLocalStorage(user: AuthUserModel): void {
-    localStorage.setItem('loggedInUser', JSON.stringify(user));
-    this.getLoggedInUserFromAsObservable();
-  }
-
-  private getLoggedInUserFromAsObservable(): void {
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    if (loggedInUser) {
-      const user = JSON.parse(loggedInUser) as AuthUserModel;
-      this.currentUserSubject.next(user);
+  loadCurrentUseFromLocalStorage(): void {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
     }
   }
 
   isLoggedIn(): boolean {
-    const loggedInUser = localStorage.getItem('loggedInUser');
+    const loggedInUser = localStorage.getItem('currentUser');
     return !!loggedInUser; // Return true if user is logged in, false otherwise
+  }
+
+  // Method to update the current user
+  setCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  logout(): void {
+    const currentUser = this.currentUserSubject.getValue();
+    this.utilsService.greenConsole(
+      `${currentUser ? currentUser.name : ''} successfully logged out`
+    );
+
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('currentUser');
+  }
+
+  login(data: User): void {
+    const user: User = {
+      email: data.email,
+      password: data.password,
+    };
+    this.api.login(user).subscribe({
+      next: (response) => {
+        this.setCurrentUser(response.user);
+        this.utilsService.greenConsole(
+          response.user.name + ' successfully logged'
+        );
+        this.utilsService.snackBarSuccess(`${response.message}`);
+      },
+      error: (error) => {
+        console.error('Failed to login', error);
+        this.utilsService.snackBarError('Failed to login');
+      },
+      complete: () => {
+        this.router.navigate(['/reservation']);
+      },
+    });
+  }
+
+  register(data: User): void {
+    const user: User = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+    this.api.register(user).subscribe({
+      next: (response) => {
+        this.utilsService.snackBarSuccess(`${response.message}`);
+        this.utilsService.greenConsole(`${user.name} successfully registered`);
+      },
+      error: (error) => {
+        console.error('Failed to register', error);
+        this.utilsService.snackBarError('Failed to register');
+      },
+      complete: () => {
+        this.router.navigate(['/login']);
+      },
+    });
   }
 }

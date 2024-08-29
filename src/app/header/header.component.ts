@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AuthUserModel } from '../auth/auth.model';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -16,8 +15,6 @@ import { AuthService } from '../auth/auth.service';
 export class HeaderComponent {
   authService = inject(AuthService);
   router = inject(Router);
-
-  constructor() {}
 
   logout(): void {
     this.authService.logout();

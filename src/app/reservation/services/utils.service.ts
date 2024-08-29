@@ -21,6 +21,10 @@ export class UtilsService {
     this.snackBar.open(message, 'Close', config);
   }
 
+  greenConsole(message: string): void {
+    console.log('%c' + message, 'color: green; font-weight: bold;');
+  }
+
   generateId(): string {
     return Math.random().toString(36) + Date.now().toString(36);
   }

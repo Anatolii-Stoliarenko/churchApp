@@ -1,6 +1,6 @@
 .reservation-detail {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
   background-color: #f9f9f9;
 }
@@ -11,7 +11,7 @@
 
 .reservation-actions {
   display: flex;
-  gap: 10px;
+  justify-content: space-evenly;
 }
 
 h2 {

@@ -64,7 +64,7 @@
           mat-icon-button
           color="primary"
           (click)="viewDetails(reservation)"
-          *ngIf="!currentUser"
+          *ngIf="!(authService.currentUser$ | async)"
         >
           <mat-icon>visibility</mat-icon>
         </button>
@@ -74,7 +74,7 @@
           mat-icon-button
           [matMenuTriggerFor]="menu"
           aria-label="Example icon-button with a menu"
-          *ngIf="currentUser"
+          *ngIf="authService.currentUser$ | async"
           class="centered-header"
         >
           <mat-icon>more_vert</mat-icon>
@@ -93,8 +93,8 @@
             [disabled]="
               !(
                 isReservationCreatedByCurrentUser(reservation) ||
-                (roleService.currentUserRole$ | async) === 'admin' ||
-                (roleService.currentUserRole$ | async) === 'moderator'
+                (authService.currentUser$ | async)?.role === 'admin' ||
+                (authService.currentUser$ | async)?.role === 'moderator'
               )
             "
             (click)="delete(reservation)"
@@ -112,8 +112,8 @@
           <!-- Pending Reject Aprove -->
           <ng-container
             *ngIf="
-              (roleService.currentUserRole$ | async) === 'admin' ||
-              (roleService.currentUserRole$ | async) === 'moderator'
+              (authService.currentUser$ | async)?.role === 'admin' ||
+              (authService.currentUser$ | async)?.role === 'moderator'
             "
           >
             <!-- Approve -->

@@ -29,7 +29,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email </mat-label>
-        <input matInput formControlName="email" required />
+        <input matInput formControlName="email" required autofocus />
         <mat-error *ngIf="authorisationForm.get('email')?.hasError('required')">
           Email is required
         </mat-error>

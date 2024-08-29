@@ -9,18 +9,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-import {
-  ReservationModel,
-  ReservationStatus,
-  UserModel,
-} from '../reservation.model';
+import { ReservationModel, ReservationStatus } from '../reservation.model';
 import { ReservationService } from '../services/reservation.service';
 import { TimeComponent } from '../time/time.component';
 import { SharedService } from '../services/shared.service';
-import { RoleService } from '../../auth/role.service';
 import { AuthService } from '../../auth/auth.service';
 import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { User } from '../../auth/auth.model';
 
 @Component({
   selector: 'app-list',
@@ -40,7 +36,6 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -48,11 +43,10 @@ export class ListComponent implements OnInit {
 
   dialog = inject(MatDialog);
   reservationService = inject(ReservationService);
-  roleService = inject(RoleService);
   sharedService = inject(SharedService);
   authService = inject(AuthService);
 
-  currentUser: UserModel | null = null;
+  currentUser: User | null = null;
   subscription: Subscription[] = [];
 
   // dataSource: ReservationModel[] = [];
@@ -96,8 +90,6 @@ export class ListComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    console.log('Sort initialized:', this.sort);
-    console.log('DataSource:', this.dataSource);
   }
 
   ngOnDestroy(): void {

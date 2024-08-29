@@ -10,8 +10,6 @@ import {
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
-import { ReservationModel } from '../reservation.model';
-
 @Component({
   selector: 'app-reservation-detail-dialog',
   templateUrl: './reservation-detail-dialog.component.html',

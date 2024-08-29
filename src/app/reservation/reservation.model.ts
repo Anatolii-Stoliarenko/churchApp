@@ -1,3 +1,30 @@
+import { User } from '../auth/auth.model';
+
+// Interface for data sent to the backend
+export interface CreateReservationModel {
+  date: string;
+  startHour: string;
+  endHour: string;
+  place: PlaceType;
+  user: User;
+  comments?: string;
+  status?: ReservationStatus;
+}
+
+// Interface for data received from the backend
+export interface FetchedReservationModel {
+  _id: string;
+  date: string;
+  startHour: string;
+  endHour: string;
+  place: PlaceType;
+  user: UserModel;
+  createdAt: string;
+  updatedAt: string;
+  comments?: string;
+  status?: ReservationStatus;
+}
+
 export interface ReservationModel {
   id: string;
   date: string; // The selected date in 'yyyy-MM-dd' format
@@ -7,6 +34,11 @@ export interface ReservationModel {
   user: UserModel;
   comments?: string;
   status?: ReservationStatus;
+}
+
+export interface ResponseReservationModel {
+  reservations: ReservationModel[];
+  message: string;
 }
 
 export enum PlaceType {
@@ -23,6 +55,7 @@ export interface UserModel {
   email: string;
   phone?: string;
   contactEmail?: string;
+  role: string;
 }
 
 export enum ReservationStatus {

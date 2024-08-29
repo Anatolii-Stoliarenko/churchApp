@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import {
   FormBuilder,
@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 
-import { AuthUserModel, AuthMode } from '../auth.model';
+import { AuthMode, User } from '../auth.model';
 
 @Component({
   selector: 'app-wrapper',
@@ -28,12 +28,11 @@ import { AuthUserModel, AuthMode } from '../auth.model';
   styleUrl: './wrapper.component.scss',
 })
 export class WrapperComponent {
+  private fb = inject(FormBuilder);
   typeAuthorisation = input<AuthMode>('register');
   errorsMessages = input<string[]>();
-  dataAuthorisation = output<AuthUserModel>();
+  dataAuthorisation = output<User>();
   authorisationForm!: FormGroup;
-
-  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -41,15 +40,13 @@ export class WrapperComponent {
 
   initForm(): void {
     this.authorisationForm = this.fb.group({
-      name: ['', []],
+      name: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
   onSubmit() {
-    const authData: AuthUserModel = this.authorisationForm.value;
-    // authData.id = '';
     this.dataAuthorisation.emit(this.authorisationForm.value);
   }
 }

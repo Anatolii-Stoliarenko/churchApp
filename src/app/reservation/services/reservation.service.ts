@@ -5,16 +5,17 @@ import { UtilsService } from './utils.service';
 import { DataService } from './data.service';
 import { AuthService } from '../../auth/auth.service';
 import {
+  CreateReservationModel,
   PlaceType,
   ReservationModel,
   ReservationStatus,
+  ResponseReservationModel,
   TimeSlot,
   UserModel,
 } from '../reservation.model';
 import { SharedService } from './shared.service';
 import { ApiService } from '../../services/api.service';
-import { RoleService } from '../../auth/role.service';
-import { UserRole } from '../../auth/auth.model';
+import { User, UserRole } from '../../auth/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,15 +30,9 @@ export class ReservationService {
   dataService = inject(DataService);
   authService = inject(AuthService);
   apiService = inject(ApiService);
-  roleService = inject(RoleService);
-
-  reservations: ReservationModel[] = [];
-
   Subscription: Subscription[] = [];
-
-  currentUser: UserModel | null = null;
-  localStorageKey = 'reservation';
-  userRole: UserRole | null | undefined;
+  currentUser: User | null = null;
+  reservations: ReservationModel[] = [];
 
   constructor() {
     this.initValues();
@@ -54,12 +49,6 @@ export class ReservationService {
         this.currentUser = user;
       })
     );
-
-    this.Subscription.push(
-      this.roleService.currentUserRole$.subscribe((role) => {
-        this.userRole = role;
-      })
-    );
   }
 
   getReservationsLocaly(): ReservationModel[] {
@@ -68,13 +57,10 @@ export class ReservationService {
 
   loadReservations(): void {
     this.apiService.getAllReservations().subscribe({
-      next: (response) => {
-        this.reservations = response;
-        this.reservationsSubject.next(response);
-        console.log(
-          '%csuccessful download reservations from API',
-          'color: green; font-weight: bold;'
-        );
+      next: (response: ResponseReservationModel) => {
+        this.reservations = response.reservations;
+        this.reservationsSubject.next(response.reservations);
+        this.utilsService.greenConsole(`${response.message}`);
       },
       error: (error) => {
         console.error('Failed to load reservations', error);
@@ -90,8 +76,8 @@ export class ReservationService {
     const newReservation = this.createReservation(reservation);
     this.apiService.addNewReservation(newReservation).subscribe({
       next: (response) => {
-        console.log(response.message);
         this.utilsService.snackBarSuccess(response.message);
+        this.utilsService.greenConsole(`${response.message}`);
       },
       error: (error) => {
         console.error('Failed to add reservation', error);
@@ -137,13 +123,12 @@ export class ReservationService {
 
   private createReservation(
     reservation: Omit<ReservationModel, 'user' | 'id'>
-  ): ReservationModel {
+  ): CreateReservationModel {
     return {
       ...reservation,
-      id: this.utilsService.generateId(),
       user: this.currentUser!,
       status:
-        this.userRole === UserRole.ADMIN
+        this.currentUser?.role === UserRole.ADMIN
           ? ReservationStatus.APPROVED
           : ReservationStatus.PENDING,
     };

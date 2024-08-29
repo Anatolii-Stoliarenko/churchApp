@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 
-import { AuthUserModel } from '../auth.model';
 import { WrapperComponent } from '../wrapper/wrapper.component';
 import { AuthService } from '../auth.service';
+import { User } from '../auth.model';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +15,7 @@ export class RegisterComponent {
   authService = inject(AuthService);
   errorsMessages: string[] = [];
 
-  register(data: AuthUserModel): void {
+  register(data: User): void {
     this.authService.register(data);
   }
 }

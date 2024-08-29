@@ -3,7 +3,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { repeat, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -12,13 +12,11 @@ import {
   PlaceType,
   ReservationModel,
   ReservationStatus,
-  UserModel,
 } from '../reservation.model';
 import { SharedService } from '../services/shared.service';
 import { UtilsService } from '../services/utils.service';
 import { AuthService } from '../../auth/auth.service';
-import { UserRole } from '../../auth/auth.model';
-import { RoleService } from '../../auth/role.service';
+import { User, UserRole } from '../../auth/auth.model';
 import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
 
 @Component({
@@ -39,7 +37,6 @@ export class TimeComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   utilService = inject(UtilsService);
   sharedService = inject(SharedService);
-  roleService = inject(RoleService);
 
   // selectedPlaces: PlaceType[] = [];
   selectedDay = '';
@@ -57,7 +54,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   );
   selectedWeek: string = ''; // This will hold the selected value
 
-  currentUser: UserModel | null = null;
+  currentUser: User | null = null;
   subscription: Subscription[] = [];
   userRole: UserRole | null | undefined;
   dialog = inject(MatDialog);
@@ -83,11 +80,8 @@ export class TimeComponent implements OnInit, OnDestroy {
 
       this.authService.currentUser$.subscribe((user) => {
         this.currentUser = user;
+        this.userRole = user?.role;
         this.resetComponentState();
-      }),
-
-      this.roleService.currentUserRole$.subscribe((role) => {
-        this.userRole = role;
       })
     );
 
