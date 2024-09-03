@@ -1,124 +1,105 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 
-import { UtilsService } from './utils.service';
+import { UtilsService } from '../../shared/services/utils.service';
 import { DataService } from './data.service';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import {
+  ApiResponse,
   CreateReservationModel,
   PlaceType,
   ReservationModel,
   ReservationStatus,
   ResponseReservationModel,
   TimeSlot,
+  updateReservationInterface,
   UserModel,
-} from '../reservation.model';
-import { SharedService } from './shared.service';
-import { ApiService } from '../../services/api.service';
-import { User, UserRole } from '../../auth/auth.model';
+} from '../models/reservations.model';
+import { ApiService } from '../../shared/services/api.service';
+import { UserInterface, UserRole } from '../../auth/models/auth.model';
+import { AppState } from '../../shared/store/appState.interface';
+import { currentUserSelector } from '../../auth/store/selectors/auth.selectors';
+import {
+  reservationsSelector,
+  selectedDaySelector,
+} from '../store/reservations.selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
-  private reservationsSubject = new BehaviorSubject<ReservationModel[]>([]);
-  reservations$: Observable<ReservationModel[]> =
-    this.reservationsSubject.asObservable();
+  // private reservationsSubject = new BehaviorSubject<ReservationModel[]>([]);
+  // reservations$: Observable<ReservationModel[]> =
+  // this.reservationsSubject.asObservable();
 
   utilsService = inject(UtilsService);
-  sharedService = inject(SharedService);
   dataService = inject(DataService);
   authService = inject(AuthService);
   apiService = inject(ApiService);
+  store = inject(Store<AppState>);
+
+  selectedDay: string | null | undefined;
   Subscription: Subscription[] = [];
-  currentUser: User | null = null;
+  currentUser: UserInterface | null = null;
   reservations: ReservationModel[] = [];
 
   constructor() {
     this.initValues();
-    this.loadReservations();
   }
 
   ngOnDestroy(): void {
     this.Subscription.forEach((sub) => sub.unsubscribe());
   }
 
-  private initValues(): void {
+  initValues(): void {
     this.Subscription.push(
-      this.authService.currentUser$.subscribe((user) => {
+      this.store.select(currentUserSelector).subscribe((user) => {
         this.currentUser = user;
+      }),
+
+      this.store.select(selectedDaySelector).subscribe((day) => {
+        this.selectedDay = day;
+      }),
+
+      this.store.select(reservationsSelector).subscribe((reservation) => {
+        this.reservations = reservation ? reservation : [];
       })
     );
+  }
+
+  isSelectedDayTodayOrFuture(): boolean {
+    let selectedDate = new Date(this.selectedDay ?? '');
+    const today = new Date();
+    // Set time to 00:00:00 to compare only the dates, not the time
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    // Return true if selectedDate is today or in the future
+    return selectedDate >= today;
   }
 
   getReservationsLocaly(): ReservationModel[] {
     return this.reservations;
   }
 
-  loadReservations(): void {
-    this.apiService.getAllReservations().subscribe({
-      next: (response: ResponseReservationModel) => {
-        this.reservations = response.reservations;
-        this.reservationsSubject.next(response.reservations);
-        this.utilsService.greenConsole(`${response.message}`);
-      },
-      error: (error) => {
-        console.error('Failed to load reservations', error);
-        this.utilsService.snackBarError('Failed to load reservations');
-      },
-      complete: () => {
-        this.sharedService.notifyReservationMade();
-      },
-    });
+  getReservations(): Observable<ResponseReservationModel> {
+    return this.apiService.getAllReservations();
   }
 
-  addReservations(reservation: Omit<ReservationModel, 'user' | 'id'>): void {
-    const newReservation = this.createReservation(reservation);
-    this.apiService.addNewReservation(newReservation).subscribe({
-      next: (response) => {
-        this.utilsService.snackBarSuccess(response.message);
-        this.utilsService.greenConsole(`${response.message}`);
-      },
-      error: (error) => {
-        console.error('Failed to add reservation', error);
-        this.utilsService.snackBarError('Failed to add reservation');
-      },
-      complete: () => {
-        this.loadReservations();
-      },
-    });
+  addReservation(reservation: CreateReservationModel): Observable<ApiResponse> {
+    return this.apiService.addNewReservation(reservation);
   }
 
-  updateReservation(id: string, data: any): void {
-    this.apiService.updateReservation(id, data).subscribe({
-      next: (response) => {
-        console.log(response.message);
-        this.utilsService.snackBarSuccess(response.message);
-      },
-      error: (error) => {
-        console.error('Failed to update reservation', error);
-        this.utilsService.snackBarError('Failed to update reservation');
-      },
-      complete: () => {
-        this.loadReservations();
-      },
-    });
+  updateReservation(
+    id: string,
+    payload: updateReservationInterface
+  ): Observable<ApiResponse> {
+    return this.apiService.updateReservation(id, payload);
   }
 
-  deleteReservation(id: string): void {
-    this.apiService.deleteReservation(id).subscribe({
-      next: (response) => {
-        console.log(response.message);
-        this.utilsService.snackBarSuccess(response.message);
-      },
-      error: (error) => {
-        console.error('Failed to delete reservation', error);
-        this.utilsService.snackBarError('Failed to delete reservation');
-      },
-      complete: () => {
-        this.loadReservations();
-      },
-    });
+  deleteReservationStore(id: string): Observable<ApiResponse> {
+    return this.apiService.deleteReservation(id);
   }
 
   private createReservation(

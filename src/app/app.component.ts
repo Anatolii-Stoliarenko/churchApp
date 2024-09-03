@@ -1,26 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { CalendarComponent } from './reservation/calendar/calendar.component';
-import { ReservationComponent } from './reservation/reservation.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { HeaderComponent } from './header/header.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialogModule } from '@angular/material/dialog';
+import { AuthService } from './auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    CalendarComponent,
-    ReservationComponent,
-    RegisterComponent,
-    HeaderComponent,
-    MatSnackBarModule,
-    MatDialogModule,
-  ],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  authService = inject(AuthService);
+
+  ngOnInit(): void {
+    this.authService.restoreUser();
+  }
+}

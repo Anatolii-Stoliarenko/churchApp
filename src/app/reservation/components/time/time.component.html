@@ -1,0 +1,100 @@
+<div
+  class="container"
+  *ngIf="
+    (selectedDay &&
+      currentUser &&
+      reserveService.isSelectedDayTodayOrFuture()) ||
+    (selectedDay && currentUser?.role === 'admin')
+  "
+>
+  <!-- From -->
+  <mat-form-field>
+    <mat-label>From</mat-label>
+    <mat-select
+      [(ngModel)]="selectedStartTime"
+      (selectionChange)="onStartTimeChange()"
+      [disabled]="!selectedDay"
+    >
+      <mat-option
+        *ngFor="
+          let time of allTemplateHours.slice(0, allTemplateHours.length - 1)
+        "
+        [value]="time"
+        [disabled]="!isHourAvailable(time)"
+      >
+        {{ time }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- To -->
+  <mat-form-field>
+    <mat-label>To</mat-label>
+    <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
+      <mat-option *ngFor="let time of filteredToHours" [value]="time">
+        {{ time }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Places -->
+  <mat-form-field>
+    <mat-label>Place</mat-label>
+    <mat-select
+      [(ngModel)]="selectedPlace"
+      (selectionChange)="onPlaceChange()"
+      [disabled]="!selectedDay"
+    >
+      <mat-option *ngFor="let place of places" [value]="place">
+        {{ place }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Repeat -->
+  <mat-form-field>
+    <mat-label>Repeat</mat-label>
+    <mat-select
+      [(ngModel)]="selectedWeek"
+      [disabled]="currentUser?.role != 'admin'"
+    >
+      <mat-option *ngFor="let week of weekOptions" [value]="week">
+        {{ week }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Comment -->
+  <mat-form-field>
+    <mat-label>Comment</mat-label>
+    <textarea
+      matInput
+      [(ngModel)]="comment"
+      maxlength="250"
+      minlength="10"
+      #commentInput="ngModel"
+      required
+    ></textarea>
+    <mat-hint align="start">Minimum 10 characters</mat-hint>
+    <mat-hint align="end">{{ comment.length || 0 }} / 250</mat-hint>
+
+    <mat-error *ngIf="commentInput.invalid && commentInput.touched">
+      Comment must be at least 10 characters long.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Button -->
+  <button
+    mat-flat-button
+    [disabled]="
+      !selectedStartTime ||
+      !selectedEndTime ||
+      !selectedPlace ||
+      !currentUser ||
+      commentInput.invalid
+    "
+    (click)="openConfirmDialogDetails()"
+  >
+    Reserve
+  </button>
+</div>

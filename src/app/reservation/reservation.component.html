@@ -1,6 +1,13 @@
 <div class="container">
   <app-header />
-  <app-calendar />
-  <app-list />
-  <app-time />
+
+  <ng-container *ngIf="isLoading$ | async; else content">
+    <app-loading />
+  </ng-container>
+
+  <ng-template #content>
+    <app-calendar />
+    <app-list />
+    <app-time />
+  </ng-template>
 </div>

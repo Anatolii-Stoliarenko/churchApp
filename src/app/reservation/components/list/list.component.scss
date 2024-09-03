@@ -1,0 +1,62 @@
+@import "../../../../styles/variables";
+
+mat-table {
+  border-radius: 5%; /* Apply border-radius to the entire table */
+  overflow: hidden; /* Ensures content respects the border-radius */
+}
+
+.list-table {
+  width: inherit;
+  margin: 0px 5px 1rem;
+}
+
+.approved-row {
+  background-color: #c8e6c9; /* Light green */
+}
+
+.pending-row {
+  background-color: #fff9c4; /* Light yellow */
+}
+
+.rejected-row {
+  background-color: #ffcdd2; /* Light red */
+}
+
+#reservation_place {
+  width: 10px;
+  overflow-wrap: break-word;
+}
+
+.pending {
+  background-color: $pending;
+}
+
+.aproved {
+  background-color: $aproved;
+}
+
+.rejected {
+  background-color: $rejected;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  border: 0.5px solid black;
+}
+
+.list {
+  display: flex; /* Enables flexbox layout */
+  justify-content: space-evenly; /* Distributes items with equal space between them */
+  align-items: center; /* Centers items vertically if needed */
+  margin: 5px 15px 5px;
+  background-color: inherit;
+}
+
+li {
+  display: inline-block;
+  font-size: 12px;
+}

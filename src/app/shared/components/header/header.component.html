@@ -1,0 +1,19 @@
+<header>
+  <div class="logo">
+    <a href="/reservation">
+      <img src="logo2.png" alt="Logo" />
+    </a>
+  </div>
+
+  <div class="actions">
+    <ng-container *ngIf="!(currentUser$ | async); else loggedTemplate">
+      <button mat-button (click)="login()">Login</button>
+      <button mat-button (click)="register()">Register</button>
+    </ng-container>
+
+    <ng-template #loggedTemplate>
+      <span> {{ (currentUser$ | async)?.name }}</span>
+      <button mat-button (click)="logout()">Logout</button>
+    </ng-template>
+  </div>
+</header>

@@ -1,0 +1,16 @@
+<mat-card appearance="outlined">
+  @if (showCalendar){
+  <mat-calendar
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [startAt]="selectedDate"
+    [selected]="selectedDate"
+    (selectedChange)="select($event)"
+    [dateClass]="dateClass"
+  ></mat-calendar>
+  }
+
+  <p>
+    <strong> {{ selectedDate | date : "yyyy-MM-dd" }}</strong>
+  </p>
+</mat-card>

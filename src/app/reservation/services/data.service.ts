@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TimeSlot } from '../reservation.model';
+import { TimeSlot } from '../models/reservations.model';
 
 @Injectable({
   providedIn: 'root',
