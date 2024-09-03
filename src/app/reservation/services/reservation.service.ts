@@ -71,6 +71,7 @@ export class ReservationService {
   isSelectedDayTodayOrFuture(): boolean {
     let selectedDate = new Date(this.selectedDay ?? '');
     const today = new Date();
+    
     // Set time to 00:00:00 to compare only the dates, not the time
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
