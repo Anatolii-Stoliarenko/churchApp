@@ -24,7 +24,7 @@ import { AppState } from '../../../shared/store/appState.interface';
 import { currentUserSelector } from '../../../auth/store/selectors/auth.selectors';
 import { selectedDaySelector } from '../../store/reservations.selectors';
 import * as ReservActions from '../../store/reservations.actions';
-import { UserInterface } from '../../../auth/models/auth.model';
+import { CurrentUserInterface } from '../../../auth/models/auth.model';
 
 @Component({
   selector: 'app-list',
@@ -54,7 +54,7 @@ export class ListComponent implements OnInit {
   reservationService = inject(ReservationService);
   authService = inject(AuthService);
 
-  currentUser: UserInterface | null = null;
+  currentUser: CurrentUserInterface | null = null;
   selectedDay: string | null | undefined;
   subscription: Subscription[] = [];
 
