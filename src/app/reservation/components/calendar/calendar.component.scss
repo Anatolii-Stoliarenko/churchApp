@@ -1,4 +1,25 @@
 @import "../../../../styles/variables";
+
+//future date
+$available-date: #caf5ce; // Light green background
+$text-available-date: #388e3c; // Dark green text (Material Design green)
+
+$reserved-partial-day: #ecc6f2; // Light purple background
+$text-partial-day: #7b1fa2; // Dark purple text (Material Design purple)
+
+$reserved-full-day: #ffebee; // Light red background
+$text-full-day: #d32f2f; // Dark red text (Material Design red)
+
+//past date
+$past-date: #e0e0e0;
+$text-past-date: #6e6e6e;
+
+$past-reserved-partial-day: #c0c0c0;
+$text-past-reserved-partial-day: #7f7f7f;
+
+$past-reserved-full-day: #d3d3d3;
+$text-past-reserved-full-day: #505050;
+
 mat-card {
   background-color: white;
 }
@@ -12,67 +33,113 @@ p {
 p {
   font-weight: bold;
 }
-//Selected day
-::ng-deep
-  .mat-calendar-body-cell.selected-date
-  .mat-calendar-body-cell-content {
-  // background-color: $pending;
-  // color: rgb(31, 32, 23);
-  background-color: #3f51b5; // Angular Material primary blue color
-  color: white; // White text for contrast
-  border-radius: 50%;
-}
+/* FUTURE DATE */
 
-// From today to future
+//available
 ::ng-deep
   .mat-calendar-body-cell.available-date
   .mat-calendar-body-cell-content {
-  // background-color: $aproved;
-  // color: green;
-  background-color: #caf5ce; // Light green background
-  color: #388e3c; // Dark green text (Material Design green)
-  border-radius: 50%;
+  background-color: $available-date;
+  color: $text-available-date;
 }
 
+//reserved-full-day
 ::ng-deep
   .mat-calendar-body-cell.reserved-full-day
   .mat-calendar-body-cell-content {
-  // background-color: #ff8888;
-  // color: rgb(180, 5, 5);
-  background-color: #ffebee; // Light red background
-  color: #d32f2f; // Dark red text (Material Design red)
-  border-radius: 50%;
+  background-color: $reserved-full-day;
+  color: $text-full-day;
 }
 
+//reserved-partial-day
 ::ng-deep
   .mat-calendar-body-cell.reserved-partial-day
   .mat-calendar-body-cell-content {
-  // background-color: #f1a5ff;
-  // color: rgb(120, 0, 168);
-  background-color: #ecc6f2; // Light purple background
-  color: #7b1fa2; // Dark purple text (Material Design purple)
-  border-radius: 50%;
+  background-color: $reserved-partial-day;
+  color: $text-partial-day;
 }
 
 //Past days
 ::ng-deep .mat-calendar-body-cell.past-date .mat-calendar-body-cell-content {
-  background-color: #e0e0e0; // Light Grey background
-  color: #6e6e6e; // Dim Grey text
-  // border-radius: 50%;
+  background-color: $past-date;
+  color: $text-past-date;
 }
 
 ::ng-deep
   .mat-calendar-body-cell.past-reserved-full-day
   .mat-calendar-body-cell-content {
-  background-color: #d3d3d3; // Slightly darker grey for full-day past reserved dates
-  color: #505050; // Darker grey text color for contrast
-  // border-radius: 50%;
+  background-color: $reserved-full-day;
+  color: $text-past-reserved-full-day;
 }
 
 ::ng-deep
   .mat-calendar-body-cell.past-reserved-partial-day
   .mat-calendar-body-cell-content {
-  background-color: #c0c0c0; // Muted grey for partial-day past reserved dates
-  color: #7f7f7f; // Soft grey text color
-  // border-radius: 50%;
+  background-color: $past-reserved-partial-day;
+  color: $text-past-reserved-partial-day;
+}
+
+//SELECTED DATE
+
+//future
+::ng-deep
+  .mat-calendar-body-cell.selected-date-available-date
+  .mat-calendar-body-cell-content {
+  --initial-color: #caf5ce; /* Angular Material primary blue color */
+  color: #388e3c; /* Text color */
+  animation: flashSelectedDate 1.5s infinite; /* Continuous animation */
+}
+
+::ng-deep
+  .mat-calendar-body-cell.selected-date-reserved-partial-day
+  .mat-calendar-body-cell-content {
+  --initial-color: #ecc6f2; /* Reserved partial day color */
+  color: #7b1fa2; /* White text for contrast */
+  animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep
+  .mat-calendar-body-cell.selected-date-reserved-full-day
+  .mat-calendar-body-cell-content {
+  --initial-color: #ff8888; /* Reserved full day color */
+  color: #ffffff; /* White text for contrast */
+  animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+//past
+::ng-deep
+  .mat-calendar-body-cell.selected-date-past
+  .mat-calendar-body-cell-content {
+  --initial-color: #e0e0e0; /* Past reserved full day color */
+  color: #6e6e6e; /* White text for contrast */
+  animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep
+  .mat-calendar-body-cell.selected-date-past-reserved-partial-day
+  .mat-calendar-body-cell-content {
+  --initial-color: #c0c0c0; /* Past reserved partial day color */
+  color: #ffffff; /* White text for contrast */
+  animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep
+  .mat-calendar-body-cell.selected-date-past-reserved-full-day
+  .mat-calendar-body-cell-content {
+  --initial-color: #d3d3d3; /* Past reserved full day color */
+  color: #ffffff; /* White text for contrast */
+  animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+@keyframes flashSelectedDate {
+  0% {
+    background-color: var(--initial-color);
+  }
+  50% {
+    background-color: rgb(85, 77, 245);
+    color: white;
+  }
+  100% {
+    background-color: var(--initial-color);
+  }
 }

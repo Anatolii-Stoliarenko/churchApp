@@ -9,7 +9,7 @@
 >
   <!-- From -->
   <mat-form-field>
-    <mat-label>From</mat-label>
+    <mat-label>Start time</mat-label>
     <mat-select
       [(ngModel)]="selectedStartTime"
       (selectionChange)="onStartTimeChange()"
@@ -27,9 +27,9 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- To -->
+  <!-- End time -->
   <mat-form-field>
-    <mat-label>To</mat-label>
+    <mat-label>End time</mat-label>
     <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
       <mat-option *ngFor="let time of filteredToHours" [value]="time">
         {{ time }}
@@ -66,7 +66,7 @@
 
   <!-- Comment -->
   <mat-form-field>
-    <mat-label>Comment</mat-label>
+    <mat-label>Comments</mat-label>
     <textarea
       matInput
       [(ngModel)]="comment"

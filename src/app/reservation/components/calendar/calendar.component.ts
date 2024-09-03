@@ -84,7 +84,7 @@ export class CalendarComponent implements OnInit {
 
   select(date: Date | null) {
     if (!date) return;
-    // this.selectedDate = date;
+    this.triggerVibration();
 
     this.store.dispatch(
       ResActions.selectedDay({ selectedDay: this.formatDate(date) })
@@ -108,25 +108,38 @@ export class CalendarComponent implements OnInit {
     const reservData = this.reservations.map((reservation) => ({
       ...reservation,
       dateString: new Date(reservation.date).toDateString(), //add new property
-      isFullDay: this.isFullDayReserved(reservation), //add new property
+      isFullDay: this.isFullDate(reservation.date), //add new property
     }));
 
-    if (
-      this.selectedDate &&
-      date.toDateString() === this.selectedDate.toDateString()
-    ) {
-      return 'selected-date';
-    }
-
-    // for (let reservation of reservData) {
-    //   if (reservation.dateString === dateString) {
-    //     return reservation.isFullDay
-    //       ? 'reserved-full-day'
-    //       : 'reserved-partial-day';
-    //   }
+    //worked code selectedDay
+    // if (this.selectedDate && dateString === this.selectedDate.toDateString()) {
+    //   return 'selected-date';
     // }
 
-    // return 'available-date';
+    //new code selected
+    if (this.selectedDate && dateString === this.selectedDate.toDateString()) {
+      if (isPastDate) {
+        if (this.isFullDate(dateString)) {
+          return `selected-date-past-reserved-full-day`;
+        }
+        if (this.isSomeReservation(this.formatDate(date))) {
+          return `selected-date-past-reserved-partial-day`;
+        }
+
+        return `selected-date-past`;
+      } else {
+        if (this.isFullDate(dateString)) {
+          return `selected-date-reserved-full-day`;
+        }
+        if (this.isSomeReservation(this.formatDate(date))) {
+          return `selected-date-reserved-partial-day`;
+        }
+
+        return `selected-date-available-date`;
+      }
+    }
+
+    //befor worked code diff classes
     for (let reservation of reservData) {
       if (reservation.dateString === dateString) {
         if (isPastDate) {
@@ -144,8 +157,27 @@ export class CalendarComponent implements OnInit {
     return isPastDate ? 'past-date' : 'available-date';
   };
 
-  isFullDayReserved(reservation: ReservationModel): boolean {
+  getReservationClass(dateString: string, reservData: any): string {
+    for (let reservation of reservData) {
+      if (reservation.date === dateString) {
+        return reservation.isFullDay
+          ? 'reserved-full-day'
+          : 'reserved-partial-day';
+      }
+    }
+    return '';
+  }
+
+  isFullDate(checkedDay: string): boolean {
     return false;
+  }
+
+  isSomeReservation(day: string): boolean {
+    return this.reservations.some((res) => {
+      const reservationDate = new Date(res.date).toDateString();
+      const dayToCheck = new Date(day).toDateString();
+      return reservationDate === dayToCheck;
+    });
   }
 
   formatDate(date: Date): string {
@@ -160,5 +192,14 @@ export class CalendarComponent implements OnInit {
     this.cdr.detectChanges();
     this.showCalendar = true;
     this.cdr.detectChanges();
+  }
+
+  triggerVibration() {
+    if (navigator.vibrate) {
+      navigator.vibrate(200); // Vibrate for 200 milliseconds
+      console.log('Vibro');
+    } else {
+      console.log('Vibration API not supported by this device.');
+    }
   }
 }
