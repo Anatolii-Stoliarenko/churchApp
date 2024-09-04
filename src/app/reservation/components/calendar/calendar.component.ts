@@ -196,7 +196,7 @@ export class CalendarComponent implements OnInit {
 
   triggerVibration() {
     if (navigator.vibrate) {
-      navigator.vibrate(200); // Vibrate for 200 milliseconds
+      navigator.vibrate(50); // Vibrate for 200 milliseconds
       console.log('Vibro');
     } else {
       console.log('Vibration API not supported by this device.');
