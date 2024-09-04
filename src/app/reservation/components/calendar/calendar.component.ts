@@ -111,12 +111,6 @@ export class CalendarComponent implements OnInit {
       isFullDay: this.isFullDate(reservation.date), //add new property
     }));
 
-    //worked code selectedDay
-    // if (this.selectedDate && dateString === this.selectedDate.toDateString()) {
-    //   return 'selected-date';
-    // }
-
-    //new code selected
     if (this.selectedDate && dateString === this.selectedDate.toDateString()) {
       if (isPastDate) {
         if (this.isFullDate(dateString)) {
@@ -139,7 +133,6 @@ export class CalendarComponent implements OnInit {
       }
     }
 
-    //befor worked code diff classes
     for (let reservation of reservData) {
       if (reservation.dateString === dateString) {
         if (isPastDate) {
@@ -197,7 +190,6 @@ export class CalendarComponent implements OnInit {
   triggerVibration() {
     if (navigator.vibrate) {
       navigator.vibrate(50); // Vibrate for 200 milliseconds
-      console.log('Vibro');
     } else {
       console.log('Vibration API not supported by this device.');
     }

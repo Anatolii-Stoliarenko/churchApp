@@ -38,6 +38,8 @@
   </mat-form-field>
 
   <!-- Places -->
+
+  <!-- Select -->
   <mat-form-field>
     <mat-label>Place</mat-label>
     <mat-select
@@ -50,6 +52,21 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <!-- checkbox -->
+  <!-- <mat-form-field>
+    <mat-label>Place</mat-label>
+    <mat-select
+      [(ngModel)]="selectedPlaces"
+      (selectionChange)="onPlaceChange()"
+      [disabled]="!selectedDay"
+      multiple
+    >
+      <mat-option *ngFor="let place of places" [value]="place">
+        {{ place }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->
 
   <!-- Repeat -->
   <mat-form-field>

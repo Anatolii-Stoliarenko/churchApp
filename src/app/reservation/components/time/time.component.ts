@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ReservationService } from '../../services/reservation.service';
 import {
@@ -36,6 +37,7 @@ import * as ReservationActions from '../../store/reservations.actions';
     CommonModule,
     FormsModule,
     MatInputModule,
+    MatCheckboxModule,
   ],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
@@ -46,7 +48,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   utilService = inject(UtilsService);
   store = inject(Store<AppState>);
 
-  // selectedPlaces: PlaceType[] = [];
+  selectedPlaces: PlaceType[] = [];
   selectedDay = '';
   availableHours: string[] = [];
   allTemplateHours: string[] = this.reserveService.getAllTemplateHour();
@@ -93,14 +95,16 @@ export class TimeComponent implements OnInit, OnDestroy {
 
     this.updateAvailableHours();
   }
+  private createStatus(): ReservationStatus {
+    return this.currentUser?.role === UserRole.ADMIN
+      ? ReservationStatus.APPROVED
+      : ReservationStatus.PENDING;
+  }
 
   openConfirmDialogDetails() {
     const confirmReservation = {
       ...this.createNewReservation(),
-      status:
-        this.currentUser?.role === UserRole.ADMIN
-          ? ReservationStatus.APPROVED
-          : ReservationStatus.PENDING,
+      status: this.createStatus(),
       user: this.currentUser,
       repeat: this.selectedWeek,
       caller: 'reserve',
@@ -160,14 +164,44 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.resetComponentState();
   }
 
+  isConflictPlaningReservations(): boolean {
+    const repeatInterval = this.getWeekInterval();
+    let currentDate = new Date(this.selectedDay);
+
+    const ReservationsWithConflict = [];
+
+    for (let i = 0; i < repeatInterval; i++) {
+      const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
+        ...this.createNewReservation(),
+        date: currentDate.toISOString().split('T')[0], //2024-09-04T12:34:56.789Z => ["2024-09-04", "12:34:56.789Z"]
+      };
+
+      if (!this.isReservationConflictFree(newReservation)) {
+        ReservationsWithConflict.push(newReservation);
+        const message = `Conflict reservations: ${ReservationsWithConflict.length}`;
+        this.utilService.snackBarError(message);
+        this.utilService.greenConsole(message);
+        console.log(ReservationsWithConflict);
+      }
+
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+    return ReservationsWithConflict.length > 0 ? true : false;
+  }
+
   async addReservation(): Promise<void> {
+    if (this.isConflictPlaningReservations()) {
+      console.log('conflict planing reservations');
+      return;
+    }
+
     const repeatInterval = this.getWeekInterval();
     let currentDate = new Date(this.selectedDay);
 
     for (let i = 0; i < repeatInterval; i++) {
       const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
         ...this.createNewReservation(),
-        date: currentDate.toISOString().split('T')[0],
+        date: currentDate.toISOString().split('T')[0], //2024-09-04T12:34:56.789Z => ["2024-09-04", "12:34:56.789Z"]
       };
 
       if (this.isReservationConflictFree(newReservation)) {

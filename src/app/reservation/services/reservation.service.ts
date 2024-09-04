@@ -29,10 +29,6 @@ import {
   providedIn: 'root',
 })
 export class ReservationService {
-  // private reservationsSubject = new BehaviorSubject<ReservationModel[]>([]);
-  // reservations$: Observable<ReservationModel[]> =
-  // this.reservationsSubject.asObservable();
-
   utilsService = inject(UtilsService);
   dataService = inject(DataService);
   authService = inject(AuthService);
@@ -71,7 +67,7 @@ export class ReservationService {
   isSelectedDayTodayOrFuture(): boolean {
     let selectedDate = new Date(this.selectedDay ?? '');
     const today = new Date();
-    
+
     // Set time to 00:00:00 to compare only the dates, not the time
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
@@ -101,19 +97,6 @@ export class ReservationService {
 
   deleteReservationStore(id: string): Observable<ApiResponse> {
     return this.apiService.deleteReservation(id);
-  }
-
-  private createReservation(
-    reservation: Omit<ReservationModel, 'user' | 'id'>
-  ): CreateReservationModel {
-    return {
-      ...reservation,
-      user: this.currentUser!,
-      status:
-        this.currentUser?.role === UserRole.ADMIN
-          ? ReservationStatus.APPROVED
-          : ReservationStatus.PENDING,
-    };
   }
 
   // Checking conflicts reservation
