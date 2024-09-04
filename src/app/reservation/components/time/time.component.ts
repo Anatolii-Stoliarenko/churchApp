@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Store } from '@ngrx/store';
 
 import { ReservationService } from '../../services/reservation.service';
 import {
@@ -19,7 +20,6 @@ import { UtilsService } from '../../../shared/services/utils.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserInterface, UserRole } from '../../../auth/models/auth.model';
 import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
-import { Store } from '@ngrx/store';
 import { AppState } from '../../../shared/store/appState.interface';
 import { currentUserSelector } from '../../../auth/store/selectors/auth.selectors';
 import {
@@ -55,14 +55,13 @@ export class TimeComponent implements OnInit, OnDestroy {
   selectedStartTime: string = '';
   selectedEndTime: string = '';
   filteredToHours: string[] = [];
-  selectedPlace: PlaceType = PlaceType.DUZA_KAPLICA;
   places = Object.values(PlaceType);
   comment = '';
   weekOptions = Array.from(
     { length: 12 },
     (_, i) => `${i + 1} week${i + 1 > 1 ? 's' : ''}`
   );
-  selectedWeek: string = ''; // This will hold the selected value
+  selectedWeek: string = '';
 
   currentUser: UserInterface | null = null;
   subscription: Subscription[] = [];
@@ -108,6 +107,7 @@ export class TimeComponent implements OnInit, OnDestroy {
       user: this.currentUser,
       repeat: this.selectedWeek,
       caller: 'reserve',
+      places: this.selectedPlaces,
     };
     const dialogRef = this.dialog.open(ReservationDetailDialogComponent, {
       width: '250px',
@@ -123,28 +123,31 @@ export class TimeComponent implements OnInit, OnDestroy {
 
   onStartTimeChange(): void {
     if (this.selectedStartTime) {
-      // Get all available hours after the selected start time
       const startTimeIndex = this.allTemplateHours.indexOf(
         this.selectedStartTime
       );
 
       this.filteredToHours = this.allTemplateHours.slice(startTimeIndex + 1);
 
-      // Get all reserved hours for the selected day and place
-      const reservedHours = this.reserveService.getReservedHours(
-        this.selectedDay,
-        this.selectedPlace
-      );
+      // Aggregate reserved hours for all selected places
+      let reservedHours: string[] = [];
+      this.selectedPlaces.forEach((place) => {
+        const placeReservedHours = this.reserveService.getReservedHours(
+          this.selectedDay,
+          place
+        );
+        reservedHours = [...reservedHours, ...placeReservedHours];
+      });
+
+      reservedHours = [...new Set(reservedHours)]; // Remove duplicates, if necessary
 
       if (reservedHours.length > 0) {
-        // Find the first reserved hour that comes after the selected start time
         const nextReservedHourIndex = this.allTemplateHours.findIndex(
           (hour) =>
             reservedHours.includes(hour) &&
             this.allTemplateHours.indexOf(hour) > startTimeIndex
         );
 
-        // If there is a reserved hour after the start time, limit the filteredToHours array
         if (nextReservedHourIndex !== -1) {
           this.filteredToHours = this.filteredToHours.slice(
             0,
@@ -171,22 +174,26 @@ export class TimeComponent implements OnInit, OnDestroy {
     const ReservationsWithConflict = [];
 
     for (let i = 0; i < repeatInterval; i++) {
-      const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
-        ...this.createNewReservation(),
-        date: currentDate.toISOString().split('T')[0], //2024-09-04T12:34:56.789Z => ["2024-09-04", "12:34:56.789Z"]
-      };
+      for (const place of this.selectedPlaces) {
+        const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
+          ...this.createNewReservation(),
+          place: place,
+          date: currentDate.toISOString().split('T')[0], // YYYY-MM-DD format
+        };
 
-      if (!this.isReservationConflictFree(newReservation)) {
-        ReservationsWithConflict.push(newReservation);
-        const message = `Conflict reservations: ${ReservationsWithConflict.length}`;
-        this.utilService.snackBarError(message);
-        this.utilService.greenConsole(message);
-        console.log(ReservationsWithConflict);
+        if (!this.isReservationConflictFree(newReservation)) {
+          ReservationsWithConflict.push(newReservation);
+          const message = `Conflict reservations: ${ReservationsWithConflict.length}`;
+          this.utilService.snackBarError(message);
+          this.utilService.greenConsole(message);
+          console.log(ReservationsWithConflict);
+        }
       }
 
       currentDate.setDate(currentDate.getDate() + 7);
     }
-    return ReservationsWithConflict.length > 0 ? true : false;
+
+    return ReservationsWithConflict.length > 0;
   }
 
   async addReservation(): Promise<void> {
@@ -199,26 +206,30 @@ export class TimeComponent implements OnInit, OnDestroy {
     let currentDate = new Date(this.selectedDay);
 
     for (let i = 0; i < repeatInterval; i++) {
-      const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
-        ...this.createNewReservation(),
-        date: currentDate.toISOString().split('T')[0], //2024-09-04T12:34:56.789Z => ["2024-09-04", "12:34:56.789Z"]
-      };
+      for (const place of this.selectedPlaces) {
+        const newReservation: Omit<ReservationModel, 'user' | 'id'> = {
+          ...this.createNewReservation(),
+          place: place, // Use the current place
+          date: currentDate.toISOString().split('T')[0], // YYYY-MM-DD format
+        };
 
-      if (this.isReservationConflictFree(newReservation)) {
-        try {
-          await this.reservation(newReservation); // Wait for each reservation to complete
-        } catch (error) {
-          this.utilService.snackBarError('Reservation failed.');
-          console.error('Reservation error:', error);
-          break; // Stop the loop if an error occurs
+        if (this.isReservationConflictFree(newReservation)) {
+          try {
+            await this.reservation(newReservation); // Wait for each reservation to complete
+          } catch (error) {
+            this.utilService.snackBarError('Reservation failed.');
+            console.error('Reservation error:', error);
+            break;
+          }
+        } else {
+          this.handleReservationConflict();
+          break;
         }
-      } else {
-        this.handleReservationConflict();
-        break; // Stop if there's a conflict
       }
 
       currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
     }
+
     this.resetComponentState();
   }
 
@@ -231,7 +242,6 @@ export class TimeComponent implements OnInit, OnDestroy {
       date: this.selectedDay,
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,
-      place: this.selectedPlace,
       comments: this.comment,
     };
   }
@@ -255,7 +265,6 @@ export class TimeComponent implements OnInit, OnDestroy {
           ? ReservationStatus.APPROVED
           : ReservationStatus.PENDING,
     };
-    // this.reserveService.addReservations(reservation);
     this.store.dispatch(
       ReservationActions.addReservations({ reservation: newReservation })
     );
@@ -275,9 +284,14 @@ export class TimeComponent implements OnInit, OnDestroy {
   }
 
   private updateAvailableHours(): void {
-    this.availableHours = this.reserveService.getHours(
-      this.selectedDay,
-      this.selectedPlace
-    );
+    this.availableHours = [];
+
+    // Loop through all selected places and get reserved hours for each
+    this.selectedPlaces.forEach((place) => {
+      const hours = this.reserveService.getHours(this.selectedDay, place);
+      this.availableHours = [...this.availableHours, ...hours]; // Combine hours
+    });
+
+    this.availableHours = [...new Set(this.availableHours)]; // Removing duplicates
   }
 }

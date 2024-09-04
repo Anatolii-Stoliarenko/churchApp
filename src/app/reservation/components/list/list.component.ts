@@ -141,7 +141,6 @@ export class ListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log(`id of deleted reservation is ${reservation.id}`);
         this.store.dispatch(
           ReservActions.deleteReservations({ id: reservation.id })
         );
@@ -151,8 +150,6 @@ export class ListComponent implements OnInit {
 
   viewDetails(reservation: ReservationModel): void {
     console.log('View details for', reservation);
-    console.log(`id of reservation is ${reservation.id}`);
-    console.log(`date of reservation is ${reservation.date}`);
     this.openDialogDetails(reservation);
   }
 

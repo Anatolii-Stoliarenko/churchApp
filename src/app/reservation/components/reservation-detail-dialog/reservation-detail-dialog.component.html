@@ -7,7 +7,17 @@
       <strong>Time:</strong> {{ reservation.startHour }} -
       {{ reservation.endHour }}
     </p>
-    <p><strong>Place:</strong> {{ reservation.place }}</p>
+    <ng-container *ngIf="reservation.place; else places">
+      <p><strong>Place:</strong> {{ reservation.place }}</p>
+    </ng-container>
+    <ng-template #places>
+      <!-- <p> -->
+      <strong>Places:</strong>
+      <ng-container *ngFor="let place of reservation.places">
+        <p>{{ place }}</p>
+      </ng-container>
+      <!-- </p> -->
+    </ng-template>
     <p>
       <strong class="comments">Reservator:</strong> {{ reservation.user.name }}
     </p>

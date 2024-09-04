@@ -8,6 +8,36 @@
   "
 >
   <!-- From -->
+
+  <!-- Places -->
+  <mat-form-field>
+    <mat-label>Places</mat-label>
+    <mat-select
+      [(ngModel)]="selectedPlaces"
+      (selectionChange)="onPlaceChange()"
+      [disabled]="!selectedDay"
+      multiple
+    >
+      <mat-option *ngFor="let place of places" [value]="place">
+        {{ place }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Repeat -->
+  <mat-form-field>
+    <mat-label>Repeat</mat-label>
+    <mat-select
+      [(ngModel)]="selectedWeek"
+      [disabled]="currentUser?.role != 'admin'"
+    >
+      <mat-option *ngFor="let week of weekOptions" [value]="week">
+        {{ week }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Start time -->
   <mat-form-field>
     <mat-label>Start time</mat-label>
     <mat-select
@@ -37,50 +67,6 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- Places -->
-
-  <!-- Select -->
-  <mat-form-field>
-    <mat-label>Place</mat-label>
-    <mat-select
-      [(ngModel)]="selectedPlace"
-      (selectionChange)="onPlaceChange()"
-      [disabled]="!selectedDay"
-    >
-      <mat-option *ngFor="let place of places" [value]="place">
-        {{ place }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- checkbox -->
-  <!-- <mat-form-field>
-    <mat-label>Place</mat-label>
-    <mat-select
-      [(ngModel)]="selectedPlaces"
-      (selectionChange)="onPlaceChange()"
-      [disabled]="!selectedDay"
-      multiple
-    >
-      <mat-option *ngFor="let place of places" [value]="place">
-        {{ place }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field> -->
-
-  <!-- Repeat -->
-  <mat-form-field>
-    <mat-label>Repeat</mat-label>
-    <mat-select
-      [(ngModel)]="selectedWeek"
-      [disabled]="currentUser?.role != 'admin'"
-    >
-      <mat-option *ngFor="let week of weekOptions" [value]="week">
-        {{ week }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
   <!-- Comment -->
   <mat-form-field>
     <mat-label>Comments</mat-label>
@@ -106,12 +92,13 @@
     [disabled]="
       !selectedStartTime ||
       !selectedEndTime ||
-      !selectedPlace ||
+      !selectedPlaces ||
       !currentUser ||
       commentInput.invalid
     "
     (click)="openConfirmDialogDetails()"
   >
+    <!-- !selectedPlace -->
     Reserve
   </button>
 </div>
