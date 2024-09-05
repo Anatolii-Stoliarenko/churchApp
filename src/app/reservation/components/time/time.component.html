@@ -10,13 +10,14 @@
   <!-- From -->
 
   <!-- Places -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Places</mat-label>
     <mat-select
       [(ngModel)]="selectedPlaces"
       (selectionChange)="onPlaceChange()"
       [disabled]="!selectedDay"
       multiple
+      required
     >
       <mat-option *ngFor="let place of places" [value]="place">
         {{ place }}
@@ -25,9 +26,10 @@
   </mat-form-field>
 
   <!-- Repeat -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Repeat</mat-label>
     <mat-select
+      matNativeControl
       [(ngModel)]="selectedWeek"
       [disabled]="currentUser?.role != 'admin'"
     >
@@ -38,12 +40,13 @@
   </mat-form-field>
 
   <!-- Start time -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Start time</mat-label>
     <mat-select
       [(ngModel)]="selectedStartTime"
       (selectionChange)="onStartTimeChange()"
       [disabled]="!selectedDay"
+      required
     >
       <mat-option
         *ngFor="
@@ -58,9 +61,13 @@
   </mat-form-field>
 
   <!-- End time -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>End time</mat-label>
-    <mat-select [(ngModel)]="selectedEndTime" [disabled]="!selectedDay">
+    <mat-select
+      [(ngModel)]="selectedEndTime"
+      [disabled]="!selectedDay"
+      required
+    >
       <mat-option *ngFor="let time of filteredToHours" [value]="time">
         {{ time }}
       </mat-option>
@@ -68,7 +75,7 @@
   </mat-form-field>
 
   <!-- Comment -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Comments</mat-label>
     <textarea
       matInput

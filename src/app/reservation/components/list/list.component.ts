@@ -18,10 +18,10 @@ import {
 import { ReservationService } from '../../services/reservation.service';
 import { TimeComponent } from '../time/time.component';
 import { AuthService } from '../../../auth/services/auth.service';
-import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
+import { ReservationDetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { AppState } from '../../../shared/store/appState.interface';
-import { currentUserSelector } from '../../../auth/store/selectors/auth.selectors';
+import { currentUserSelector } from '../../../auth/store/auth.selectors';
 import { selectedDaySelector } from '../../store/reservations.selectors';
 import * as ReservActions from '../../store/reservations.actions';
 import { CurrentUserInterface } from '../../../auth/models/auth.model';
@@ -117,6 +117,10 @@ export class ListComponent implements OnInit {
 
   pending(reservation: ReservationModel): void {
     this.changeReservationStatus(reservation, ReservationStatus.PENDING);
+  }
+
+  edit(reservation: ReservationModel): void {
+    
   }
 
   changeReservationStatus(

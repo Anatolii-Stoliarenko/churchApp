@@ -11,7 +11,7 @@ import { TimeComponent } from './components/time/time.component';
 import { AppState } from '../shared/store/appState.interface';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import * as ReservActions from './store/reservations.actions';
-import { loadingReservationsSelector } from './store/reservations.selectors';
+import { loadingReservationsSelector, loadingUpdateReservationsSelector } from './store/reservations.selectors';
 
 @Component({
   selector: 'app-reservation',
@@ -31,9 +31,12 @@ import { loadingReservationsSelector } from './store/reservations.selectors';
 export class ReservationComponent {
   store = inject(Store<AppState>);
   isLoading$: Observable<boolean> | undefined;
+  isLoadingUpdateReservation$: Observable<boolean> | undefined;
 
   ngOnInit() {
     this.isLoading$ = this.store.select(loadingReservationsSelector);
+    this.isLoadingUpdateReservation$ = this.store.select(loadingUpdateReservationsSelector);
+    
     this.store.dispatch(ReservActions.getReservations());
   }
 }

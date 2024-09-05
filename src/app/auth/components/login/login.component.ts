@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { AuthState } from '../../store/auth.state';
-import * as AuthActions from '../../../auth/store/actions/auth.actions';
+import * as AuthActions from '../../../auth/store/auth.actions';
 import { WrapperComponent } from '../wrapper/wrapper.component';
 import { LoginInterface, UserInterface } from '../../models/auth.model';
 

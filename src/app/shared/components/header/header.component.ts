@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
 import { CurrentUserInterface } from '../../../auth/models/auth.model';
 import { AppState } from '../../store/appState.interface';
-import { currentUserSelector } from '../../../auth/store/selectors/auth.selectors';
+import { currentUserSelector } from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-header',

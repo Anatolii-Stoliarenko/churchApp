@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { WrapperComponent } from '../wrapper/wrapper.component';
 import { RegisterInterface, UserInterface } from '../../models/auth.model';
 import { AuthState } from '../../store/auth.state';
-import * as AuthActions from '../../../auth/store/actions/auth.actions';
+import * as AuthActions from '../../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-register',

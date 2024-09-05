@@ -15,7 +15,7 @@ import { AuthMode, UserInterface } from '../../models/auth.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../shared/store/appState.interface';
 import { Observable } from 'rxjs';
-import { selectAuthLoading } from '../../store/selectors/auth.selectors';
+import { selectAuthLoading } from '../../store/auth.selectors';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({

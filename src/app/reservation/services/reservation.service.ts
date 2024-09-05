@@ -19,7 +19,7 @@ import {
 import { ApiService } from '../../shared/services/api.service';
 import { UserInterface, UserRole } from '../../auth/models/auth.model';
 import { AppState } from '../../shared/store/appState.interface';
-import { currentUserSelector } from '../../auth/store/selectors/auth.selectors';
+import { currentUserSelector } from '../../auth/store/auth.selectors';
 import {
   reservationsSelector,
   selectedDaySelector,

@@ -12,8 +12,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reservation-detail-dialog',
-  templateUrl: './reservation-detail-dialog.component.html',
-  styleUrls: ['./reservation-detail-dialog.component.scss'],
+  templateUrl: './detail-dialog.component.html',
+  styleUrls: ['./detail-dialog.component.scss'],
   standalone: true,
   imports: [
     MatDialogTitle,

@@ -19,14 +19,15 @@ import {
 import { UtilsService } from '../../../shared/services/utils.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserInterface, UserRole } from '../../../auth/models/auth.model';
-import { ReservationDetailDialogComponent } from '../reservation-detail-dialog/reservation-detail-dialog.component';
+import { ReservationDetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 import { AppState } from '../../../shared/store/appState.interface';
-import { currentUserSelector } from '../../../auth/store/selectors/auth.selectors';
+import { currentUserSelector } from '../../../auth/store/auth.selectors';
 import {
   reservationsSelector,
   selectedDaySelector,
 } from '../../store/reservations.selectors';
 import * as ReservationActions from '../../store/reservations.actions';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-time',
@@ -38,6 +39,7 @@ import * as ReservationActions from '../../store/reservations.actions';
     FormsModule,
     MatInputModule,
     MatCheckboxModule,
+    MatFormFieldModule,
   ],
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
@@ -77,12 +79,12 @@ export class TimeComponent implements OnInit, OnDestroy {
 
   initValues(): void {
     this.subscription.push(
-      this.store.select(selectedDaySelector).subscribe((day) => {
-        this.selectedDay = day ? day : '';
+      this.store.select(selectedDaySelector).subscribe((selectedDay) => {
+        this.selectedDay = selectedDay ? selectedDay : '';
         this.resetComponentState();
       }),
 
-      this.store.select(reservationsSelector).subscribe((day) => {
+      this.store.select(reservationsSelector).subscribe(() => {
         this.resetComponentState();
       }),
 

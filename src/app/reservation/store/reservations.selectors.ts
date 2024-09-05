@@ -19,3 +19,8 @@ export const loadingReservationsSelector = createSelector(
   selectReservationsState,
   (state: ReservationState) => state.loading
 );
+
+export const loadingUpdateReservationsSelector = createSelector(
+  selectReservationsState,
+  (state: ReservationState) => state.updateReservationLoading
+);

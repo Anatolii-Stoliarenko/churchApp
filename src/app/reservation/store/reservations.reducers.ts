@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import { ReservationState, initialReserveState } from './reservation.state';
 import * as ReservationActions from './reservations.actions';
-import * as AuthActions from '../../auth/store/actions/auth.actions';
+import * as AuthActions from '../../auth/store/auth.actions';
 
 export const reservationReducer = createReducer<ReservationState>(
   initialReserveState,
@@ -45,48 +45,48 @@ export const reservationReducer = createReducer<ReservationState>(
   //Add Reservation
   on(ReservationActions.addReservations, (state) => ({
     ...state,
-    loading: true,
+    updateReservationLoading: true,
   })),
   on(ReservationActions.addReservationsSuccess, (state, { message }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     message,
   })),
   on(ReservationActions.getReservationsFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     error,
   })),
 
   //Update Reservation
   on(ReservationActions.updateReservations, (state) => ({
     ...state,
-    loading: true,
+    updateReservationLoading: true,
   })),
   on(ReservationActions.updateReservationsSuccess, (state, { message }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     message,
   })),
   on(ReservationActions.updateReservationsFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     error,
   })),
 
   //Delete Reservation
   on(ReservationActions.deleteReservations, (state) => ({
     ...state,
-    loading: true,
+    updateReservationLoading: true,
   })),
   on(ReservationActions.deleteReservationsSuccess, (state, { message }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     message,
   })),
   on(ReservationActions.deleteReservationsFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    updateReservationLoading: false,
     error,
   }))
 );

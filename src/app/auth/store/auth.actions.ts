@@ -4,7 +4,7 @@ import {
   CurrentUserInterface,
   LoginInterface,
   RegisterInterface,
-} from '../../models/auth.model';
+} from '../models/auth.model';
 
 export enum ActionTypes {
   LOGIN = '[Auth] Login',

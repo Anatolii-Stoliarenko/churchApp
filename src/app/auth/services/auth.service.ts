@@ -13,7 +13,7 @@ import {
 import { ApiService } from '../../shared/services/api.service';
 import { PersistenceService } from '../../shared/services/persistence.service';
 import { AppState } from '../../shared/store/appState.interface';
-import * as authactions from '../store/actions/auth.actions';
+import * as authactions from '../store/auth.actions';
 import { ApiResponse } from '../../reservation/models/reservations.model';
 
 @Injectable({

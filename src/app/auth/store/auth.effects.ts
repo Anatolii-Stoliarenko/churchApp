@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { AuthService } from '../../services/auth.service';
-import * as AuthActions from '../actions/auth.actions';
-import { UtilsService } from '../../../shared/services/utils.service';
-import { PersistenceService } from '../../../shared/services/persistence.service';
+import { AuthService } from '../services/auth.service';
+import * as AuthActions from './auth.actions';
+import { UtilsService } from '../../shared/services/utils.service';
+import { PersistenceService } from '../../shared/services/persistence.service';
 
 @Injectable()
 export class AuthEffects {
@@ -25,8 +25,6 @@ export class AuthEffects {
       mergeMap((action) =>
         this.authService.login(action.payload).pipe(
           map((response) => {
-            this.persistenceService.saveItem('currentUser', response.user);
-            this.persistenceService.saveItem('authToken', response.token);
             return AuthActions.loginSuccess({
               user: response.user,
               token: response.token,
@@ -44,9 +42,11 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
         tap((action) => {
+          this.persistenceService.saveItem('currentUser', action.user);
+          this.persistenceService.saveItem('authToken', action.token);
+          this.router.navigate(['/reservation']);
           const message = `${action.user.name} successfully logged in`;
           action.message ? this.utilsService.snackBarSuccess(message) : '';
-          this.router.navigate(['/reservation']);
         })
       ),
     { dispatch: false }
@@ -57,8 +57,8 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginFailure),
         tap((action) => {
-          console.error('Failed to login', action.error);
-          this.utilsService.snackBarError('Failed to login');
+          console.error(action.error);
+          this.utilsService.snackBarError(action.error);
         })
       ),
     { dispatch: false }
@@ -69,12 +69,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.logout),
         tap((action) => {
-          this.persistenceService.removeItem('currentUser');
-          this.persistenceService.removeItem('authToken');
-          this.utilsService.snackBarSuccess(
-            `${action.message} successfully logged out`
-          );
+          this.persistenceService.clear();
           this.router.navigate(['/login']);
+          this.utilsService.snackBarSuccess(`${action.message} logged out`);
         })
       ),
     { dispatch: false }
@@ -104,10 +101,22 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.registerSuccess),
         tap((action) => {
+          this.router.navigate(['/login']);
           const message = `${action.message}`;
           action.message ? this.utilsService.snackBarSuccess(message) : '';
           this.utilsService.greenConsole(message);
-          this.router.navigate(['/login']);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  registerFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.registerFailure),
+        tap((action) => {
+          console.error(action.error);
+          this.utilsService.snackBarError(`Registration failed`);
         })
       ),
     { dispatch: false }
