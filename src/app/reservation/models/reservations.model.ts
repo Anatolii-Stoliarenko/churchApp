@@ -1,4 +1,7 @@
-import { UserInterface } from '../../auth/models/auth.model';
+import {
+  CurrentUserInterface,
+  UserInterface,
+} from '../../auth/models/auth.model';
 
 // Interface for data sent to the backend
 export interface CreateReservationModel {
@@ -46,6 +49,15 @@ export interface ReservationModel {
   status?: ReservationStatus;
 }
 
+export interface BookingModel {
+  startHour: string;
+  endHour: string;
+  places: PlaceType[];
+  comments: string;
+  repeat: string;
+  date?: string;
+}
+
 export interface ResponseReservationModel {
   reservations: FetchedReservationModel[];
   message: string;
@@ -75,6 +87,28 @@ export enum ReservationStatus {
 
 export interface ApiResponse {
   message: string;
+}
+
+export interface ConfirmDialogDetailModel {
+  status: ReservationStatus;
+  user: CurrentUserInterface;
+  repeat?: string;
+  places: PlaceType[];
+  date?: string;
+  startHour: string;
+  endHour: string;
+  comments: string;
+}
+
+export interface NewReservationModel {
+  status: ReservationStatus;
+  user: CurrentUserInterface;
+  repeat?: string;
+  places: PlaceType[];
+  date: string;
+  startHour: string;
+  endHour: string;
+  comments: string;
 }
 
 export type TimeSlot =

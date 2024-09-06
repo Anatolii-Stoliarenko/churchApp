@@ -1,0 +1,15 @@
+<ng-container
+  *ngIf="
+    (isChildVisible &&
+      selectedDay &&
+      currentUser &&
+      reserveService.isSelectedDayTodayOrFuture()) ||
+    (isChildVisible && selectedDay && currentUser?.role === 'admin')
+  "
+>
+  <app-booking
+    [selectedDay]="selectedDay"
+    (submitEvent)="confirmReservation($event)"
+  >
+  </app-booking>
+</ng-container>

@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Store } from '@ngrx/store';
 
 import { ReservationService } from '../../services/reservation.service';
@@ -27,7 +28,6 @@ import {
   selectedDaySelector,
 } from '../../store/reservations.selectors';
 import * as ReservationActions from '../../store/reservations.actions';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-time',

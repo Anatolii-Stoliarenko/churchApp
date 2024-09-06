@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { UtilsService } from '../../shared/services/utils.service';
@@ -7,7 +7,10 @@ import { DataService } from './data.service';
 import { AuthService } from '../../auth/services/auth.service';
 import {
   ApiResponse,
+  BookingModel,
+  ConfirmDialogDetailModel,
   CreateReservationModel,
+  NewReservationModel,
   PlaceType,
   ReservationModel,
   ReservationStatus,
@@ -17,7 +20,7 @@ import {
   UserModel,
 } from '../models/reservations.model';
 import { ApiService } from '../../shared/services/api.service';
-import { UserInterface, UserRole } from '../../auth/models/auth.model';
+import { CurrentUserInterface } from '../../auth/models/auth.model';
 import { AppState } from '../../shared/store/appState.interface';
 import { currentUserSelector } from '../../auth/store/auth.selectors';
 import {
@@ -37,7 +40,7 @@ export class ReservationService {
 
   selectedDay: string | null | undefined;
   Subscription: Subscription[] = [];
-  currentUser: UserInterface | null = null;
+  currentUser: CurrentUserInterface | null = null; //UserInterface | null = null;
   reservations: ReservationModel[] = [];
 
   constructor() {
@@ -97,6 +100,50 @@ export class ReservationService {
 
   deleteReservationStore(id: string): Observable<ApiResponse> {
     return this.apiService.deleteReservation(id);
+  }
+
+  prepareReservation(reservation: BookingModel): void {
+    const newReservation: NewReservationModel = {
+      ...reservation,
+      status: this.createStatus(),
+      user: this.currentUser!,
+      date: this.selectedDay!,
+    };
+    this.isConflictPlaningReservations(newReservation)
+      ? console.log('no conflict')
+      : console.log('conflict');
+  }
+
+  isConflictPlaningReservations(data: NewReservationModel): boolean {
+    const repeatInterval = this.getWeekInterval(data?.repeat);
+    let currentDate = new Date(this.selectedDay!);
+
+    const ReservationsWithConflict = [];
+
+    for (let i = 0; i < repeatInterval; i++) {
+      for (const place of data.places) {
+        const newReservation = {
+          date: currentDate.toISOString().split('T')[0], // YYYY-MM-DD format
+          startHour: data.startHour,
+          endHour: data.endHour,
+          comments: data.comments,
+          place: place,
+          status: data.status,
+        };
+
+        if (this.hasConflict(newReservation)) {
+          ReservationsWithConflict.push(newReservation);
+          const message = `Conflict reservations: ${ReservationsWithConflict.length}`;
+          this.utilsService.snackBarError(message);
+          this.utilsService.greenConsole(message);
+          console.log(ReservationsWithConflict);
+        }
+      }
+
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return ReservationsWithConflict.length > 0;
   }
 
   // Checking conflicts reservation
@@ -192,5 +239,29 @@ export class ReservationService {
 
   getAllTemplateHour() {
     return this.dataService.availableHours;
+  }
+
+  getDataForConfirmDialog(data: BookingModel): ConfirmDialogDetailModel {
+    return {
+      status: this.createStatus(),
+      user: this.currentUser!,
+      repeat: data.repeat,
+
+      places: data.places,
+      date: data.date,
+      startHour: data.startHour,
+      endHour: data.endHour,
+      comments: data.comments,
+    };
+  }
+
+  createStatus(): ReservationStatus {
+    return this.currentUser?.role === 'admin'
+      ? ReservationStatus.APPROVED
+      : ReservationStatus.PENDING;
+  }
+
+  private getWeekInterval(repeat: string = ''): number {
+    return parseInt(repeat.split(' ')[0], 10) || 1; // Default to 1 if no repeat interval is selected
   }
 }
