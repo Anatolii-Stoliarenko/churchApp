@@ -72,6 +72,7 @@ export class BookingService {
 
     selectedPlaces.forEach((place) => {
       const hours = this.reserveService.getHours(selectedDay, place);
+      console.log('hours' + hours);
       availableHours = [...availableHours, ...hours];
     });
 
