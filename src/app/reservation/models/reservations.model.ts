@@ -126,8 +126,8 @@ export interface NewReservationModel {
 }
 
 export enum ReservationType {
-  PL = 'Polish',
-  UA = 'Ukrainian',
+  PL = 'PL',
+  UA = 'UA',
   OTHER = 'Other',
 }
 

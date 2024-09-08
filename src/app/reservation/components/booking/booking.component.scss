@@ -39,16 +39,21 @@ button {
   color: #ffffff !important;
 }
 
+/* Active colors for the toggle buttons */
 ::ng-deep .mat-button-toggle-checked.toggle-pl {
-  --active-color: #f44336 !important;
+  --active-color: #f44336 !important; /* Red for PL */
+  font-weight: bold !important;
 }
 
 ::ng-deep .mat-button-toggle-checked.toggle-ua {
-  --active-color: #1976d2 !important;
+  --active-color: #ffd700 !important; /* Blue for UA */
+  color: #000000 !important;
+  font-weight: bold;
 }
 
 ::ng-deep .mat-button-toggle-checked.toggle-inne {
-  --active-color: #9e9e9e !important;
+  --active-color: #9e9e9e !important; /* Gray for Inne */
+  font-weight: bold !important;
 }
 
 /* Basic styling for the color circle */
@@ -61,15 +66,25 @@ button {
   margin-right: 8px; /* Space between the circle and text */
 }
 
-/* Specific colors for each type */
+/* Flag for Poland (white and red) */
 .circle-pl {
-  background-color: #f44336; /* Red for PL */
+  background: linear-gradient(
+    to bottom,
+    white 50%,
+    #f44336 50%
+  ); /* Poland flag */
 }
 
+/* Flag for Ukraine (blue and yellow) */
 .circle-ua {
-  background-color: #ffeb3b; /* Yellow for UA */
+  background: linear-gradient(
+    to bottom,
+    #1976d2 50%,
+    #ffd700 50%
+  ); /* Ukraine flag */
 }
 
+/* Generic or Other flag (gray) */
 .circle-inne {
-  background-color: #9e9e9e; /* Gray for Inne */
+  background-color: #9e9e9e; /* Gray for Other */
 }

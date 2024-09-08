@@ -10,8 +10,8 @@
       *ngFor="let type of reservationTypes"
       [value]="type"
       [ngClass]="{
-        'toggle-pl': type === 'Polish',
-        'toggle-ua': type === 'Ukrainian',
+        'toggle-pl': type === 'PL',
+        'toggle-ua': type === 'UA',
         'toggle-inne': type === 'Other'
       }"
     >
