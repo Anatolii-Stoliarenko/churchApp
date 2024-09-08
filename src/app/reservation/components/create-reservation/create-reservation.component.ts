@@ -4,13 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
-import { BookingComponent } from '../booking.component';
-import { ReservationService } from '../../../services/reservation.service';
-import { AppState } from '../../../../shared/store/appState.interface';
-import { selectedDaySelector } from '../../../store/reservations.selectors';
-import { BookingModel } from '../../../models/reservations.model';
-import { ReservationDetailDialogComponent } from '../../detail-dialog/detail-dialog.component';
-import { currentUserSelector } from '../../../../auth/store/auth.selectors';
+import { BookingComponent } from '../booking/booking.component';
+import { ReservationService } from '../../services/reservation.service';
+import { AppState } from '../../../shared/store/appState.interface';
+import { selectedDaySelector } from '../../store/reservations.selectors';
+import { BookingModel } from '../../models/reservations.model';
+import { ReservationDetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { currentUserSelector } from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-create-reservation',

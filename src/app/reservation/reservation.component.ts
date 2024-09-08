@@ -10,8 +10,11 @@ import { HeaderComponent } from '../shared/components/header/header.component';
 import { AppState } from '../shared/store/appState.interface';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import * as ReservActions from './store/reservations.actions';
-import { loadingReservationsSelector, loadingUpdateReservationsSelector } from './store/reservations.selectors';
-import { CreateReservationComponent } from "./components/booking/create-reservation/create-reservation.component";
+import {
+  loadingReservationsSelector,
+  loadingUpdateReservationsSelector,
+} from './store/reservations.selectors';
+import { CreateReservationComponent } from './components/create-reservation/create-reservation.component';
 
 @Component({
   selector: 'app-reservation',
@@ -23,8 +26,8 @@ import { CreateReservationComponent } from "./components/booking/create-reservat
     HeaderComponent,
     RouterOutlet,
     LoadingComponent,
-    CreateReservationComponent
-],
+    CreateReservationComponent,
+  ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
@@ -35,8 +38,10 @@ export class ReservationComponent {
 
   ngOnInit() {
     this.isLoading$ = this.store.select(loadingReservationsSelector);
-    this.isLoadingUpdateReservation$ = this.store.select(loadingUpdateReservationsSelector);
-    
+    this.isLoadingUpdateReservation$ = this.store.select(
+      loadingUpdateReservationsSelector
+    );
+
     this.store.dispatch(ReservActions.getReservations());
   }
 }

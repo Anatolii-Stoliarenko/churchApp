@@ -91,3 +91,16 @@ li {
 .type-other {
   background-color: #9e9e9e; /* Gray background */
 }
+
+tr.mat-row,
+tr.mat-header-row,
+td.mat-cell,
+th.mat-header-cell {
+  height: 20px !important;
+}
+
+/* Style for selected row */
+.selected-row {
+  background-color: #02dc7a !important; /* Light green background */
+  color: black; /* Optional: Change text color */
+}

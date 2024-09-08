@@ -65,6 +65,40 @@ export class ListComponent implements OnInit {
     'actions',
   ];
 
+  // Track selected rows
+  selectedRows: any[] = [];
+
+  // Toggle row selection
+  toggleSelection(row: any) {
+    console.log(row);
+    const index = this.selectedRows.indexOf(row);
+    if (index === -1) {
+      this.selectedRows.push(row);
+    } else {
+      this.selectedRows.splice(index, 1);
+    }
+  }
+
+  // Check if row is selected
+  isRowSelected(row: any): boolean {
+    return this.selectedRows.indexOf(row) > -1;
+  }
+
+  getRowClass(reservation: ReservationModel): string {
+    if (this.isRowSelected(reservation)) {
+      return 'selected-row'; // Apply selected row class
+    }
+    if (!reservation.status) {
+      return '';
+    }
+    switch (reservation.status) {
+      case ReservationStatus.APPROVED:
+        return 'approved-row';
+      case ReservationStatus.PENDING:
+        return 'pending-row';
+    }
+  }
+
   constructor() {
     this.dataSource = new MatTableDataSource<ReservationModel>([]);
   }
@@ -93,18 +127,6 @@ export class ListComponent implements OnInit {
         this.updateDataSource();
       })
     );
-  }
-
-  getRowClass(reservation: ReservationModel): string {
-    if (!reservation.status) {
-      return '';
-    }
-    switch (reservation.status) {
-      case ReservationStatus.APPROVED:
-        return 'approved-row';
-      case ReservationStatus.PENDING:
-        return 'pending-row';
-    }
   }
 
   updateDataSource(): void {
@@ -184,7 +206,20 @@ export class ListComponent implements OnInit {
         this.store.dispatch(
           ReservActions.deleteReservations({ id: reservation.id })
         );
+        // this.deleteReservations(this.selectedRows);
       }
+    });
+  }
+
+  deleteReservations(selectedRows: ReservationModel[]): void {
+    if (selectedRows.length === 0) {
+      console.log('No reservations selected for deletion.');
+      return;
+    }
+
+    selectedRows.forEach(({ id }) => {
+      console.log(id); // Log the reservation ID
+      this.store.dispatch(ReservActions.deleteReservations({ id }));
     });
   }
 

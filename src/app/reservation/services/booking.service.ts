@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
-import { ReservationService } from '../../services/reservation.service';
-import { PlaceType, ReservationType } from '../../models/reservations.model';
+import { ReservationService } from './reservation.service';
+import { PlaceType, ReservationType } from '../models/reservations.model';
 
 @Injectable({
   providedIn: 'root',

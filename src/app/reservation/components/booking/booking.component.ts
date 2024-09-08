@@ -14,7 +14,7 @@ import {
   ReservationType,
 } from '../../models/reservations.model';
 import { ReservationService } from '../../services/reservation.service';
-import { BookingService } from './booking.service';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-booking',

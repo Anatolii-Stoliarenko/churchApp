@@ -96,7 +96,7 @@ export class ReservationService {
       : this.dispatchReservartions(reservations);
   }
 
-  async dispatchReservartions(reservations: BookingModel): Promise<void> {
+  dispatchReservartions(reservations: BookingModel): void {
     const repeatInterval = this.getWeekInterval(reservations?.repeat);
     const currentDate = new Date(reservations?.date ?? this.selectedDay!);
 
@@ -111,7 +111,7 @@ export class ReservationService {
         };
 
         try {
-          await this.store.dispatch(
+          this.store.dispatch(
             ReservationActions.addReservations({ reservation: newRes })
           );
         } catch (error) {
@@ -119,8 +119,8 @@ export class ReservationService {
           console.error('Reservation error:', error);
           break;
         }
-        currentDate.setDate(currentDate.getDate() + 7); //add 7 days aftre each interaction
       }
+      currentDate.setDate(currentDate.getDate() + 7); //add 7 days aftre each interaction
     }
   }
 
