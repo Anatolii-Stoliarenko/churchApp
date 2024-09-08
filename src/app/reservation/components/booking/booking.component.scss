@@ -1,22 +1,29 @@
 .container {
   width: inherit;
   margin: 0 5px;
-
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-  grid-template-rows: auto auto auto;
+  //   grid-template-rows: auto auto auto auto;
   column-gap: 2%; /* Control spacing between the form fields */
   // row-gap: 10px;
 }
-
-mat-form-field:nth-child(3) {
-  grid-column: span 1; /* The third field spans across both columns */
-  width: 100%; /* Ensure the third field takes the full width */
+mat-button-toggle-group {
+  grid-column: span 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 35px;
+  margin-bottom: 15px;
 }
 
-mat-form-field:nth-child(5) {
-  grid-column: span 2; /* The third field spans across both columns */
-  width: 100%; /* Ensure the third field takes the full width */
+mat-button-toggle {
+  flex: 1; /* Make each toggle button take equal width */
+  color: #000000;
+}
+
+.full-width-field {
+  grid-column: span 2; /* Make the field span across both columns */
+  width: 100%; /* Ensure it takes the full width */
   margin-bottom: 15px;
 }
 
@@ -24,4 +31,45 @@ button {
   grid-column: span 2; /* The third field spans across both columns */
   width: 100%; /* Ensure the third field takes the full width */
   margin-bottom: 10px;
+}
+
+/* Ensure button colors change only when selected */
+::ng-deep .mat-button-toggle-checked {
+  background-color: var(--active-color) !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .mat-button-toggle-checked.toggle-pl {
+  --active-color: #f44336 !important;
+}
+
+::ng-deep .mat-button-toggle-checked.toggle-ua {
+  --active-color: #1976d2 !important;
+}
+
+::ng-deep .mat-button-toggle-checked.toggle-inne {
+  --active-color: #9e9e9e !important;
+}
+
+/* Basic styling for the color circle */
+.color-circle {
+  display: inline-block;
+  width: 15px; /* Size of the circle */
+  height: 15px; /* Size of the circle */
+  border-radius: 50%; /* Make it a circle */
+  border: #000000 solid 0.5px;
+  margin-right: 8px; /* Space between the circle and text */
+}
+
+/* Specific colors for each type */
+.circle-pl {
+  background-color: #f44336; /* Red for PL */
+}
+
+.circle-ua {
+  background-color: #ffeb3b; /* Yellow for UA */
+}
+
+.circle-inne {
+  background-color: #9e9e9e; /* Gray for Inne */
 }

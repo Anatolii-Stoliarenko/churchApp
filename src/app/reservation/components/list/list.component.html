@@ -6,6 +6,24 @@
     class="mat-table"
     [class.hidden]="false"
   >
+    <!-- Type -->
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let reservation">
+        <div class="type-cell">
+          <!-- Circle with color based on reservation.type -->
+          <span
+            class="type-circle"
+            [ngClass]="{
+              'type-polish': reservation.type === 'Polish',
+              'type-ukrainian': reservation.type === 'Ukrainian',
+              'type-other': reservation.type === 'Other'
+            }"
+          ></span>
+        </div>
+      </td>
+    </ng-container>
+
     <!-- startHour Column -->
     <ng-container matColumnDef="startHour">
       <th
@@ -14,7 +32,7 @@
         mat-sort-header
         class="centered-header"
       >
-        From
+        Start
       </th>
       <td mat-cell *matCellDef="let reservation">
         {{ reservation.startHour }}
@@ -23,7 +41,7 @@
 
     <!-- startHour Column -->
     <ng-container matColumnDef="endHour">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>To</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>End</th>
       <td mat-cell *matCellDef="let reservation">
         {{ reservation.endHour }}
       </td>
@@ -44,7 +62,7 @@
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef class="centered-header">Actions</th>
+      <th mat-header-cell *matHeaderCellDef class="centered-header">Menu</th>
       <td mat-cell *matCellDef="let reservation">
         <!-- Check what show: visibility or menu -->
         <ng-container
@@ -107,6 +125,23 @@
             <span>Edit</span>
           </button>
 
+          <!-- Type button to open submenu -->
+          <button
+            mat-menu-item
+            [matMenuTriggerFor]="typeMenu"
+            aria-label="Change type"
+            [disabled]="
+              !(
+                currentUser?.id === reservation.user.id ||
+                currentUser?.role === 'admin' ||
+                currentUser?.role === 'moderator'
+              )
+            "
+          >
+            <mat-icon>category</mat-icon>
+            <span>Type</span>
+          </button>
+
           <!-- Pending Reject Aprove -->
           <ng-container
             *ngIf="
@@ -133,6 +168,22 @@
               <span>Pending</span>
             </button>
           </ng-container>
+
+          <!-- Submenu for type selection -->
+          <mat-menu #typeMenu="matMenu">
+            <button mat-menu-item (click)="typeUA(reservation)">
+              <mat-icon>flag</mat-icon>
+              <span>UA</span>
+            </button>
+            <button mat-menu-item (click)="typePl(reservation)">
+              <mat-icon>flag</mat-icon>
+              <span>PL</span>
+            </button>
+            <button mat-menu-item (click)="typeOther(reservation)">
+              <mat-icon>flag</mat-icon>
+              <span>Other</span>
+            </button>
+          </mat-menu>
         </mat-menu>
       </td>
       <!-- menu -->

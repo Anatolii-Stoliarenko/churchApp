@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import {
   ApiResponse,
   BookingModel,
+  CheckConflictModel,
   ConfirmDialogDetailModel,
   CreateReservationModel,
   NewReservationModel,
@@ -17,7 +18,6 @@ import {
   ResponseReservationModel,
   TimeSlot,
   updateReservationInterface,
-  UserModel,
 } from '../models/reservations.model';
 import { ApiService } from '../../shared/services/api.service';
 import { CurrentUserInterface } from '../../auth/models/auth.model';
@@ -27,6 +27,7 @@ import {
   reservationsSelector,
   selectedDaySelector,
 } from '../store/reservations.selectors';
+import * as ReservationActions from '../store/reservations.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -67,22 +68,7 @@ export class ReservationService {
     );
   }
 
-  isSelectedDayTodayOrFuture(): boolean {
-    let selectedDate = new Date(this.selectedDay ?? '');
-    const today = new Date();
-
-    // Set time to 00:00:00 to compare only the dates, not the time
-    today.setHours(0, 0, 0, 0);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    // Return true if selectedDate is today or in the future
-    return selectedDate >= today;
-  }
-
-  getReservationsLocaly(): ReservationModel[] {
-    return this.reservations;
-  }
-
+  // API
   getReservations(): Observable<ResponseReservationModel> {
     return this.apiService.getAllReservations();
   }
@@ -102,73 +88,108 @@ export class ReservationService {
     return this.apiService.deleteReservation(id);
   }
 
-  prepareReservation(reservation: BookingModel): void {
-    const newReservation: NewReservationModel = {
-      ...reservation,
-      status: this.createStatus(),
-      user: this.currentUser!,
-      date: this.selectedDay!,
-    };
-    this.isConflictPlaningReservations(newReservation)
-      ? console.log('no conflict')
-      : console.log('conflict');
+  //OTHER FUNCTIONSs
+  addReservations(reservations: BookingModel) {
+    const cheking = this.chekingPlaningReservations(reservations);
+    cheking.length > 0
+      ? this.handleConflictReservations(cheking)
+      : this.dispatchReservartions(reservations);
   }
 
-  isConflictPlaningReservations(data: NewReservationModel): boolean {
-    const repeatInterval = this.getWeekInterval(data?.repeat);
-    let currentDate = new Date(this.selectedDay!);
+  async dispatchReservartions(reservations: BookingModel): Promise<void> {
+    const repeatInterval = this.getWeekInterval(reservations?.repeat);
+    const currentDate = new Date(reservations?.date ?? this.selectedDay!);
 
-    const ReservationsWithConflict = [];
+    for (let i = 0; i < repeatInterval; i++) {
+      for (const place of reservations.places) {
+        const newRes: CreateReservationModel = {
+          ...reservations,
+          place: place, // Use the current place
+          date: currentDate.toISOString().split('T')[0], // YYYY-MM-DD format
+          user: this.currentUser!,
+          status: this.createStatus(),
+        };
+
+        try {
+          await this.store.dispatch(
+            ReservationActions.addReservations({ reservation: newRes })
+          );
+        } catch (error) {
+          this.utilsService.snackBarError('Reservation failed.');
+          console.error('Reservation error:', error);
+          break;
+        }
+        currentDate.setDate(currentDate.getDate() + 7); //add 7 days aftre each interaction
+      }
+    }
+  }
+
+  handleConflictReservations(data: BookingModel[]) {
+    if (data.length > 0) {
+      this.utilsService.snackBarError(`Conflict reservations: ${data.length}`);
+      this.utilsService.greenConsole(`Conflict reservation with exist: `);
+      console.log(data);
+    }
+  }
+
+  private chekingPlaningReservations(data: BookingModel): BookingModel[] {
+    const repeatInterval = this.getWeekInterval(data?.repeat);
+    const currentDate = new Date(data?.date ?? this.selectedDay!);
+
+    let conflictReservations: BookingModel[] = [];
 
     for (let i = 0; i < repeatInterval; i++) {
       for (const place of data.places) {
-        const newReservation = {
-          date: currentDate.toISOString().split('T')[0], // YYYY-MM-DD format
-          startHour: data.startHour,
-          endHour: data.endHour,
-          comments: data.comments,
+        const reserves = this.isConflict({
+          ...data,
+          date: currentDate.toISOString().split('T')[0],
           place: place,
-          status: data.status,
-        };
-
-        if (this.hasConflict(newReservation)) {
-          ReservationsWithConflict.push(newReservation);
-          const message = `Conflict reservations: ${ReservationsWithConflict.length}`;
-          this.utilsService.snackBarError(message);
-          this.utilsService.greenConsole(message);
-          console.log(ReservationsWithConflict);
+          user: this.currentUser!,
+        });
+        if (reserves) {
+          conflictReservations = [
+            ...conflictReservations,
+            {
+              startHour: data.startHour,
+              endHour: data.endHour,
+              places: data.places,
+              comments: data.comments,
+              repeat: data.repeat,
+              date: currentDate.toISOString().split('T')[0],
+              type: data.type,
+            },
+          ];
         }
       }
 
-      currentDate.setDate(currentDate.getDate() + 7);
+      currentDate.setDate(currentDate.getDate() + 7); //add 7 days aftre each interaction
     }
 
-    return ReservationsWithConflict.length > 0;
+    return conflictReservations;
   }
 
-  // Checking conflicts reservation
-  hasConflict(newReservation: Omit<ReservationModel, 'user' | 'id'>): boolean {
-    if (newReservation.startHour === newReservation.endHour) {
-      return true; // If start and end times are the same, consider it a conflict
+  isConflict(reservation: CreateReservationModel): boolean {
+    if (reservation.startHour === reservation.endHour) {
+      return true;
     }
-    return this.reservations.some((existingReservation) => {
+    return this.reservations.some((existingRes) => {
       return (
-        existingReservation.date === newReservation.date &&
-        existingReservation.place === newReservation.place &&
+        existingRes.date === reservation.date &&
+        existingRes.place === reservation.place &&
         this.timeRangesOverlap(
-          existingReservation.startHour,
-          existingReservation.endHour,
-          newReservation.startHour,
-          newReservation.endHour
+          existingRes.startHour,
+          existingRes.endHour,
+          reservation.startHour,
+          reservation.endHour
         ) &&
-        this.dataService.availableTimeSlots.indexOf(
-          newReservation.startHour as TimeSlot
-        ) <=
-          this.dataService.availableTimeSlots.indexOf(
-            newReservation.endHour as TimeSlot
-          )
+        this.getIndexOfPossibleHours(reservation.startHour) <=
+          this.getIndexOfPossibleHours(reservation.endHour)
       );
     });
+  }
+
+  private getIndexOfPossibleHours(hour: string): number {
+    return this.dataService.availableHours.indexOf(hour as TimeSlot);
   }
 
   private timeRangesOverlap(
@@ -183,39 +204,18 @@ export class ReservationService {
     );
   }
 
-  getHours(
-    date: string,
-    place?: PlaceType,
-    user?: UserModel,
-    type: 'reserved' | 'available' = 'available'
-  ): string[] {
-    return type === 'reserved'
-      ? this.getReservedHours(date, place, user)
-      : this.getAvailableHours(date, place, user);
-  }
-
-  private getAvailableHours(
-    date: string,
-    place?: PlaceType,
-    user?: UserModel
-  ): string[] {
-    const reservedHours = this.getReservedHours(date, place, user);
+  getAvailableHours(date: string, place?: PlaceType): string[] {
+    const reservedHours = this.getReservedHours(date, place);
     return this.dataService.availableHours.filter(
       (hour) => !reservedHours.includes(hour)
     );
   }
 
-  getReservedHours(
-    date: string,
-    place?: PlaceType,
-    user?: UserModel
-  ): string[] {
+  getReservedHours(date: string, place?: PlaceType): string[] {
     return this.reservations
       .filter(
         (reservation) =>
-          reservation.date === date &&
-          reservation.place === place &&
-          (!user || reservation.user.id === user.id)
+          reservation.date === date && reservation.place === place
       )
       .flatMap((reservation) => {
         const startIndex = this.dataService.availableHours.indexOf(
@@ -233,15 +233,8 @@ export class ReservationService {
       });
   }
 
-  getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {
-    return this.reservations.filter((res) => res.date === selectedDay);
-  }
-
-  getAllTemplateHour() {
-    return this.dataService.availableHours;
-  }
-
-  getDataForConfirmDialog(data: BookingModel): ConfirmDialogDetailModel {
+  //for ConrirmDialog in booking component
+  getDataForConfirmDialogBooking(data: BookingModel): ConfirmDialogDetailModel {
     return {
       status: this.createStatus(),
       user: this.currentUser!,
@@ -252,10 +245,28 @@ export class ReservationService {
       startHour: data.startHour,
       endHour: data.endHour,
       comments: data.comments,
+      type: data.type,
     };
   }
 
-  createStatus(): ReservationStatus {
+  getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {
+    return this.reservations.filter((res) => res.date === selectedDay);
+  }
+
+  getAllPossibleHours() {
+    return this.dataService.availableHours;
+  }
+
+  isSelectedDayTodayOrFuture(day: string): boolean {
+    // Set time to 00:00:00 to compare only the dates, not the time
+    let selectedDate = new Date(day).setHours(0, 0, 0, 0);
+    const today = new Date().setHours(0, 0, 0, 0);
+
+    // Return true if selectedDate is today or in the future
+    return selectedDate >= today;
+  }
+
+  private createStatus(): ReservationStatus {
     return this.currentUser?.role === 'admin'
       ? ReservationStatus.APPROVED
       : ReservationStatus.PENDING;

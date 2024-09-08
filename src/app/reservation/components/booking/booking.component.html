@@ -1,4 +1,33 @@
 <div class="container">
+  <!-- toggle-group -->
+  <mat-button-toggle-group
+    name="reservationType"
+    [(ngModel)]="type"
+    aria-label="Reservation Type"
+    class="custom-toggle-group"
+  >
+    <mat-button-toggle
+      *ngFor="let type of reservationTypes"
+      [value]="type"
+      [ngClass]="{
+        'toggle-pl': type === 'Polish',
+        'toggle-ua': type === 'Ukrainian',
+        'toggle-inne': type === 'Other'
+      }"
+    >
+      <!-- Small circle for each button -->
+      <!-- <span
+        class="color-circle"
+        [ngClass]="{
+          'circle-pl': type.code === 'PL',
+          'circle-ua': type.code === 'UA',
+          'circle-inne': type.code === 'Inne'
+        }"
+      ></span> -->
+      {{ type }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
   <!-- Places -->
   <mat-form-field appearance="outline">
     <mat-label>Places</mat-label>
@@ -57,7 +86,7 @@
   </mat-form-field>
 
   <!-- Comment -->
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="full-width-field">
     <mat-label>Comments</mat-label>
     <textarea
       matInput

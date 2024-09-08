@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ListComponent } from './components/list/list.component';
 import { HeaderComponent } from '../shared/components/header/header.component';
-import { TimeComponent } from './components/time/time.component';
 import { AppState } from '../shared/store/appState.interface';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import * as ReservActions from './store/reservations.actions';
@@ -23,7 +22,6 @@ import { CreateReservationComponent } from "./components/booking/create-reservat
     ListComponent,
     HeaderComponent,
     RouterOutlet,
-    TimeComponent,
     LoadingComponent,
     CreateReservationComponent
 ],

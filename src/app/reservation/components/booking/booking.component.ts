@@ -6,8 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { BookingModel, PlaceType } from '../../models/reservations.model';
+import {
+  BookingModel,
+  PlaceType,
+  ReservationType,
+} from '../../models/reservations.model';
 import { ReservationService } from '../../services/reservation.service';
 import { BookingService } from './booking.service';
 
@@ -22,6 +27,7 @@ import { BookingService } from './booking.service';
     MatInputModule,
     MatCheckboxModule,
     MatFormFieldModule,
+    MatButtonToggleModule,
   ],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss',
@@ -36,25 +42,28 @@ export class BookingComponent {
   @Input() selectedStartTime: string = '';
   @Input() selectedEndTime: string = '';
   @Input() selectedDay: string = '';
+  @Input() type: ReservationType = ReservationType.OTHER; // Holds the selected reservation type
 
   @Output() submitEvent = new EventEmitter<BookingModel>();
 
+  reservationTypes = this.bookingService.getTypes();
   filteredToHours: string[] = [];
   repeat: string = '';
   places = this.bookingService.getPlaces();
   weekOptions: string[] = this.bookingService.getWeekOptions();
-  possibleTimes: string[] = this.reserveService.getAllTemplateHour();
+  possibleTimes: string[] = this.reserveService.getAllPossibleHours();
+
+  hideSingleSelectionIndicator() {}
 
   onSubmit() {
-    this.submitEvent.emit(
-      this.bookingService.getFormData({
-        startHour: this.selectedStartTime,
-        endHour: this.selectedEndTime,
-        places: this.selectedPlaces,
-        comments: this.comment,
-        repeat: this.repeat,
-      })
-    );
+    this.submitEvent.emit({
+      startHour: this.selectedStartTime,
+      endHour: this.selectedEndTime,
+      places: this.selectedPlaces,
+      comments: this.comment,
+      repeat: this.repeat,
+      type: this.type,
+    });
   }
 
   onStartTime(selectedStartTime: string): void {
@@ -77,6 +86,5 @@ export class BookingComponent {
   onPlaceChange(): void {
     this.selectedStartTime = '';
     this.selectedEndTime = '';
-    this.repeat = '';
   }
 }

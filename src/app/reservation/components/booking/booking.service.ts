@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import { ReservationService } from '../../services/reservation.service';
-import { BookingModel, PlaceType } from '../../models/reservations.model';
+import { PlaceType, ReservationType } from '../../models/reservations.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,10 @@ export class BookingService {
 
   getPlaces() {
     return Object.values(PlaceType);
+  }
+
+  getTypes() {
+    return Object.values(ReservationType);
   }
 
   // Get filtered end times based on the selected start time, day, and places
@@ -63,36 +67,34 @@ export class BookingService {
     return filteredToHours;
   }
 
-  // Get available times based on day and selected places
   getAvailableTimes(
     selectedDay: string,
     selectedPlaces: PlaceType[]
   ): string[] {
     let availableHours: string[] = [];
+    let reservedHours: string[] = [];
 
     selectedPlaces.forEach((place) => {
-      const hours = this.reserveService.getHours(selectedDay, place);
-      console.log('hours' + hours);
+      // Get the available hours for this place
+      const hours = this.reserveService.getAvailableHours(selectedDay, place);
+
+      // Get reserved hours for this place
+      const reserved = this.reserveService.getReservedHours(selectedDay, place);
+
+      // Add the available hours of this place to the list
       availableHours = [...availableHours, ...hours];
+
+      // Add the reserved hours of this place to the reservedHours list
+      reservedHours = [...reservedHours, ...reserved];
     });
 
-    return [...new Set(availableHours)]; // Remove duplicates
-  }
+    // Remove duplicates from availableHours
+    availableHours = [...new Set(availableHours)];
 
-  // Collect form data for submission
-  getFormData(data: {
-    startHour: string;
-    endHour: string;
-    places: PlaceType[];
-    comments: string;
-    repeat: string;
-  }): BookingModel {
-    return {
-      startHour: data.startHour,
-      endHour: data.endHour,
-      places: data.places,
-      comments: data.comments,
-      repeat: data.repeat,
-    };
+    // Remove any hours that are reserved for any place
+    availableHours = availableHours.filter(
+      (hour) => !reservedHours.includes(hour)
+    );
+    return availableHours;
   }
 }

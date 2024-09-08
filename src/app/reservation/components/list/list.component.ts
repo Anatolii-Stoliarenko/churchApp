@@ -13,10 +13,10 @@ import { Store } from '@ngrx/store';
 import {
   ReservationModel,
   ReservationStatus,
+  ReservationType,
   updateReservationInterface,
 } from '../../models/reservations.model';
 import { ReservationService } from '../../services/reservation.service';
-import { TimeComponent } from '../time/time.component';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ReservationDetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
@@ -32,7 +32,6 @@ import { CurrentUserInterface } from '../../../auth/models/auth.model';
   imports: [
     MatTableModule,
     CommonModule,
-    TimeComponent,
     MatButtonModule,
     MatIconModule,
     ReservationDetailDialogComponent,
@@ -58,7 +57,13 @@ export class ListComponent implements OnInit {
   selectedDay: string | null | undefined;
   subscription: Subscription[] = [];
 
-  displayedColumns: string[] = ['startHour', 'endHour', 'place', 'actions'];
+  displayedColumns: string[] = [
+    'type',
+    'startHour',
+    'endHour',
+    'place',
+    'actions',
+  ];
 
   constructor() {
     this.dataSource = new MatTableDataSource<ReservationModel>([]);
@@ -111,28 +116,59 @@ export class ListComponent implements OnInit {
     }
   }
 
-  approve(reservation: ReservationModel): void {
-    this.changeReservationStatus(reservation, ReservationStatus.APPROVED);
-  }
-
-  pending(reservation: ReservationModel): void {
-    this.changeReservationStatus(reservation, ReservationStatus.PENDING);
-  }
-
-  edit(reservation: ReservationModel): void {
-    
-  }
-
-  changeReservationStatus(
+  updateReservation(
     reservation: ReservationModel,
-    status: ReservationStatus
+    payload: Partial<updateReservationInterface>
   ): void {
     const id = reservation.id;
     if (!id) {
       console.error('Reservation ID is undefined');
       return;
     }
-    const partialUpdate: updateReservationInterface = { status };
+
+    this.store.dispatch(ReservActions.updateReservations({ id, payload }));
+  }
+
+  approve(reservation: ReservationModel): void {
+    this.updateReservation(reservation, { status: ReservationStatus.APPROVED });
+  }
+
+  pending(reservation: ReservationModel): void {
+    this.updateReservation(reservation, { status: ReservationStatus.PENDING });
+  }
+
+  edit(reservation: ReservationModel): void {
+    // Remove `id` from the payload because `id` is passed separately
+    const { id, ...updatedReservationData } = reservation;
+
+    if (!id) {
+      console.error('Reservation ID is undefined');
+      return;
+    }
+
+    // Update all fields except the `id`
+    this.updateReservation(reservation, updatedReservationData);
+  }
+
+  typePl(reservation: ReservationModel): void {
+    this.updateReservation(reservation, { type: ReservationType.PL });
+  }
+
+  typeUA(reservation: ReservationModel): void {
+    this.updateReservation(reservation, { type: ReservationType.UA });
+  }
+
+  typeOther(reservation: ReservationModel): void {
+    this.updateReservation(reservation, { type: ReservationType.OTHER });
+  }
+
+  changeReservationType(reservation: ReservationModel, type: ReservationType) {
+    const id = reservation.id;
+    if (!id) {
+      console.error('Reservation ID is undefined');
+      return;
+    }
+    const partialUpdate: updateReservationInterface = { type };
     this.store.dispatch(
       ReservActions.updateReservations({ id, payload: partialUpdate })
     );

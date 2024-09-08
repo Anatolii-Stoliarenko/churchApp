@@ -2,49 +2,66 @@
   <h6>Reservation Details</h6>
 
   <div class="reservation-info">
+    <!-- Time -->
     <p><strong>Date:</strong> {{ reservation.date }}</p>
+
+    <!-- Date -->
     <p>
       <strong>Time:</strong> {{ reservation.startHour }} -
       {{ reservation.endHour }}
     </p>
+
+    <!-- Places -->
     <ng-container *ngIf="reservation.place; else places">
       <p><strong>Place:</strong> {{ reservation.place }}</p>
     </ng-container>
     <ng-template #places>
-      <!-- <p> -->
       <strong>Places:</strong>
       <ng-container *ngFor="let place of reservation.places">
         <p>{{ place }}</p>
       </ng-container>
-      <!-- </p> -->
     </ng-template>
+
+    <!-- Type -->
+    <p><strong>Type:</strong> {{ reservation.type }}</p>
+
+    <!-- Status -->
+    <p><strong>Status:</strong> {{ reservation.status || "Pending" }}</p>
+
+    <!-- Reservator -->
     <p>
       <strong class="comments">Reservator:</strong> {{ reservation.user.name }}
     </p>
+
+    <!-- Contact -->
     <p>
       <strong class="comments">Contact:</strong> ({{ reservation.user.email }})
     </p>
-    <p><strong>Status:</strong> {{ reservation.status || "Pending" }}</p>
+
+    <!-- Comment -->
     <p *ngIf="reservation.comments?.length ? true : false" class="comments">
       <strong>Comment:</strong> {{ reservation.comments }}
     </p>
 
+    <!-- Repeat && Reserve Button-->
     <ng-container
       class="reservation-actions"
       *ngIf="
         reservation.caller && reservation.caller.length > 0;
         else closeOnly
       "
-    >
+      ><!-- Repeat -->
       <p *ngIf="reservation.repeat ? true : false">
         <strong>Repeat:</strong> ({{ reservation.repeat }})
       </p>
+      <!-- Close and Reserve Buttons -->
       <div mat-dialog-actions>
         <button mat-flat-button (click)="onCancel()">Close</button>
         <button mat-button color="warn" (click)="onConfirm()">Reserve</button>
       </div>
     </ng-container>
 
+    <!-- Close Button -->
     <ng-template #closeOnly>
       <div class="reservation-actions">
         <button mat-flat-button color="primary" (click)="onCancel()">

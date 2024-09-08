@@ -2,9 +2,9 @@
   *ngIf="
     (isChildVisible &&
       selectedDay &&
-      currentUser &&
-      reserveService.isSelectedDayTodayOrFuture()) ||
-    (isChildVisible && selectedDay && currentUser?.role === 'admin')
+      (currentUser | async) &&
+      reserveService.isSelectedDayTodayOrFuture(selectedDay)) ||
+    (isChildVisible && selectedDay && (currentUser | async)?.role === 'admin')
   "
 >
   <app-booking

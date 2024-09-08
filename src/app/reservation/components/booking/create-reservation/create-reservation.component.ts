@@ -10,7 +10,6 @@ import { AppState } from '../../../../shared/store/appState.interface';
 import { selectedDaySelector } from '../../../store/reservations.selectors';
 import { BookingModel } from '../../../models/reservations.model';
 import { ReservationDetailDialogComponent } from '../../detail-dialog/detail-dialog.component';
-import { UserInterface } from '../../../../auth/models/auth.model';
 import { currentUserSelector } from '../../../../auth/store/auth.selectors';
 
 @Component({
@@ -25,10 +24,9 @@ export class CreateReservationComponent {
   store = inject(Store<AppState>);
   dialog = inject(MatDialog);
 
+  currentUser = this.store.select(currentUserSelector);
   subscription: Subscription[] = [];
-
   selectedDay = '';
-  currentUser: UserInterface | null = null;
   isChildVisible = true;
 
   ngOnInit(): void {
@@ -44,10 +42,6 @@ export class CreateReservationComponent {
       this.store.select(selectedDaySelector).subscribe((day) => {
         day ? (this.selectedDay = day) : '';
         this.reloadBookingComponent();
-      }),
-
-      this.store.select(currentUserSelector).subscribe((user) => {
-        this.currentUser = user;
       })
     );
   }
@@ -56,8 +50,9 @@ export class CreateReservationComponent {
     const dialogRef = this.dialog.open(ReservationDetailDialogComponent, {
       width: '250px',
       data: {
-        ...this.reserveService.getDataForConfirmDialog(data),
+        ...this.reserveService.getDataForConfirmDialogBooking(data),
         caller: 'reserve',
+        date: this.selectedDay,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -66,7 +61,7 @@ export class CreateReservationComponent {
           ...data,
           date: this.selectedDay,
         };
-        this.reserveService.prepareReservation(reservation);
+        this.reserveService.addReservations(reservation);
       }
     });
   }

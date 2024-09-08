@@ -12,6 +12,7 @@ export interface CreateReservationModel {
   user: UserInterface;
   comments?: string;
   status?: ReservationStatus;
+  type?: ReservationType;
 }
 
 // Interface for data received from the backend
@@ -26,6 +27,7 @@ export interface FetchedReservationModel {
   updatedAt: string;
   comments?: string;
   status?: ReservationStatus;
+  type?: ReservationType;
 }
 
 export interface updateReservationInterface {
@@ -36,6 +38,7 @@ export interface updateReservationInterface {
   place?: PlaceType;
   comments?: string;
   status?: ReservationStatus;
+  type?: ReservationType;
 }
 
 export interface ReservationModel {
@@ -47,6 +50,7 @@ export interface ReservationModel {
   user: UserModel;
   comments?: string;
   status?: ReservationStatus;
+  type?: ReservationType;
 }
 
 export interface BookingModel {
@@ -56,6 +60,14 @@ export interface BookingModel {
   comments: string;
   repeat: string;
   date?: string;
+  type: ReservationType;
+}
+
+export interface CheckConflictModel {
+  startHour: string;
+  endHour: string;
+  place: PlaceType;
+  date: string;
 }
 
 export interface ResponseReservationModel {
@@ -98,6 +110,7 @@ export interface ConfirmDialogDetailModel {
   startHour: string;
   endHour: string;
   comments: string;
+  type: ReservationType;
 }
 
 export interface NewReservationModel {
@@ -109,6 +122,13 @@ export interface NewReservationModel {
   startHour: string;
   endHour: string;
   comments: string;
+  type: ReservationType;
+}
+
+export enum ReservationType {
+  PL = 'Polish',
+  UA = 'Ukrainian',
+  OTHER = 'Other',
 }
 
 export type TimeSlot =
