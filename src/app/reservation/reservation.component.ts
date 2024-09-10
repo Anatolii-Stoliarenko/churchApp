@@ -36,6 +36,7 @@ import { selectedDaySelector } from '../reservation/store/reservations.selectors
     MatTabsModule,
     MatIconModule,
     DetailsComponent,
+    MatTabGroup,
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
