@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -66,6 +66,15 @@ export class ReservationComponent {
     this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
+  // ngAfterViewInit() {
+  //   // Access tabGroup safely after the view is initialized
+  //   if (this.tabGroup) {
+  //     console.log('MatTabGroup initialized:', this.tabGroup);
+  //   } else {
+  //     console.error('MatTabGroup not initialized');
+  //   }
+  // }
+
   initValues(): void {
     this.subscription.push(
       this.store.select(selectedDaySelector).subscribe((day) => {
@@ -86,13 +95,6 @@ export class ReservationComponent {
   goToReserveTab(): void {
     if (this.tabGroup) {
       this.tabGroup.selectedIndex = 1; // Switch to the second tab (Reserve tab)
-    }
-  }
-
-  // Ensure tabGroup is available after the view has been initialized
-  ngAfterViewInit(): void {
-    if (!this.tabGroup) {
-      console.error('MatTabGroup not initialized');
     }
   }
 }
