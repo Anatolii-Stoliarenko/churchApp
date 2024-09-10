@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -25,6 +31,7 @@ import { currentUserSelector } from '../../../auth/store/auth.selectors';
 import { selectedDaySelector } from '../../store/reservations.selectors';
 import * as ReservActions from '../../store/reservations.actions';
 import { CurrentUserInterface } from '../../../auth/models/auth.model';
+import { DetailsComponent } from '../details/details.component';
 
 @Component({
   selector: 'app-list',
@@ -40,6 +47,7 @@ import { CurrentUserInterface } from '../../../auth/models/auth.model';
     MatMenuModule,
     MatSortModule,
     MatSort,
+    DetailsComponent,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -59,33 +67,30 @@ export class ListComponent implements OnInit {
 
   displayedColumns: string[] = [
     'type',
-    'startHour',
-    'endHour',
+    'time',
+    // 'startHour',
+    // 'endHour',
     'place',
-    'actions',
+    // 'actions',
+    'comment',
   ];
 
-  // Track selected rows
-  selectedRows: any[] = [];
+  selectedRow: ReservationModel | null = null;
 
-  // Toggle row selection
-  toggleSelection(row: any) {
-    console.log(row);
-    const index = this.selectedRows.indexOf(row);
-    if (index === -1) {
-      this.selectedRows.push(row);
+  // Method to select a row
+  selectRow(row: ReservationModel) {
+    // If the clicked row is already selected, deselect it
+    if (this.selectedRow === row) {
+      this.selectedRow = null;
     } else {
-      this.selectedRows.splice(index, 1);
+      // Otherwise, select the new row
+      this.selectedRow = row;
     }
   }
 
-  // Check if row is selected
-  isRowSelected(row: any): boolean {
-    return this.selectedRows.indexOf(row) > -1;
-  }
-
+  // Apply CSS class based on reservation status and selection
   getRowClass(reservation: ReservationModel): string {
-    if (this.isRowSelected(reservation)) {
+    if (this.selectedRow === reservation) {
       return 'selected-row'; // Apply selected row class
     }
     if (!reservation.status) {
@@ -96,6 +101,8 @@ export class ListComponent implements OnInit {
         return 'approved-row';
       case ReservationStatus.PENDING:
         return 'pending-row';
+      default:
+        return '';
     }
   }
 

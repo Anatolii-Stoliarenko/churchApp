@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
 
 import {
   BookingModel,
@@ -15,6 +17,7 @@ import {
 } from '../../models/reservations.model';
 import { ReservationService } from '../../services/reservation.service';
 import { BookingService } from '../../services/booking.service';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-booking',
@@ -28,7 +31,11 @@ import { BookingService } from '../../services/booking.service';
     MatCheckboxModule,
     MatFormFieldModule,
     MatButtonToggleModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatIconModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss',
 })
@@ -41,7 +48,7 @@ export class BookingComponent {
   @Input() comment: string = '';
   @Input() selectedStartTime: string = '';
   @Input() selectedEndTime: string = '';
-  @Input() selectedDay: string = '';
+  @Input() selectedDay: string = new Date().toISOString().split('T')[0];
   @Input() type: ReservationType = ReservationType.OTHER; // Holds the selected reservation type
 
   @Output() submitEvent = new EventEmitter<BookingModel>();

@@ -5,13 +5,44 @@
   </ng-container>
 
   <ng-template #content>
-    <app-calendar />
-    <ng-container *ngIf="isLoadingUpdateReservation$ | async; else listTime">
-      <app-loading />
-    </ng-container>
-    <ng-template #listTime>
-      <app-list />
-      <app-create-reservation />
-    </ng-template>
+    <mat-tab-group #tabGroup>
+      <!-- Day -->
+      <mat-tab label="Day">
+        <br />
+        <app-calendar />
+        <!-- if -->
+        <ng-container
+          *ngIf="isLoadingUpdateReservation$ | async; else listTime"
+        >
+          <app-loading />
+        </ng-container>
+        <!-- else -->
+        <ng-template #listTime>
+          <app-list *ngIf="isChildVisible && selectedDay" />
+        </ng-template>
+
+        <!-- buttond Add -->
+        <button
+          mat-fab
+          color="primary"
+          class="floating-button"
+          (click)="goToReserveTab()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-tab>
+
+      <!-- Reserve -->
+      <ng-container *ngIf="currentUser$ | async">
+        <mat-tab label="Add"> <br /><app-create-reservation /> </mat-tab>
+      </ng-container>
+
+      <!-- List -->
+      <mat-tab label="List"
+        ><br />
+        Here will list...
+        <!-- <app-list /> -->
+      </mat-tab>
+    </mat-tab-group>
   </ng-template>
 </div>

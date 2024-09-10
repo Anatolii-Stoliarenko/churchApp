@@ -1,0 +1,69 @@
+.container {
+  width: inherit;
+  margin: 0px 5px 1rem;
+  background-color: white;
+  scroll-behavior: smooth; /* Makes scrolling smooth */
+}
+
+mat-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-header {
+  background-color: #f5f5f5;
+  padding: 10px 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+mat-card-subtitle {
+  font-size: 0.9em;
+  color: #666;
+}
+
+mat-card-content p {
+  margin-bottom: 8px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 20px;
+}
+
+/* Basic styling for the circle */
+.type-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: solid black 0.5px;
+  display: inline-block;
+}
+span {
+  margin-right: 10px;
+}
+/* Flag for Poland (white and red) */
+.type-polish {
+  background: linear-gradient(to bottom, white 50%, #f44336 50%);
+}
+
+/* Flag for Ukraine (blue and yellow) */
+.type-ukrainian {
+  background: linear-gradient(to bottom, #1976d2 50%, #ffd700 50%);
+}
+
+/* Generic or Other flag (gray) */
+.type-other {
+  background-color: #9e9e9e; /* Gray background */
+}
+
+strong {
+  font-weight: bold;
+}

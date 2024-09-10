@@ -1,25 +1,38 @@
 @import "../../../../styles/variables";
 
-mat-table {
-  border-radius: 5%; /* Apply border-radius to the entire table */
-  overflow: hidden; /* Ensures content respects the border-radius */
-}
-
-.list-table {
-  width: inherit;
-  margin: 0px 5px 1rem;
-}
-
 .approved-row {
-  background-color: #c8e6c9; /* Light green */
+  background-color: $aproved; /* Light green */
 }
 
 .pending-row {
-  background-color: #fff9c4; /* Light yellow */
+  background-color: $pending; /* Light yellow */
 }
 
 .rejected-row {
-  background-color: #ffcdd2; /* Light red */
+  background-color: $rejected; /* Light red */
+}
+
+// bottom information pending or approved
+.list {
+  display: flex; /* Enables flexbox layout */
+  justify-content: space-evenly; /* Distributes items with equal space between them */
+  align-items: center; /* Centers items vertically if needed */
+  margin: 5px 15px 5px;
+  background-color: inherit;
+}
+
+li {
+  display: inline-block;
+  font-size: 12px;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  border: 0.5px solid black;
 }
 
 #reservation_place {
@@ -39,28 +52,6 @@ mat-table {
   background-color: $rejected;
 }
 
-.circle {
-  border-radius: 50%;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;
-  border: 0.5px solid black;
-}
-
-.list {
-  display: flex; /* Enables flexbox layout */
-  justify-content: space-evenly; /* Distributes items with equal space between them */
-  align-items: center; /* Centers items vertically if needed */
-  margin: 5px 15px 5px;
-  background-color: inherit;
-}
-
-li {
-  display: inline-block;
-  font-size: 12px;
-}
-
 //Circl
 /* Ensure that the type-cell displays the circle and the text properly */
 .type-cell {
@@ -77,30 +68,97 @@ li {
   display: inline-block;
 }
 
-/* Flag for Poland (white and red) */
+.mat-table {
+  border-radius: 5%; /* Apply border-radius to the entire table */
+  overflow: hidden; /* Ensures content respects the border-radius */
+  width: inherit !important;
+}
+
 .type-polish {
   background: linear-gradient(to bottom, white 50%, #f44336 50%);
 }
 
-/* Flag for Ukraine (blue and yellow) */
 .type-ukrainian {
   background: linear-gradient(to bottom, #1976d2 50%, #ffd700 50%);
 }
 
-/* Generic or Other flag (gray) */
 .type-other {
-  background-color: #9e9e9e; /* Gray background */
+  background-color: #9e9e9e;
 }
 
 tr.mat-row,
 tr.mat-header-row,
 td.mat-cell,
 th.mat-header-cell {
-  height: 20px !important;
+  height: 10px !important;
 }
 
 /* Style for selected row */
 .selected-row {
-  background-color: #02dc7a !important; /* Light green background */
+  background-color: #99e49a !important; /* Light green background */
   color: black; /* Optional: Change text color */
+}
+
+//animation
+.reservation-details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.show-details {
+  max-height: 500px;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+.time-header {
+  padding: 5px;
+  margin: 0;
+  max-width: 30px;
+  text-align: center;
+}
+
+//Columns and rows pf mat-table
+.type {
+  padding: 10px;
+  margin-left: 0px;
+  max-width: 10px;
+  text-align: center;
+}
+
+.time-row {
+  padding: 5px;
+  max-width: 30px;
+  margin: 0;
+  height: auto;
+}
+
+.place-header {
+  padding: 5px;
+  margin: 0;
+  max-width: 40px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.place-row {
+  padding: 5px;
+  max-width: 40px;
+  margin: 0;
+}
+
+.comment-header {
+  margin: 0;
+  max-width: 60px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.comment-row {
+  max-width: 60px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

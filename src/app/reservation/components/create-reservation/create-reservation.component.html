@@ -1,9 +1,6 @@
 <ng-container
   *ngIf="
-    (isChildVisible &&
-      selectedDay &&
-      (currentUser | async) &&
-      reserveService.isSelectedDayTodayOrFuture(selectedDay)) ||
+    (isChildVisible && (currentUser | async)) ||
     (isChildVisible && selectedDay && (currentUser | async)?.role === 'admin')
   "
 >

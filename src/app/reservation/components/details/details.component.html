@@ -1,0 +1,108 @@
+<mat-card class="container">
+  <mat-card-header>
+    <!-- Reservation Information -->
+    <mat-card-subtitle>
+      <span
+        class="type-circle"
+        [ngClass]="{
+          'type-polish': reservation?.type === 'PL',
+          'type-ukrainian': reservation?.type === 'UA',
+          'type-other': reservation?.type === 'Other'
+        }"
+      ></span>
+      {{ reservation?.date }} | {{ reservation?.startHour }} -
+      {{ reservation?.endHour }}
+    </mat-card-subtitle>
+
+    <!-- Close Button -->
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Place -->
+    <div>
+      <p><strong>Place:</strong> {{ reservation?.place }}</p>
+    </div>
+
+    <p><strong>Type:</strong> {{ reservation?.type }}</p>
+
+    <p><strong>Status:</strong> {{ reservation?.status || "Pending" }}</p>
+
+    <p><strong>Reservator:</strong> {{ reservation?.user?.name }}</p>
+
+    <p><strong>Contact:</strong> {{ reservation?.user?.email }}</p>
+
+    <p><strong>Comment:</strong> {{ reservation?.comments }}</p>
+  </mat-card-content>
+
+  <ng-container
+    *ngIf="
+      currentUser?.id === reservation?.user?.id ||
+      currentUser?.role === 'moderator' ||
+      currentUser?.role == 'admin'
+    "
+  >
+    <mat-card-actions align="end">
+      <!-- Type button to open submenu -->
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="typeMenu"
+        aria-label="Change type"
+      >
+        <mat-icon>category</mat-icon>
+      </button>
+
+      <!-- Submenu for type selection -->
+      <mat-menu #typeMenu="matMenu">
+        <button mat-menu-item (click)="typeUA()">
+          <mat-icon>flag</mat-icon>
+          <span>UA</span>
+        </button>
+        <button mat-menu-item (click)="typePl()">
+          <mat-icon>flag</mat-icon>
+          <span>PL</span>
+        </button>
+        <button mat-menu-item (click)="typeOther()">
+          <mat-icon>flag</mat-icon>
+          <span>Other</span>
+        </button>
+      </mat-menu>
+
+      <ng-container
+        *ngIf="
+          currentUser?.role === 'admin' || currentUser?.role === 'moderator'
+        "
+      >
+        <!-- Approve -->
+        <button
+          mat-button
+          color="primary"
+          (click)="approve()"
+          [disabled]="reservation?.status === 'Approved'"
+        >
+          <mat-icon>check_circle</mat-icon>
+        </button>
+        <!-- Pending -->
+        <button
+          mat-button
+          color="primary"
+          (click)="pending()"
+          [disabled]="reservation?.status === 'Pending'"
+        >
+          <mat-icon>hourglass_bottom</mat-icon>
+        </button>
+      </ng-container>
+
+      <!-- Edit -->
+      <button mat-button color="primary" (click)="edit()" disabled>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <!-- Delete -->
+      <button mat-button color="warn" (click)="delete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </ng-container>
+</mat-card>
