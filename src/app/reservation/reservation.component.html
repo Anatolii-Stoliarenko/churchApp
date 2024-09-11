@@ -35,27 +35,27 @@
 
         <div class="button-container">
           <!-- buttond Add -->
-          <ng-container *ngIf="currentUser$ | async">
-            <button
-              mat-fab
-              color="primary"
-              class="floating-button"
-              (click)="goToReserveTab()"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
-          </ng-container>
-          <!-- buttond Add -->
-          <ng-container *ngIf="currentUser$ | async">
-            <button
-              mat-fab
-              color="primary"
-              class="floating-button"
-              (click)="goToList()"
-            >
-              <mat-icon>list</mat-icon>
-            </button>
-          </ng-container>
+
+          <button
+            mat-fab
+            color="primary"
+            class="floating-button"
+            (click)="goToReserveTab()"
+            *ngIf="currentUser$ | async"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+
+          <!-- buttond List -->
+
+          <button
+            mat-fab
+            color="primary"
+            class="floating-button"
+            (click)="goToList()"
+          >
+            <mat-icon>list</mat-icon>
+          </button>
         </div>
       </mat-tab>
 
@@ -65,27 +65,26 @@
           <br /><app-create-reservation />
           <div class="button-container">
             <!-- buttond Add -->
-            <ng-container *ngIf="currentUser$ | async">
-              <button
-                mat-fab
-                color="primary"
-                class="floating-button"
-                (click)="goToDay()"
-              >
-                <mat-icon>arrow_back</mat-icon>
-              </button>
-            </ng-container>
+
+            <button
+              mat-fab
+              color="primary"
+              class="floating-button"
+              (click)="goToDay()"
+            >
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+
             <!-- buttond Add -->
-            <ng-container *ngIf="currentUser$ | async">
-              <button
-                mat-fab
-                color="primary"
-                class="floating-button"
-                (click)="goToList()"
-              >
-                <mat-icon>list</mat-icon>
-              </button>
-            </ng-container>
+
+            <button
+              mat-fab
+              color="primary"
+              class="floating-button"
+              (click)="goToList()"
+            >
+              <mat-icon>list</mat-icon>
+            </button>
           </div></mat-tab
         >
       </ng-container>
@@ -96,27 +95,27 @@
         <app-full-list />
         <div class="button-container">
           <!-- buttond Add -->
-          <ng-container *ngIf="currentUser$ | async">
-            <button
-              mat-fab
-              color="primary"
-              class="floating-button"
-              (click)="goToDay()"
-            >
-              <mat-icon>list</mat-icon>
-            </button>
-          </ng-container>
+
+          <button
+            mat-fab
+            color="primary"
+            class="floating-button"
+            (click)="goToDay()"
+          >
+            <mat-icon>list</mat-icon>
+          </button>
+
           <!-- buttond Add -->
-          <ng-container *ngIf="currentUser$ | async">
-            <button
-              mat-fab
-              color="primary"
-              class="floating-button"
-              (click)="goToReserveTab()"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
-          </ng-container>
+
+          <button
+            *ngIf="currentUser$ | async"
+            mat-fab
+            color="primary"
+            class="floating-button"
+            (click)="goToReserveTab()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
       </mat-tab>
     </mat-tab-group>
