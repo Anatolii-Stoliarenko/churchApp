@@ -31,13 +31,18 @@
   <!-- Start date -->
   <mat-form-field appearance="outline">
     <mat-label>Start date</mat-label>
-    <input matInput [matDatepicker]="startPicker" [(ngModel)]="selectedDay" />
+    <input
+      matInput
+      [matDatepicker]="startPicker"
+      [(ngModel)]="selectedDay"
+      (ngModelChange)="onDateChange($event)"
+    />
     <mat-datepicker-toggle matIconSuffix [for]="startPicker">
       <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
     </mat-datepicker-toggle>
     <mat-datepicker #startPicker></mat-datepicker>
   </mat-form-field>
-  
+
   <!-- End date -->
   <mat-form-field appearance="outline">
     <mat-label>End date</mat-label>
@@ -69,7 +74,7 @@
     <mat-select
       matNativeControl
       [(ngModel)]="repeat"
-      [disabled]="mode != 'create'"
+      [disabled]="currentUser?.role != 'admin'"
     >
       <mat-option *ngFor="let week of weekOptions" [value]="week">
         {{ week }}
