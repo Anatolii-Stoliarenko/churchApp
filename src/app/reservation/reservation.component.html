@@ -18,7 +18,11 @@
         </ng-container>
         <!-- else -->
         <ng-template #listTime>
-          <app-list *ngIf="isChildVisible && selectedDay" />
+          <app-list
+            *ngIf="isChildVisible && selectedDay"
+            [reservation]="reservation"
+            [currentUser]="currentUser$ | async"
+          />
         </ng-template>
 
         <!-- buttond Add -->
@@ -34,7 +38,17 @@
 
       <!-- Reserve -->
       <ng-container *ngIf="currentUser$ | async">
-        <mat-tab label="Add"> <br /><app-create-reservation /> </mat-tab>
+        <mat-tab label="Add">
+          <br /><app-create-reservation />
+          <button
+            mat-fab
+            color="primary"
+            class="floating-button"
+            (click)="goToDay()"
+          >
+            <mat-icon>list</mat-icon>
+          </button></mat-tab
+        >
       </ng-container>
 
       <!-- List -->

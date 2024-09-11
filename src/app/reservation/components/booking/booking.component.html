@@ -111,13 +111,13 @@
     <textarea
       matInput
       [(ngModel)]="comment"
-      maxlength="250"
+      maxlength="100"
       minlength="10"
       #commentInput="ngModel"
       required
     ></textarea>
     <mat-hint align="start">Minimum 10 characters</mat-hint>
-    <mat-hint align="end">{{ comment.length || 0 }} / 250</mat-hint>
+    <mat-hint align="end">{{ comment.length || 0 }} / 100</mat-hint>
 
     <mat-error *ngIf="commentInput.invalid && commentInput.touched">
       Comment must be at least 10 characters long.

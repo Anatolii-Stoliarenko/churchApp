@@ -15,12 +15,15 @@ import * as ReservActions from './store/reservations.actions';
 import {
   loadingReservationsSelector,
   loadingUpdateReservationsSelector,
+  reservationsSelector,
 } from './store/reservations.selectors';
 import { CreateReservationComponent } from './components/create-reservation/create-reservation.component';
 import { CurrentUserInterface } from '../auth/models/auth.model';
 import { currentUserSelector } from '../auth/store/auth.selectors';
 import { DetailsComponent } from './components/details/details.component';
 import { selectedDaySelector } from '../reservation/store/reservations.selectors';
+import { ReservationModel } from './models/reservations.model';
+import { ReservationService } from './services/reservation.service';
 
 @Component({
   selector: 'app-reservation',
@@ -45,20 +48,19 @@ export class ReservationComponent {
   @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
 
   store = inject(Store<AppState>);
-  isLoading$: Observable<boolean> | undefined;
-  isLoadingUpdateReservation$: Observable<boolean> | undefined;
-  currentUser$: Observable<CurrentUserInterface | null> | undefined;
+  reservationService = inject(ReservationService);
+  isLoading$ = this.store.select(loadingReservationsSelector);
+  isLoadingUpdateReservation$ = this.store.select(
+    loadingUpdateReservationsSelector
+  );
+
+  currentUser$ = this.store.select(currentUserSelector);
   selectedDay: string | null | undefined;
   isChildVisible = true;
   subscription: Subscription[] = [];
+  reservation: ReservationModel[] = [];
 
   ngOnInit() {
-    this.isLoading$ = this.store.select(loadingReservationsSelector);
-    this.isLoadingUpdateReservation$ = this.store.select(
-      loadingUpdateReservationsSelector
-    );
-    this.currentUser$ = this.store.select(currentUserSelector);
-
     this.store.dispatch(ReservActions.getReservations());
     this.initValues();
   }
@@ -67,22 +69,27 @@ export class ReservationComponent {
     this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 
-  // ngAfterViewInit() {
-  //   // Access tabGroup safely after the view is initialized
-  //   if (this.tabGroup) {
-  //     console.log('MatTabGroup initialized:', this.tabGroup);
-  //   } else {
-  //     console.error('MatTabGroup not initialized');
-  //   }
-  // }
-
   initValues(): void {
     this.subscription.push(
       this.store.select(selectedDaySelector).subscribe((day) => {
         day ? (this.selectedDay = day) : '';
         this.reloadBookingComponent();
-      })
+        this.updateReservation();
+      }),
+
+      this.store
+        .select(reservationsSelector)
+        .subscribe(() => this.updateReservation())
     );
+  }
+
+  private updateReservation(): void {
+    if (this.selectedDay) {
+      this.reservation =
+        this.reservationService.getAllReservationsBySelectedDay(
+          this.selectedDay
+        );
+    }
   }
 
   private reloadBookingComponent(): void {
@@ -96,6 +103,12 @@ export class ReservationComponent {
   goToReserveTab(): void {
     if (this.tabGroup) {
       this.tabGroup.selectedIndex = 1; // Switch to the second tab (Reserve tab)
+    }
+  }
+
+  goToDay(): void {
+    if (this.tabGroup) {
+      this.tabGroup.selectedIndex = 0; // Switch to the second tab (Reserve tab)
     }
   }
 }

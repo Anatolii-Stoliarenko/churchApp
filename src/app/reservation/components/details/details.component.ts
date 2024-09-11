@@ -6,20 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import {
   ReservationModel,
   ReservationStatus,
   ReservationType,
   updateReservationInterface,
-} from '../../models/reservations.model';
-import { AppState } from '../../../shared/store/appState.interface';
-import * as ReservActions from '../../store/reservations.actions';
-import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+} from '../../../reservation/models/reservations.model';
+import { AppState } from '../../../../app/shared/store/appState.interface';
+import * as ReservActions from '../../../reservation/store/reservations.actions';
+import { ConfirmationDialogComponent } from '../../../../app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { CurrentUserInterface } from '../../../auth/models/auth.model';
-import { Subscription } from 'rxjs';
-import { selectedDaySelector } from '../../store/reservations.selectors';
-import { currentUserSelector } from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-details',
@@ -35,33 +33,19 @@ import { currentUserSelector } from '../../../auth/store/auth.selectors';
   styleUrl: './details.component.scss',
 })
 export class DetailsComponent {
+  @Input() reservation: ReservationModel | null = null;
+  @Input() currentUser: CurrentUserInterface | null = null;
+  @Output() closeDetails = new EventEmitter<void>(); // Event emitter to notify parent component
+
   store = inject(Store<AppState>);
   dialog = inject(MatDialog);
 
-  @Input() reservation: ReservationModel | null = null;
-  @Output() close = new EventEmitter<ReservationModel>();
-
-  currentUser: CurrentUserInterface | null = null;
   subscription: Subscription[] = [];
 
-  ngOnInit() {
-    this.initializeListeners();
-  }
-  ngOnDestroy(): void {
-    this.subscription.forEach((subscription) => subscription.unsubscribe());
-  }
-
-  initializeListeners(): void {
-    this.subscription.push(
-      this.store.select(currentUserSelector).subscribe((user) => {
-        this.currentUser = user;
-      })
-    );
-  }
-
   onClose() {
-    this.close.emit(this.reservation!);
+    this.closeDetails.emit(); // Emit the event to notify the parent
   }
+
   //Delete Reservation
   delete(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
