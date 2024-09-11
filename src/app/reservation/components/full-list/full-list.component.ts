@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import { ListComponent } from '../list/list.component';
-import { ReservationModel } from '../../models/reservations.model';
+import {
+  DaysReservationModel,
+  ReservationModel,
+} from '../../models/reservations.model';
+import { ReservationService } from '../../services/reservation.service';
+import { DetailsComponent } from '../details/details.component';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../shared/store/appState.interface';
+import { currentUserSelector } from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-full-list',
@@ -28,14 +36,30 @@ import { ReservationModel } from '../../models/reservations.model';
     MatSelectModule,
     MatIconModule,
     MatInputModule,
+    DetailsComponent,
   ],
 
   templateUrl: './full-list.component.html',
   styleUrl: './full-list.component.scss',
 })
 export class FullListComponent {
+  reservationService = inject(ReservationService);
+  store = inject(Store<AppState>);
+  currentUser$ = this.store.select(currentUserSelector);
+
   startDay: string = new Date().toISOString().split('T')[0];
   endDay: string = new Date().toISOString().split('T')[0];
 
-  reservations: ReservationModel[][] = [];
+  reservationsOfDays: DaysReservationModel[] = [];
+
+  ngOnInit() {
+    this.onEndDateChange();
+  }
+
+  onEndDateChange() {
+    this.reservationsOfDays = this.reservationService.getReservationsFromToDays(
+      this.startDay,
+      this.endDay
+    );
+  }
 }

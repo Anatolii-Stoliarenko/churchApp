@@ -12,27 +12,42 @@
   <!-- End date -->
   <mat-form-field appearance="outline">
     <mat-label>End date</mat-label>
-    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDay" />
+    <input
+      matInput
+      [matDatepicker]="endPicker"
+      [(ngModel)]="endDay"
+      [min]="startDay"
+      (ngModelChange)="onEndDateChange()"
+    />
     <mat-datepicker-toggle matIconSuffix [for]="endPicker">
       <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
     </mat-datepicker-toggle>
     <mat-datepicker #endPicker></mat-datepicker>
   </mat-form-field>
 
-  <!-- Panel -->
-  Panel..
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let reservation of reservations">
-      <mat-expansion-panel-header>
-        <!-- Display the day as a label -->
-        <mat-panel-title>
-          {{ "fullDate" }}
-          <!-- Display formatted date -->
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+  <ng-container *ngIf="reservationsOfDays.length > 0; else noRes">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let dayReservations of reservationsOfDays">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ dayReservations.date | date : "fullDate" }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
 
-      <!-- Nested component displaying the list of reservations for this day -->
-      <app-list [reservation]="reservation"></app-list>
-    </mat-expansion-panel>
-  </mat-accordion>
+        <mat-panel-description class="panel">
+          <app-list
+            class="panel"
+            [reservation]="dayReservations.reservations"
+            [currentUser]="currentUser$ | async"
+          ></app-list>
+        </mat-panel-description>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+
+  <ng-template #noRes>
+    <div class="no-reservations">
+      <p>no reservations yet...</p>
+    </div>
+  </ng-template>
 </div>

@@ -53,6 +53,11 @@ export interface ReservationModel {
   type?: ReservationType;
 }
 
+export interface DaysReservationModel {
+  date: string; // The date in 'yyyy-MM-dd' format
+  reservations: ReservationModel[]; // List of reservations for this day
+}
+
 export interface BookingModel {
   startHour: string;
   endHour: string;

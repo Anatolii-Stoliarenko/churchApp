@@ -4,10 +4,7 @@
 }
 
 .floating-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000; /* Ensure the button is always on top */
+  /* Ensure the button is always on top */
   width: 60px; /* Set width for the circle */
   height: 60px; /* Set height for the circle */
   background-color: lightgreen; /* Light green color */
@@ -21,4 +18,13 @@
 .floating-button mat-icon {
   font-size: 24px; /* Size of the icon inside */
   color: white; /* Icon color */
+}
+
+.button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex; /* Use flexbox to align buttons side by side */
+  gap: 16px; /* Add space between the buttons */
 }

@@ -7,3 +7,63 @@
   column-gap: 2%; /* Control spacing between the form fields */
   // row-gap: 10px;
 }
+
+::ng-deep mat-accordion,
+mat-accordion {
+  grid-column: span 2;
+  margin-bottom: 20px;
+  padding: 0; /* Remove padding */
+}
+
+::ng-deep mat-expansion-panel,
+mat-expansion-panel {
+  padding: 0px;
+  margin-bottom: 10px;
+}
+
+::ng-deep mat-panel-description,
+mat-panel-description {
+  padding: 0px;
+  margin: 0px;
+}
+
+app-list {
+  width: 100%; /* Make app-list take up full width */
+  padding: 0px; /* Ensure no extra padding */
+  margin: 0px;
+}
+
+.panel {
+  padding: 0px;
+  margin: 0px;
+}
+
+mat-expansion-panel-body {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.no-reservations {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height as needed */
+  font-size: 1.5rem; /* Font size for the text */
+  color: #757575; /* Grey color for the message */
+  background-color: #f9f9f9; /* Light background for contrast */
+  border-radius: 8px; /* Rounded corners */
+  border: 2px dashed #ccc; /* Dashed border for a subtle effect */
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.no-reservations p {
+  margin: 0;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important; /* Override padding */
+  margin: 0px;
+}

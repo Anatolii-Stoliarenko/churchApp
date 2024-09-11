@@ -24,7 +24,7 @@ import { DetailsComponent } from './components/details/details.component';
 import { selectedDaySelector } from '../reservation/store/reservations.selectors';
 import { ReservationModel } from './models/reservations.model';
 import { ReservationService } from './services/reservation.service';
-import { FullListComponent } from "./components/full-list/full-list.component";
+import { FullListComponent } from './components/full-list/full-list.component';
 
 @Component({
   selector: 'app-reservation',
@@ -41,8 +41,8 @@ import { FullListComponent } from "./components/full-list/full-list.component";
     MatIconModule,
     DetailsComponent,
     MatTabGroup,
-    FullListComponent
-],
+    FullListComponent,
+  ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
@@ -111,6 +111,12 @@ export class ReservationComponent {
   goToDay(): void {
     if (this.tabGroup) {
       this.tabGroup.selectedIndex = 0; // Switch to the second tab (Reserve tab)
+    }
+  }
+
+  goToList(): void {
+    if (this.tabGroup) {
+      this.tabGroup.selectedIndex = 2; // Switch to the second tab (Reserve tab)
     }
   }
 }

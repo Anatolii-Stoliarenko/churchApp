@@ -8,10 +8,9 @@ import { AuthService } from '../../auth/services/auth.service';
 import {
   ApiResponse,
   BookingModel,
-  CheckConflictModel,
   ConfirmDialogDetailModel,
   CreateReservationModel,
-  NewReservationModel,
+  DaysReservationModel,
   PlaceType,
   ReservationModel,
   ReservationStatus,
@@ -247,6 +246,34 @@ export class ReservationService {
       comments: data.comments,
       type: data.type,
     };
+  }
+
+  getReservationsFromToDays(
+    start: string,
+    end: string
+  ): DaysReservationModel[] {
+    let reservations: DaysReservationModel[] = [];
+
+    let currentDate = new Date(start);
+    let endDate = new Date(end);
+
+    while (currentDate <= endDate) {
+      const formattedDate = currentDate.toISOString().split('T')[0]; // Format date to 'yyyy-MM-dd'
+
+      const dailyReservations =
+        this.getAllReservationsBySelectedDay(formattedDate);
+
+      if (dailyReservations.length > 0) {
+        reservations.push({
+          date: formattedDate,
+          reservations: dailyReservations,
+        });
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return reservations;
   }
 
   getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {
