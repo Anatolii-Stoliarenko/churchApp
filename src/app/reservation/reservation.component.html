@@ -18,11 +18,19 @@
         </ng-container>
         <!-- else -->
         <ng-template #listTime>
-          <app-list
-            *ngIf="isChildVisible && selectedDay"
-            [reservation]="reservation"
-            [currentUser]="currentUser$ | async"
-          />
+          <ng-container *ngIf="isChildVisible && selectedDay">
+            <app-list
+              *ngIf="reservation.length > 0; else noRes"
+              [reservation]="reservation"
+              [currentUser]="currentUser$ | async"
+            />
+
+            <ng-template #noRes>
+              <div class="no-reservations">
+                <p>no reservations yet...</p>
+              </div>
+            </ng-template>
+          </ng-container>
         </ng-template>
 
         <div class="button-container">

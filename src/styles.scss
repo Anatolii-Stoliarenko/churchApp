@@ -53,3 +53,25 @@ mat-card {
 mat-expansion-panel-body {
   padding: 0 0px 0px !important;
 }
+
+.no-reservations {
+  width: inherit;
+  margin: 0px 5px 1rem;
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.5rem;
+  color: #757575;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #ccc;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-reservations p {
+  margin: 5px;
+}
