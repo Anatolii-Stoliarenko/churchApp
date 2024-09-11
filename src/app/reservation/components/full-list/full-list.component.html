@@ -1,1 +1,38 @@
-<p>full-list works!</p>
+<div class="container">
+  <!-- Start date -->
+  <mat-form-field appearance="outline">
+    <mat-label>Start date</mat-label>
+    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDay" />
+    <mat-datepicker-toggle matIconSuffix [for]="startPicker">
+      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- End date -->
+  <mat-form-field appearance="outline">
+    <mat-label>End date</mat-label>
+    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDay" />
+    <mat-datepicker-toggle matIconSuffix [for]="endPicker">
+      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #endPicker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Panel -->
+  Panel..
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let reservation of reservations">
+      <mat-expansion-panel-header>
+        <!-- Display the day as a label -->
+        <mat-panel-title>
+          {{ "fullDate" }}
+          <!-- Display formatted date -->
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <!-- Nested component displaying the list of reservations for this day -->
+      <app-list [reservation]="reservation"></app-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

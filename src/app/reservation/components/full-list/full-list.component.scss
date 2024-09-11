@@ -1,0 +1,9 @@
+.container {
+  width: inherit;
+  margin: 0 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+  //   grid-template-rows: auto auto auto auto;
+  column-gap: 2%; /* Control spacing between the form fields */
+  // row-gap: 10px;
+}

@@ -24,6 +24,7 @@ import { DetailsComponent } from './components/details/details.component';
 import { selectedDaySelector } from '../reservation/store/reservations.selectors';
 import { ReservationModel } from './models/reservations.model';
 import { ReservationService } from './services/reservation.service';
+import { FullListComponent } from "./components/full-list/full-list.component";
 
 @Component({
   selector: 'app-reservation',
@@ -40,7 +41,8 @@ import { ReservationService } from './services/reservation.service';
     MatIconModule,
     DetailsComponent,
     MatTabGroup,
-  ],
+    FullListComponent
+],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
