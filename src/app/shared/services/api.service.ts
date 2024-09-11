@@ -19,8 +19,8 @@ import {
 export class ApiService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:3000';
-  // private apiUrl = 'https://reservation-api-gamma.vercel.app';
+  // private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'https://reservation-api-gamma.vercel.app';
 
   private registerUrl = this.apiUrl + '/register';
   private loginUrl = this.apiUrl + '/login';
