@@ -10,6 +10,10 @@ mat-card {
   // margin: 0px;
 }
 
+mat-icon {
+  margin-right: 5px;
+}
+
 mat-card-header {
   background-color: #f5f5f5;
   padding: 10px 10px;
@@ -25,6 +29,8 @@ mat-card-title {
 }
 
 mat-card-subtitle {
+  display: flex;
+  align-items: center;
   font-size: 0.9em;
   color: #666;
 }
@@ -41,6 +47,7 @@ mat-card-actions {
 
 span {
   margin-right: 5px;
+  font-weight: bold;
 }
 
 strong {
@@ -50,11 +57,16 @@ strong {
 /* Basic styling for the color circle */
 .color-circle {
   display: inline-block;
-  width: 15px; /* Size of the circle */
-  height: 15px; /* Size of the circle */
+  width: 20px; /* Size of the circle */
+  height: 20px; /* Size of the circle */
   border-radius: 50%; /* Make it a circle */
   border: #000000 solid 0.5px;
   margin-right: 8px; /* Space between the circle and text */
+}
+
+.color-circle-15 {
+  width: 15px; /* Size of the circle */
+  height: 15px; /* Size of the circle */
 }
 
 /* Flag for Poland (white and red) */

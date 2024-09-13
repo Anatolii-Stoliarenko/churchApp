@@ -51,6 +51,8 @@ export interface ReservationModel {
   comments?: string;
   status?: ReservationStatus;
   type?: ReservationType;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DaysReservationModel {

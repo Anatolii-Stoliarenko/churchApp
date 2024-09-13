@@ -10,8 +10,12 @@
           'circle-inne': reservation?.type === 'Other'
         }"
       ></span>
-      {{ reservation?.date }} | {{ reservation?.startHour }} -
-      {{ reservation?.endHour }}
+      <!-- 
+      <mat-icon>schedule</mat-icon> -->
+
+      <span>{{ reservation?.startHour }} - {{ reservation?.endHour }}</span>
+      <mat-icon>event</mat-icon>
+      <span>{{ reservation?.date | date : "dd.MM.yyyy" }}</span>
     </mat-card-subtitle>
 
     <!-- Close Button -->
@@ -26,15 +30,25 @@
       <p><strong>Place:</strong> {{ reservation?.place }}</p>
     </div>
 
-    <p><strong>Type:</strong> {{ reservation?.type }}</p>
+    <!-- <p><strong>Type:</strong> {{ reservation?.type }}</p> -->
 
     <p><strong>Status:</strong> {{ reservation?.status || "Pending" }}</p>
 
     <p><strong>Reservator:</strong> {{ reservation?.user?.name }}</p>
 
-    <p><strong>Contact:</strong> {{ reservation?.user?.email }}</p>
+    <!-- <p><strong>Contact:</strong> {{ reservation?.user?.email }}</p> -->
 
     <p><strong>Comment:</strong> {{ reservation?.comments }}</p>
+
+    <p>
+      <strong>Created:</strong>
+      {{ reservation?.createdAt | date : "HH.mm | dd.MM.yyyy" }}
+    </p>
+
+    <!-- <p>
+      <strong>Last update:</strong>
+      {{ reservation?.updatedAt | date : "HH.mm | dd.MM.yyyy" }}
+    </p> -->
   </mat-card-content>
 
   <ng-container
@@ -57,15 +71,24 @@
       <!-- Submenu for type selection -->
       <mat-menu #typeMenu="matMenu">
         <button mat-menu-item (click)="typeUA()">
-          <span class="color-circle" [ngClass]="'circle-ua'"></span>
+          <span
+            class="color-circle color-circle-15"
+            [ngClass]="'circle-ua'"
+          ></span>
           <span>UA</span>
         </button>
         <button mat-menu-item (click)="typePl()">
-          <span class="color-circle" [ngClass]="'circle-pl'"></span>
+          <span
+            class="color-circle color-circle-15"
+            [ngClass]="'circle-pl'"
+          ></span>
           <span>PL</span>
         </button>
         <button mat-menu-item (click)="typeOther()">
-          <span class="color-circle" [ngClass]="'circle-inne'"></span>
+          <span
+            class="color-circle color-circle-15"
+            [ngClass]="'circle-inne'"
+          ></span>
           <span>Other</span>
         </button>
       </mat-menu>
