@@ -27,4 +27,12 @@ export class UtilsService {
   greenConsole(message: string): void {
     console.log('%c' + message, 'color: green; font-weight: bold;');
   }
+
+  triggerVibration() {
+    if (navigator.vibrate) {
+      navigator.vibrate(50); // Vibrate for 50 milliseconds
+    } else {
+      console.log('Vibration API not supported by this device.');
+    }
+  }
 }

@@ -1,0 +1,24 @@
+.footer {
+  margin-top: 100px;
+  bottom: 0;
+  width: inherit;
+
+  color: rgb(0, 0, 0); /* Text color */
+  text-align: center; /* Center the text */
+  padding: 10px; /* Padding for spacing */
+  font-size: 10px; /* Font size */
+}
+p {
+  margin-bottom: 0px;
+}
+
+.footer a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

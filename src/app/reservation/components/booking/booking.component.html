@@ -16,14 +16,14 @@
       }"
     >
       <!-- Small circle for each button -->
-      <!-- <span
+      <span
         class="color-circle"
         [ngClass]="{
-          'circle-pl': type.code === 'PL',
-          'circle-ua': type.code === 'UA',
-          'circle-inne': type.code === 'Inne'
+          'circle-pl': type === 'PL',
+          'circle-ua': type === 'UA',
+          'circle-inne': type === 'Other'
         }"
-      ></span> -->
+      ></span>
       {{ type }}
     </mat-button-toggle>
   </mat-button-toggle-group>
@@ -46,8 +46,8 @@
   <!-- End date -->
   <mat-form-field appearance="outline">
     <mat-label>End date</mat-label>
-    <input matInput [matDatepicker]="endPicker" />
-    <mat-datepicker-toggle matIconSuffix [for]="endPicker" disabled="true">
+    <input matInput [matDatepicker]="endPicker" disabled="true" />
+    <mat-datepicker-toggle matIconSuffix [for]="endPicker">
       <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
     </mat-datepicker-toggle>
     <mat-datepicker #endPicker></mat-datepicker>
@@ -74,7 +74,7 @@
     <mat-select
       matNativeControl
       [(ngModel)]="repeat"
-      [disabled]="currentUser?.role != 'admin'"
+      [disabled]="currentUser?.role !== 'admin'"
     >
       <mat-option *ngFor="let week of weekOptions" [value]="week">
         {{ week }}

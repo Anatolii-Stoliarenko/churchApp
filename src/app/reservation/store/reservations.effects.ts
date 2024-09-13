@@ -80,7 +80,12 @@ export class Reservationffects {
   addReservationSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReservActions.addReservationsSuccess),
-      switchMap(() => [ReservActions.getReservations()])
+      switchMap(() => [
+        ReservActions.getReservations(), // Dispatch action to get reservations
+      ]),
+      tap(() => {
+        this.utilsService.snackBarSuccess('Reservation added successfully');
+      })
     )
   );
 
@@ -118,7 +123,10 @@ export class Reservationffects {
   updateReservationSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReservActions.updateReservationsSuccess),
-      switchMap(() => [ReservActions.getReservations()])
+      switchMap(() => [ReservActions.getReservations()]),
+      tap(() => {
+        this.utilsService.snackBarSuccess('Reservation updated successfully');
+      })
     )
   );
 
@@ -156,7 +164,10 @@ export class Reservationffects {
   deleteReservationSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReservActions.deleteReservationsSuccess),
-      switchMap(() => [ReservActions.getReservations()])
+      switchMap(() => [ReservActions.getReservations()]),
+      tap(() => {
+        this.utilsService.snackBarSuccess('Reservation deleted successfully');
+      })
     )
   );
 

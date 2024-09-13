@@ -35,8 +35,8 @@ button {
 
 /* Ensure button colors change only when selected */
 ::ng-deep .mat-button-toggle-checked {
-  background-color: var(--active-color) !important;
-  color: #ffffff !important;
+  // background-color: var(--active-color) !important;
+  color: #000000 !important;
 }
 
 /* Active colors for the toggle buttons */

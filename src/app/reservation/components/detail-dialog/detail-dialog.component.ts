@@ -9,6 +9,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-reservation-detail-dialog',
@@ -26,7 +27,12 @@ import { CommonModule } from '@angular/common';
 })
 export class ReservationDetailDialogComponent {
   dialogRef = inject(MatDialogRef<ReservationDetailDialogComponent>);
+  utilService = inject(UtilsService);
   reservation: any = inject(MAT_DIALOG_DATA);
+
+  ngOnInit() {
+    this.utilService.triggerVibration();
+  }
 
   onConfirm(): void {
     this.dialogRef.close(true);

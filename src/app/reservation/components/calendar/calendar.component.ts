@@ -20,6 +20,7 @@ import {
   reservationsSelector,
   selectedDaySelector,
 } from '../../store/reservations.selectors';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-calendar',
@@ -33,6 +34,7 @@ import {
 export class CalendarComponent implements OnInit {
   store = inject(Store<AppState>);
 
+  utilService = inject(UtilsService);
   reservationService = inject(ReservationService);
   cdr = inject(ChangeDetectorRef);
 
@@ -84,7 +86,7 @@ export class CalendarComponent implements OnInit {
 
   select(date: Date | null) {
     if (!date) return;
-    this.triggerVibration();
+    this.utilService.triggerVibration();
 
     this.store.dispatch(
       ResActions.selectedDay({ selectedDay: this.formatDate(date) })
@@ -185,13 +187,5 @@ export class CalendarComponent implements OnInit {
     this.cdr.detectChanges();
     this.showCalendar = true;
     this.cdr.detectChanges();
-  }
-
-  triggerVibration() {
-    if (navigator.vibrate) {
-      navigator.vibrate(50); // Vibrate for 200 milliseconds
-    } else {
-      console.log('Vibration API not supported by this device.');
-    }
   }
 }

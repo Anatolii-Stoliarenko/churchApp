@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ListComponent } from './components/list/list.component';
@@ -18,13 +19,13 @@ import {
   reservationsSelector,
 } from './store/reservations.selectors';
 import { CreateReservationComponent } from './components/create-reservation/create-reservation.component';
-import { CurrentUserInterface } from '../auth/models/auth.model';
 import { currentUserSelector } from '../auth/store/auth.selectors';
 import { DetailsComponent } from './components/details/details.component';
 import { selectedDaySelector } from '../reservation/store/reservations.selectors';
 import { ReservationModel } from './models/reservations.model';
 import { ReservationService } from './services/reservation.service';
 import { FullListComponent } from './components/full-list/full-list.component';
+import { BottomComponent } from "../shared/components/footer/footer.component";
 
 @Component({
   selector: 'app-reservation',
@@ -42,7 +43,9 @@ import { FullListComponent } from './components/full-list/full-list.component';
     DetailsComponent,
     MatTabGroup,
     FullListComponent,
-  ],
+    MatCardModule,
+    BottomComponent
+],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })

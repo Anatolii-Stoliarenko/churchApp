@@ -65,5 +65,11 @@ mat-expansion-panel-body {
 
 ::ng-deep .mat-expansion-panel-body {
   padding: 0 !important; /* Override padding */
-  margin: 0px;
+  margin: 0 !important;
+}
+
+::ng-deep .mat-expansion-indicator {
+  font-size: 24px; /* Increase the size of the arrow */
+  width: 24px; /* Adjust the width of the arrow container if needed */
+  height: 24px; /* Adjust the height */
 }

@@ -90,6 +90,7 @@ li {
   border-radius: 5%; /* Apply border-radius to the entire table */
   overflow: hidden; /* Ensures content respects the border-radius */
   width: inherit !important;
+  border-radius: 8px;
 }
 
 .type-polish {
@@ -182,6 +183,6 @@ th.mat-header-cell {
 }
 
 mat-card {
-  max-height: 400px; /* Set maximum height */
+  max-height: 500px; /* Set maximum height */
   overflow: auto;
 }

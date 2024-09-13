@@ -6,6 +6,7 @@
 >
   <app-booking
     [selectedDay]="selectedDay"
+    [currentUser]="currentUser | async"
     (submitEvent)="confirmReservation($event)"
   >
   </app-booking>

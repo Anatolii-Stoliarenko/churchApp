@@ -20,21 +20,14 @@ html {
 .container {
   min-width: $min-width;
   max-width: $max-width;
+  padding-bottom: 0px;
+  margin-top: 0px;
 }
 
 mat-card {
   width: inherit;
   margin: 0px 5px 1rem;
-  // background-color: rgb(223, 5, 5);
 }
-
-// @media (max-width: 431px) {
-//   body {
-//     display: grid;
-//     grid-template-columns: 1fr;
-//     justify-content: center;
-//   }
-// }
 
 @media (min-width: 432px) {
   body {
@@ -56,7 +49,7 @@ mat-expansion-panel-body {
 
 .no-reservations {
   width: inherit;
-  margin: 0px 5px 1rem;
+  margin: 0px;
   grid-column: span 2;
   display: flex;
   justify-content: center;

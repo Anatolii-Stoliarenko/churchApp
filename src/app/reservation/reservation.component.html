@@ -5,17 +5,21 @@
   </ng-container>
 
   <ng-template #content>
-    <mat-tab-group #tabGroup>
+    <mat-tab-group #tabGroup mat-stretch-tabs="true" mat-align-tabs="start">
       <!-- Day -->
       <mat-tab label="Day">
         <br />
-        <app-calendar />
+        <mat-card class="container">
+          <app-calendar />
+          <ng-container
+            *ngIf="isLoadingUpdateReservation$ | async; else listTime"
+          >
+            <app-loading />
+          </ng-container>
+        </mat-card>
+
         <!-- if -->
-        <ng-container
-          *ngIf="isLoadingUpdateReservation$ | async; else listTime"
-        >
-          <app-loading />
-        </ng-container>
+
         <!-- else -->
         <ng-template #listTime>
           <ng-container *ngIf="isChildVisible && selectedDay">
@@ -120,4 +124,5 @@
       </mat-tab>
     </mat-tab-group>
   </ng-template>
+  <app-footer />
 </div>

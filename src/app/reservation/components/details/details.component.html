@@ -3,11 +3,11 @@
     <!-- Reservation Information -->
     <mat-card-subtitle>
       <span
-        class="type-circle"
+        class="color-circle"
         [ngClass]="{
-          'type-polish': reservation?.type === 'PL',
-          'type-ukrainian': reservation?.type === 'UA',
-          'type-other': reservation?.type === 'Other'
+          'circle-pl': reservation?.type === 'PL',
+          'circle-ua': reservation?.type === 'UA',
+          'circle-inne': reservation?.type === 'Other'
         }"
       ></span>
       {{ reservation?.date }} | {{ reservation?.startHour }} -
@@ -57,15 +57,15 @@
       <!-- Submenu for type selection -->
       <mat-menu #typeMenu="matMenu">
         <button mat-menu-item (click)="typeUA()">
-          <mat-icon>flag</mat-icon>
+          <span class="color-circle" [ngClass]="'circle-ua'"></span>
           <span>UA</span>
         </button>
         <button mat-menu-item (click)="typePl()">
-          <mat-icon>flag</mat-icon>
+          <span class="color-circle" [ngClass]="'circle-pl'"></span>
           <span>PL</span>
         </button>
         <button mat-menu-item (click)="typeOther()">
-          <mat-icon>flag</mat-icon>
+          <span class="color-circle" [ngClass]="'circle-inne'"></span>
           <span>Other</span>
         </button>
       </mat-menu>
