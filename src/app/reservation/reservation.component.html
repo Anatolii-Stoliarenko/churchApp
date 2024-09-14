@@ -9,7 +9,7 @@
       <!-- Day -->
       <mat-tab label="Day">
         <br />
-        <mat-card class="container">
+        <mat-card class="con">
           <app-calendar />
           <ng-container
             *ngIf="isLoadingUpdateReservation$ | async; else listTime"
@@ -66,7 +66,8 @@
       <!-- Reserve -->
       <ng-container *ngIf="currentUser$ | async">
         <mat-tab label="Add">
-          <br /><app-create-reservation />
+          <br />
+          <app-create-reservation />
           <div class="button-container">
             <!-- buttond Add -->
 

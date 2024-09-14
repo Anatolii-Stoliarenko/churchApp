@@ -90,6 +90,21 @@ export enum PlaceType {
   HARCOWKA = 'Harcówka',
 }
 
+export enum ReservationStatus {
+  PENDING = 'Pending',
+  APPROVED = 'Approved',
+}
+
+export enum ReservationType {
+  PL = 'PL',
+  UA = 'UA',
+  OTHER = 'Other',
+}
+
+export interface ApiResponse {
+  message: string;
+}
+
 export interface UserModel {
   id: string;
   name: string;
@@ -97,15 +112,6 @@ export interface UserModel {
   phone?: string;
   contactEmail?: string;
   role: string;
-}
-
-export enum ReservationStatus {
-  PENDING = 'Pending',
-  APPROVED = 'Approved',
-}
-
-export interface ApiResponse {
-  message: string;
 }
 
 export interface ConfirmDialogDetailModel {
@@ -130,12 +136,6 @@ export interface NewReservationModel {
   endHour: string;
   comments: string;
   type: ReservationType;
-}
-
-export enum ReservationType {
-  PL = 'PL',
-  UA = 'UA',
-  OTHER = 'Other',
 }
 
 export type TimeSlot =

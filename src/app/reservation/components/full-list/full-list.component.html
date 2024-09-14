@@ -26,7 +26,7 @@
   </mat-form-field>
 
   <ng-container *ngIf="reservationsOfDays.length > 0; else noRes">
-    <mat-accordion>
+    <mat-accordion [multi]="true">
       <mat-expansion-panel *ngFor="let dayReservations of reservationsOfDays">
         <mat-expansion-panel-header>
           <mat-panel-title>
