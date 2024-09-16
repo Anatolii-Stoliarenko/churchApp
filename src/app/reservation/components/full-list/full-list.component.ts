@@ -146,7 +146,7 @@ export class FullListComponent {
     return null;
   }
 
-  private isFilterSelected(filter: { label: string; group: string }): boolean {
+  isFilterSelected(filter: { label: string; group: string }): boolean {
     return this.selectedFilters.some(
       (selected) =>
         selected.label === filter.label && selected.group === filter.group

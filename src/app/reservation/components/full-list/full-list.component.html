@@ -61,7 +61,11 @@
       (optionSelected)="selectedFilter($event)"
     >
       <mat-optgroup *ngFor="let group of groupedFilters" [label]="group.name">
-        <mat-option *ngFor="let filter of group.items" [value]="filter">
+        <mat-option
+          *ngFor="let filter of group.items"
+          [value]="filter"
+          [disabled]="isFilterSelected({ label: filter, group: group.name })"
+        >
           {{ filter }}
         </mat-option>
       </mat-optgroup>

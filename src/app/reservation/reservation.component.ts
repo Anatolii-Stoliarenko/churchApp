@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ListComponent } from './components/list/list.component';
@@ -45,6 +46,7 @@ import { BottomComponent } from '../shared/components/footer/footer.component';
     FullListComponent,
     MatCardModule,
     BottomComponent,
+    MatTooltipModule,
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',

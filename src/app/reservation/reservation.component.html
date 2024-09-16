@@ -11,14 +11,13 @@
         <br />
         <mat-card class="con">
           <app-calendar />
+          <!-- if -->
           <ng-container
             *ngIf="isLoadingUpdateReservation$ | async; else listTime"
           >
             <app-loading />
           </ng-container>
         </mat-card>
-
-        <!-- if -->
 
         <!-- else -->
         <ng-template #listTime>
@@ -42,6 +41,7 @@
 
           <button
             mat-fab
+            matTooltip="Open Booking"
             color="primary"
             class="floating-button"
             (click)="goToReserveTab()"
@@ -54,6 +54,7 @@
 
           <button
             mat-fab
+            matTooltip="View List"
             color="primary"
             class="floating-button"
             (click)="goToList()"
@@ -73,17 +74,19 @@
 
             <button
               mat-fab
+              matTooltip="View Month"
               color="primary"
               class="floating-button"
               (click)="goToDay()"
             >
-              <mat-icon>arrow_back</mat-icon>
+              <mat-icon>event</mat-icon>
             </button>
 
             <!-- buttond Add -->
 
             <button
               mat-fab
+              matTooltip="View List"
               color="primary"
               class="floating-button"
               (click)="goToList()"
@@ -103,11 +106,13 @@
 
           <button
             mat-fab
+            matTooltip="View Month"
             color="primary"
             class="floating-button"
             (click)="goToDay()"
           >
-            <mat-icon>list</mat-icon>
+            <!-- <mat-icon>list</mat-icon> -->
+            <mat-icon>event</mat-icon>
           </button>
 
           <!-- buttond Add -->
@@ -115,6 +120,7 @@
           <button
             *ngIf="currentUser$ | async"
             mat-fab
+            matTooltip="Open Booking"
             color="primary"
             class="floating-button"
             (click)="goToReserveTab()"
