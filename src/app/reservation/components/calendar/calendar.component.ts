@@ -89,7 +89,9 @@ export class CalendarComponent implements OnInit {
     this.utilService.triggerVibration();
 
     this.store.dispatch(
-      ResActions.selectedDay({ selectedDay: this.formatDate(date) })
+      ResActions.selectedDay({
+        selectedDay: this.reservationService.formatDate(date),
+      })
     );
     this.refreshCalendar();
   }
@@ -118,7 +120,7 @@ export class CalendarComponent implements OnInit {
         if (this.isFullDate(dateString)) {
           return `selected-date-past-reserved-full-day`;
         }
-        if (this.isSomeReservation(this.formatDate(date))) {
+        if (this.isSomeReservation(this.reservationService.formatDate(date))) {
           return `selected-date-past-reserved-partial-day`;
         }
 
@@ -127,7 +129,7 @@ export class CalendarComponent implements OnInit {
         if (this.isFullDate(dateString)) {
           return `selected-date-reserved-full-day`;
         }
-        if (this.isSomeReservation(this.formatDate(date))) {
+        if (this.isSomeReservation(this.reservationService.formatDate(date))) {
           return `selected-date-reserved-partial-day`;
         }
 
@@ -175,12 +177,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+  //worked code befor this.reservationService.formatDate(date)
+  // formatDate(date: Date): string {
+  //   const year = date.getFullYear();
+  //   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+  //   const day = date.getDate().toString().padStart(2, '0');
+  //   return `${year}-${month}-${day}`;
+  // }
 
   refreshCalendar() {
     this.showCalendar = false;

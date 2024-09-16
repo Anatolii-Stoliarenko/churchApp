@@ -67,7 +67,7 @@ export class ReservationService {
     );
   }
 
-  // API
+  // ======================API===========================
   getReservations(): Observable<ResponseReservationModel> {
     return this.apiService.getAllReservations();
   }
@@ -87,7 +87,7 @@ export class ReservationService {
     return this.apiService.deleteReservation(id);
   }
 
-  //OTHER FUNCTIONSs
+  //==================OTHER FUNCTIONS===========================
   addReservations(reservations: BookingModel) {
     const cheking = this.chekingPlaningReservations(reservations);
     cheking.length > 0
@@ -272,13 +272,14 @@ export class ReservationService {
     let reservations: DaysReservationModel[] = [];
     let currentDate = new Date(start);
     let endDate = new Date(end);
-    endDate.setDate(endDate.getDate() + 1);
 
-    //   while (currentDate < endDate) {
+    endDate.setDate(endDate.getDate() + 1); // Include the end date
+
     while (currentDate < endDate) {
-      const formattedDate = currentDate.toISOString().split('T')[0];
+      // Format date manually to avoid time zone issues
+      const formattedDate = this.formatDate(currentDate);
 
-      // Mock or real API call for reservations on the given day
+      // Call to fetch daily reservations (replace with actual API call)
       const dailyReservations: ReservationModel[] =
         this.getReservationsByDay(formattedDate);
 
@@ -289,10 +290,19 @@ export class ReservationService {
         });
       }
 
+      // Move to the next day
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return reservations;
+  }
+
+  // Helper function to format date in 'yyyy-MM-dd' without time zone issues
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero
+    const day = ('0' + date.getDate()).slice(-2); // Add leading zero
+    return `${year}-${month}-${day}`;
   }
 
   // Filter reservations based on selected filters
