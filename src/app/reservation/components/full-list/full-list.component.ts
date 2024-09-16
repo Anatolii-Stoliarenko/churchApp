@@ -19,6 +19,7 @@ import { ReservationService } from '../../services/reservation.service';
 import { DetailsComponent } from '../details/details.component';
 import { AppState } from '../../../shared/store/appState.interface';
 import { currentUserSelector } from '../../../auth/store/auth.selectors';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-full-list',
@@ -48,6 +49,7 @@ import { currentUserSelector } from '../../../auth/store/auth.selectors';
 })
 export class FullListComponent {
   reservationService = inject(ReservationService);
+  utilsService = inject(UtilsService);
   store = inject(Store<AppState>);
   currentUser$ = this.store.select(currentUserSelector);
 
@@ -90,6 +92,7 @@ export class FullListComponent {
       this.endDay,
       this.selectedFilters // Passing filters to the service
     );
+    this.utilsService.triggerVibration();
   }
 
   // Add selected filter as chip and apply filter
