@@ -88,3 +88,7 @@ button {
 .circle-inne {
   background-color: #9e9e9e; /* Gray for Other */
 }
+
+::ng-deep .mat-mdc-select-arrow svg {
+  display: none !important; /* Hides the default dropdown arrow */
+}

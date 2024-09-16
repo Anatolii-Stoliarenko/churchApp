@@ -55,7 +55,8 @@
 
   <!-- Places -->
   <mat-form-field appearance="outline">
-    <mat-label>Places</mat-label>
+    <mat-label>Places </mat-label>
+    <mat-icon matSuffix>location_on</mat-icon>
     <mat-select
       [(ngModel)]="selectedPlaces"
       (selectionChange)="onPlaceChange()"
@@ -70,7 +71,8 @@
 
   <!-- Repeat -->
   <mat-form-field appearance="outline">
-    <mat-label>Repeat</mat-label>
+    <mat-label>Repeat </mat-label>
+    <mat-icon matSuffix>repeat</mat-icon>
     <mat-select
       matNativeControl
       [(ngModel)]="repeat"
@@ -84,7 +86,9 @@
 
   <!-- Start time -->
   <mat-form-field appearance="outline">
-    <mat-label>Start time</mat-label>
+    <mat-label>Start </mat-label>
+    <mat-icon matSuffix>access_time</mat-icon>
+
     <mat-select
       [(ngModel)]="selectedStartTime"
       (selectionChange)="onStartTime($event.value)"
@@ -102,7 +106,8 @@
 
   <!-- End time -->
   <mat-form-field appearance="outline">
-    <mat-label>End time</mat-label>
+    <mat-label>End</mat-label>
+    <mat-icon matSuffix>access_time</mat-icon>
     <mat-select [(ngModel)]="selectedEndTime" required>
       <mat-option *ngFor="let time of filteredToHours" [value]="time">
         {{ time }}
@@ -112,7 +117,7 @@
 
   <!-- Comment -->
   <mat-form-field appearance="outline" class="full-width-field">
-    <mat-label>Comments</mat-label>
+    <mat-label><mat-icon>comment</mat-icon> Comments</mat-label>
     <textarea
       matInput
       [(ngModel)]="comment"
@@ -125,7 +130,7 @@
     <mat-hint align="end">{{ comment.length || 0 }} / 100</mat-hint>
 
     <mat-error *ngIf="commentInput.invalid && commentInput.touched">
-      Comment must be at least 10 characters long.
+      Comments must be at least 10 characters long.
     </mat-error>
   </mat-form-field>
 

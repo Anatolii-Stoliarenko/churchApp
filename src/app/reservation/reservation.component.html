@@ -9,7 +9,10 @@
   <ng-template #content>
     <mat-tab-group #tabGroup mat-stretch-tabs="true" mat-align-tabs="start">
       <!-- Month Tab -->
-      <mat-tab label="Month">
+      <!-- <mat-tab label="Month"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>event</mat-icon></ng-template>
+
         <br />
         <mat-card class="con">
           <app-calendar></app-calendar>
@@ -31,6 +34,7 @@
 
               <ng-template #noRes>
                 <div class="no-reservations">
+                  <!-- <mat-icon style="font-size: 48px">search_off</mat-icon> -->
                   <p>No reservations found for the selected date</p>
                 </div>
               </ng-template>
@@ -64,7 +68,9 @@
 
       <!-- Booking Tab (Visible for currentUser) -->
 
-      <mat-tab label="Booking">
+      <!-- <mat-tab label="Booking"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>add</mat-icon></ng-template>
         <br />
         <app-create-reservation></app-create-reservation>
 
@@ -95,7 +101,9 @@
       </mat-tab>
 
       <!-- List Tab -->
-      <mat-tab label="List">
+      <!-- <mat-tab label="List"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>list</mat-icon></ng-template>
         <br />
         <app-full-list></app-full-list>
 
