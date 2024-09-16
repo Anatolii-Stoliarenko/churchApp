@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ListComponent } from './components/list/list.component';

@@ -27,6 +27,7 @@ import { RESERVATIONS_DATE_FORMATS } from '../../../shared/config/date-formats';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../shared/store/appState.interface';
 import * as ResActions from '../../store/reservations.actions';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-booking',
@@ -54,6 +55,7 @@ import * as ResActions from '../../store/reservations.actions';
 })
 export class BookingComponent {
   reserveService = inject(ReservationService);
+  utilsService = inject(UtilsService);
   bookingService = inject(BookingService);
   store = inject(Store<AppState>);
 
@@ -79,6 +81,10 @@ export class BookingComponent {
   hideSingleSelectionIndicator() {}
 
   onSubmit() {
+    if (!this.currentUser) {
+      this.utilsService.snackBarError(`Booking requires login`);
+      return;
+    }
     this.submitEvent.emit({
       startHour: this.selectedStartTime,
       endHour: this.selectedEndTime,

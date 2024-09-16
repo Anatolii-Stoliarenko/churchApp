@@ -155,4 +155,34 @@ export class FullListComponent {
         selected.label === filter.label && selected.group === filter.group
     );
   }
+
+  getFormattedDateWithOrdinal(date: string): string {
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const ordinal = this.getOrdinalSuffix(day);
+    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+    const month = dateObj.toLocaleDateString('en-US', { month: 'long' });
+    const year = dateObj.getFullYear();
+
+    return `${weekday}, ${day}${ordinal} ${month} ${year}`;
+  }
+
+  private getOrdinalSuffix(day: number): string {
+    // Handle special cases for 11th, 12th, 13th
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+
+    // Handle general cases
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
 }

@@ -32,7 +32,7 @@
 
   <!-- Filter -->
   <mat-form-field class="chip-list" appearance="outline">
-    <mat-label>Filter</mat-label>
+    <mat-label>Filters</mat-label>
 
     <!-- Chips for selected filters -->
     <mat-chip-grid #chipGrid aria-label="Filter selection">
@@ -78,7 +78,7 @@
       <mat-expansion-panel *ngFor="let dayReservations of reservationsOfDays">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{ dayReservations.date | date : "fullDate" }}
+            {{ getFormattedDateWithOrdinal(dayReservations.date) }}
           </mat-panel-title>
         </mat-expansion-panel-header>
 

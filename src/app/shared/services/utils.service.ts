@@ -30,7 +30,8 @@ export class UtilsService {
 
   triggerVibration() {
     if (navigator.vibrate) {
-      navigator.vibrate(50); // Vibrate for 50 milliseconds
+      navigator.vibrate(40); // Vibrate for 50 milliseconds
+      console.log('Vibration for 40 milliseconds');
     } else {
       console.log('Vibration API not supported by this device.');
     }
