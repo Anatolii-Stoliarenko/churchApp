@@ -46,7 +46,6 @@
             color="primary"
             class="floating-button"
             (click)="goToReserveTab()"
-            *ngIf="currentUser$ | async"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -115,7 +114,6 @@
 
           <!-- Open Booking Button (Visible for currentUser) -->
           <button
-            *ngIf="currentUser$ | async"
             mat-fab
             matTooltip="Open Booking"
             color="primary"
