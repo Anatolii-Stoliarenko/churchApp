@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 
 import { AuthService } from './auth/services/auth.service';
 import { BottomComponent } from "./shared/components/footer/footer.component";
+import { AdminComponent } from "./auth/components/admin/admin.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BottomComponent],
+  imports: [RouterOutlet, BottomComponent, AdminComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

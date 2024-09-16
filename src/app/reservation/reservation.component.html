@@ -1,44 +1,49 @@
 <div class="container">
-  <app-header />
+  <app-header></app-header>
+
+  <!-- Loading Indicator -->
   <ng-container *ngIf="isLoading$ | async; else content">
-    <app-loading />
+    <app-loading></app-loading>
   </ng-container>
 
   <ng-template #content>
     <mat-tab-group #tabGroup mat-stretch-tabs="true" mat-align-tabs="start">
-      <!-- Day -->
+      <!-- Month Tab -->
       <mat-tab label="Month">
         <br />
         <mat-card class="con">
-          <app-calendar />
-          <!-- if -->
+          <app-calendar></app-calendar>
+
+          <!-- Show Loading when updating reservation -->
           <ng-container
             *ngIf="isLoadingUpdateReservation$ | async; else listTime"
           >
-            <app-loading />
+            <app-loading></app-loading>
           </ng-container>
+
+          <!-- Reservation List -->
+          <ng-template #listTime>
+            <ng-container *ngIf="isChildVisible && selectedDay">
+              <!-- Show reservations if available, otherwise show 'No reservations' message -->
+              <app-list
+                *ngIf="reservation.length > 0; else noRes"
+                [reservation]="reservation"
+                [currentUser]="currentUser$ | async"
+              ></app-list>
+
+              <!-- No Reservations Template -->
+              <ng-template #noRes>
+                <div class="no-reservations">
+                  <p>No reservations found for the selected date</p>
+                </div>
+              </ng-template>
+            </ng-container>
+          </ng-template>
         </mat-card>
 
-        <!-- else -->
-        <ng-template #listTime>
-          <ng-container *ngIf="isChildVisible && selectedDay">
-            <app-list
-              *ngIf="reservation.length > 0; else noRes"
-              [reservation]="reservation"
-              [currentUser]="currentUser$ | async"
-            />
-
-            <ng-template #noRes>
-              <div class="no-reservations">
-                <p>No reservations found for the selected date</p>
-              </div>
-            </ng-template>
-          </ng-container>
-        </ng-template>
-
+        <!-- Floating Action Buttons (FAB) -->
         <div class="button-container">
-          <!-- buttond Add -->
-
+          <!-- Add Button -->
           <button
             mat-fab
             matTooltip="Open Booking"
@@ -50,8 +55,7 @@
             <mat-icon>add</mat-icon>
           </button>
 
-          <!-- buttond List -->
-
+          <!-- View List Button -->
           <button
             mat-fab
             matTooltip="View List"
@@ -64,14 +68,15 @@
         </div>
       </mat-tab>
 
-      <!-- Reserve -->
+      <!-- Booking Tab (Visible for currentUser) -->
       <ng-container *ngIf="currentUser$ | async">
         <mat-tab label="Booking">
           <br />
-          <app-create-reservation />
-          <div class="button-container">
-            <!-- buttond Add -->
+          <app-create-reservation></app-create-reservation>
 
+          <!-- Floating Action Buttons (FAB) -->
+          <div class="button-container">
+            <!-- View Month Button -->
             <button
               mat-fab
               matTooltip="View Month"
@@ -82,8 +87,7 @@
               <mat-icon>event</mat-icon>
             </button>
 
-            <!-- buttond Add -->
-
+            <!-- View List Button -->
             <button
               mat-fab
               matTooltip="View List"
@@ -93,17 +97,18 @@
             >
               <mat-icon>list</mat-icon>
             </button>
-          </div></mat-tab
-        >
+          </div>
+        </mat-tab>
       </ng-container>
 
-      <!-- List -->
-      <mat-tab label="List"
-        ><br />
-        <app-full-list />
-        <div class="button-container">
-          <!-- buttond Add -->
+      <!-- List Tab -->
+      <mat-tab label="List">
+        <br />
+        <app-full-list></app-full-list>
 
+        <!-- Floating Action Buttons (FAB) -->
+        <div class="button-container">
+          <!-- View Month Button -->
           <button
             mat-fab
             matTooltip="View Month"
@@ -111,12 +116,10 @@
             class="floating-button"
             (click)="goToDay()"
           >
-            <!-- <mat-icon>list</mat-icon> -->
             <mat-icon>event</mat-icon>
           </button>
 
-          <!-- buttond Add -->
-
+          <!-- Open Booking Button (Visible for currentUser) -->
           <button
             *ngIf="currentUser$ | async"
             mat-fab
@@ -131,5 +134,6 @@
       </mat-tab>
     </mat-tab-group>
   </ng-template>
-  <app-footer />
+
+  <app-footer></app-footer>
 </div>
