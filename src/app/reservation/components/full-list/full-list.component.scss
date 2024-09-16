@@ -7,6 +7,11 @@
   column-gap: 2%; /* Control spacing between the form fields */
   // row-gap: 10px;
 }
+.chip-list {
+  grid-column: span 2;
+  margin-bottom: 0px;
+  padding: 0; /* Remove padding */
+}
 
 ::ng-deep mat-accordion,
 mat-accordion {
@@ -72,4 +77,12 @@ mat-expansion-panel-body {
   font-size: 24px; /* Increase the size of the arrow */
   width: 24px; /* Adjust the width of the arrow container if needed */
   height: 24px; /* Adjust the height */
+}
+
+mat-optgroup {
+  font-weight: bold;
+}
+
+mat-option {
+  font-size: 13px;
 }

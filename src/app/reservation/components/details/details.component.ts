@@ -46,6 +46,24 @@ export class DetailsComponent {
     this.closeDetails.emit(); // Emit the event to notify the parent
   }
 
+  // Helper function to get the day with the ordinal suffix
+  getOrdinal(createdAt: string | undefined): string {
+    if (!createdAt) return ''; // Handle undefined case
+    const date = new Date(createdAt);
+    const day = date.getDate();
+    if (day > 3 && day < 21) return day + 'th'; // Special case for 11th-13th
+    switch (day % 10) {
+      case 1:
+        return day + 'st';
+      case 2:
+        return day + 'nd';
+      case 3:
+        return day + 'rd';
+      default:
+        return day + 'th';
+    }
+  }
+
   //Delete Reservation
   delete(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

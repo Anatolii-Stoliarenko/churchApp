@@ -42,7 +42,9 @@
 
     <p>
       <strong>Created:</strong>
-      {{ reservation?.createdAt | date : "HH.mm | dd.MM.yyyy" }}
+      {{ reservation?.createdAt | date : "HH:mm" }} |
+      {{ getOrdinal(reservation?.createdAt) }}
+      {{ reservation?.createdAt | date : "MMMM yyyy" }}
     </p>
 
     <!-- <p>

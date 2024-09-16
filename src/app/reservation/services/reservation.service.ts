@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { endWith, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { UtilsService } from '../../shared/services/utils.service';
@@ -248,20 +248,39 @@ export class ReservationService {
     };
   }
 
+  // Fetch reservations for a date range and apply optional filters
   getReservationsFromToDays(
+    start: string,
+    end: string,
+    selectedFilters?: { label: string; group: string }[]
+  ): DaysReservationModel[] {
+    let allReservations = this.getAllReservationsFromDateRange(start, end);
+
+    // Apply filters if any filters are selected
+    if (selectedFilters && selectedFilters.length > 0) {
+      allReservations = this.applyFilters(allReservations, selectedFilters);
+    }
+
+    return allReservations;
+  }
+
+  // Get reservations for a specific date range
+  private getAllReservationsFromDateRange(
     start: string,
     end: string
   ): DaysReservationModel[] {
     let reservations: DaysReservationModel[] = [];
-
     let currentDate = new Date(start);
     let endDate = new Date(end);
+    endDate.setDate(endDate.getDate() + 1);
 
-    while (currentDate <= endDate) {
-      const formattedDate = currentDate.toISOString().split('T')[0]; // Format date to 'yyyy-MM-dd'
+    //   while (currentDate < endDate) {
+    while (currentDate < endDate) {
+      const formattedDate = currentDate.toISOString().split('T')[0];
 
-      const dailyReservations =
-        this.getAllReservationsBySelectedDay(formattedDate);
+      // Mock or real API call for reservations on the given day
+      const dailyReservations: ReservationModel[] =
+        this.getReservationsByDay(formattedDate);
 
       if (dailyReservations.length > 0) {
         reservations.push({
@@ -276,7 +295,37 @@ export class ReservationService {
     return reservations;
   }
 
-  getAllReservationsBySelectedDay(selectedDay: string): ReservationModel[] {
+  // Filter reservations based on selected filters
+  private applyFilters(
+    reservationsOfDays: DaysReservationModel[],
+    selectedFilters: { label: string; group: string }[]
+  ): DaysReservationModel[] {
+    return reservationsOfDays
+      .map((day) => {
+        const filteredDayReservations = day.reservations.filter(
+          (reservation) => {
+            return selectedFilters.every((filter) => {
+              if (filter.group === 'Types') {
+                return reservation.type === filter.label;
+              } else if (filter.group === 'Places') {
+                return reservation.place === filter.label;
+              } else if (filter.group === 'Status') {
+                return reservation.status === filter.label;
+              }
+              return true;
+            });
+          }
+        );
+
+        return {
+          ...day,
+          reservations: filteredDayReservations,
+        };
+      })
+      .filter((day) => day.reservations.length > 0);
+  }
+
+  getReservationsByDay(selectedDay: string): ReservationModel[] {
     return this.reservations.filter((res) => res.date === selectedDay);
   }
 

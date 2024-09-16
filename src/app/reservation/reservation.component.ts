@@ -25,7 +25,7 @@ import { selectedDaySelector } from '../reservation/store/reservations.selectors
 import { ReservationModel } from './models/reservations.model';
 import { ReservationService } from './services/reservation.service';
 import { FullListComponent } from './components/full-list/full-list.component';
-import { BottomComponent } from "../shared/components/footer/footer.component";
+import { BottomComponent } from '../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-reservation',
@@ -44,8 +44,8 @@ import { BottomComponent } from "../shared/components/footer/footer.component";
     MatTabGroup,
     FullListComponent,
     MatCardModule,
-    BottomComponent
-],
+    BottomComponent,
+  ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
@@ -90,10 +90,9 @@ export class ReservationComponent {
 
   private updateReservation(): void {
     if (this.selectedDay) {
-      this.reservation =
-        this.reservationService.getAllReservationsBySelectedDay(
-          this.selectedDay
-        );
+      this.reservation = this.reservationService.getReservationsByDay(
+        this.selectedDay
+      );
     }
   }
 
