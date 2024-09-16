@@ -7,7 +7,7 @@
   <ng-template #content>
     <mat-tab-group #tabGroup mat-stretch-tabs="true" mat-align-tabs="start">
       <!-- Day -->
-      <mat-tab label="Day">
+      <mat-tab label="Month">
         <br />
         <mat-card class="con">
           <app-calendar />
@@ -31,7 +31,7 @@
 
             <ng-template #noRes>
               <div class="no-reservations">
-                <p>no reservations</p>
+                <p>No reservations found for the selected date</p>
               </div>
             </ng-template>
           </ng-container>
@@ -65,7 +65,7 @@
 
       <!-- Reserve -->
       <ng-container *ngIf="currentUser$ | async">
-        <mat-tab label="Add">
+        <mat-tab label="Booking">
           <br />
           <app-create-reservation />
           <div class="button-container">

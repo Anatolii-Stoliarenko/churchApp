@@ -1,6 +1,5 @@
 <div class="container">
-  <!-- Calendar -->
-  <!-- Start date -->
+  <!-- Calendar -> Start date -->
   <mat-form-field appearance="outline">
     <mat-label>Start date</mat-label>
     <input
@@ -10,12 +9,12 @@
       (ngModelChange)="filterByDate()"
     />
     <mat-datepicker-toggle matIconSuffix [for]="startPicker">
-      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+      <mat-icon matDatepickerToggleIcon>event</mat-icon>
     </mat-datepicker-toggle>
     <mat-datepicker #startPicker></mat-datepicker>
   </mat-form-field>
 
-  <!-- End date -->
+  <!-- Calendar -> End date -->
   <mat-form-field appearance="outline">
     <mat-label>End date</mat-label>
     <input
@@ -26,13 +25,12 @@
       (ngModelChange)="filterByDate()"
     />
     <mat-datepicker-toggle matIconSuffix [for]="endPicker">
-      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+      <mat-icon matDatepickerToggleIcon>event</mat-icon>
     </mat-datepicker-toggle>
     <mat-datepicker #endPicker></mat-datepicker>
   </mat-form-field>
 
   <!-- Filter -->
-
   <mat-form-field class="chip-list" appearance="outline">
     <mat-label>Filter</mat-label>
 
@@ -93,7 +91,7 @@
 
   <ng-template #noRes>
     <div class="no-reservations">
-      <p>no reservations</p>
+      <p>No reservations found for the selected dates or filters</p>
     </div>
   </ng-template>
 </div>
