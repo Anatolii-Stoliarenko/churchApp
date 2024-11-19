@@ -21,6 +21,7 @@ ChurchApp to aplikacja webowa służąca do zarządzania rezerwacjami i wydarzen
 
 - **Angular** - Framework do budowy aplikacji webowych.
 - **RxJS** - Zarządzanie asynchronicznymi operacjami.
+- **NgRx** - Biblioteka do zarządzania stanem aplikacji Angular.
 - **TypeScript** - Nadzbiór JavaScript zapewniający typowanie.
 - **Angular Material** - Zestaw komponentów do projektowania nowoczesnego i responsywnego interfejsu.
 - **SCSS** - Preprocesor CSS zapewniający zaawansowaną kontrolę nad stylami.

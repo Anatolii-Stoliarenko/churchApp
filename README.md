@@ -20,6 +20,7 @@ ChurchApp is a web application designed for managing reservations and events in 
 ## Technologies and Libraries
 
 - **Angular** - Framework for building web applications.
+- **NgRx** - State management library for Angular applications.
 - **RxJS** - Manages asynchronous operations.
 - **TypeScript** - Superset of JavaScript providing typing.
 - **Angular Material** - Set of components for designing modern, responsive interfaces.
@@ -34,7 +35,7 @@ src/
 ├── public/
 ├── src/
 │   ├── app/
-│   │   ├── auth/                                // Moduł autoryzacji
+│   │   ├── auth/                                // Authorization Module
 │   │   │   ├── components/
 │   │   │   │   ├── admin/
 │   │   │   │   │   ├── admin.component.html
@@ -64,7 +65,7 @@ src/
 │   │   │   │   ├── auth.reducer.ts
 │   │   │   │   ├── auth.selectors.ts
 │   │   │   │   └── auth.state.ts
-│   │   ├── reservation/                         // Moduł rezerwacji
+│   │   ├── reservation/                         // Reservation Module
 │   │   │   ├── components/
 │   │   │   │   ├── booking/
 │   │   │   │   │   ├── booking.component.html
@@ -157,6 +158,30 @@ src/
 │   │   └── styles.scss
 └── _redirects
 ```
+
+---
+
+## Key Points of the `Booking system` Project Structure
+
+1. **auth/** - Module responsible for user authorization, including components for login, registration, and user management. It also contains a guard (`auth.guard.ts`) that protects access to selected routes.
+
+2. **reservation/** - Module responsible for managing reservations. It includes components for creating, editing, and viewing reservations, as well as calendar views, reservation lists, and reservation details.
+
+3. **shared/** - Contains shared components that can be used throughout the application, such as the footer (`footer`), header (`header`), loading component (`loading`), and a component for handling confirmation dialogs.
+
+4. **services/** - Contains services that implement business logic and backend communication, including `auth.service.ts` for user authorization and `reservation.service.ts` for handling reservations.
+
+5. **store/** - Implements state management using `NgRx` architecture. It includes files such as `actions`, `reducers`, `effects`, `selectors`, and state files for authorization and reservations.
+
+6. **components/** - Located within different modules and defines the views and logic associated with specific UI elements.
+
+7. **models/** - Stores data models that describe the structure of data used in the application, such as `auth.model.ts` for user data or `reservations.model.ts` for reservation data.
+
+8. **config/** - Contains configuration files, such as date format settings, notification bar settings (`snack-bar.config.ts`), and user configurations.
+
+9. **app.component.ts, app.component.html, app.component.scss** - Main application component that serves as the entry point and structure for the application.
+
+10. **main.ts** - The main entry point for the Angular application, responsible for bootstrapping the main application module.
 
 ---
 
