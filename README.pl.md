@@ -1,33 +1,33 @@
 # Booking system
 
-**Polska wersja**: Zobacz [README.md](README.md)
+**English version**: See [README.md](README.md)
 
-## Project Description
+## Opis projektu
 
-ChurchApp is a web application designed for managing reservations and events in a church context. The app enables users to browse and book available resources and manage events using a clear and intuitive user interface.
+ChurchApp to aplikacja webowa służąca do zarządzania rezerwacjami i wydarzeniami w kontekście kościelnym. Aplikacja umożliwia użytkownikom przeglądanie i rezerwowanie dostępnych zasobów oraz zarządzanie wydarzeniami, korzystając z przejrzystego i intuicyjnego interfejsu użytkownika.
 
-## Features
+## Funkcjonalności
 
-- **User Registration and Login**: Allows users to create accounts and log into the application.
-- **Reservations**: Users can create and edit reservations as well as view full lists of available resources for booking.
-- **Calendar**: Displays events in a calendar view with booking options based on selected dates.
-- **Reservation Details**: Displays the details of each reservation in a dedicated dialog.
-- **Dynamic Data Handling**: Data is fetched using services and processed accordingly.
-- **Notifications**: Provides notifications to users.
-
----
-
-## Technologies and Libraries
-
-- **Angular** - Framework for building web applications.
-- **RxJS** - Manages asynchronous operations.
-- **TypeScript** - Superset of JavaScript providing typing.
-- **Angular Material** - Set of components for designing modern, responsive interfaces.
-- **SCSS** - CSS preprocessor offering advanced style control.
+- **Rejestracja i logowanie użytkowników**: Możliwość zakładania kont i logowania użytkowników do aplikacji.
+- **Rezerwacje**: Użytkownicy mogą tworzyć i edytować rezerwacje oraz przeglądać pełne listy dostępnych zasobów do rezerwacji.
+- **Kalendarz**: Wyświetlanie wydarzeń w kalendarzu z możliwością rezerwacji na podstawie wybranych dat.
+- **Szczegóły rezerwacji**: Wyświetlanie szczegółów każdej rezerwacji w dedykowanym dialogu.
+- **Obsługa dynamicznych danych**: Dane są pobierane za pomocą serwisów i odpowiednio przetwarzane.
+- **Notyfikacje**: Możliwość wyświetlania powiadomień użytkownikom.
 
 ---
 
-## Project Structure
+## Technologie i biblioteki
+
+- **Angular** - Framework do budowy aplikacji webowych.
+- **RxJS** - Zarządzanie asynchronicznymi operacjami.
+- **TypeScript** - Nadzbiór JavaScript zapewniający typowanie.
+- **Angular Material** - Zestaw komponentów do projektowania nowoczesnego i responsywnego interfejsu.
+- **SCSS** - Preprocesor CSS zapewniający zaawansowaną kontrolę nad stylami.
+
+---
+
+## Struktura projektu
 
 ```plaintext
 src/
@@ -160,48 +160,80 @@ src/
 
 ---
 
-## Installation and Setup
+## Kluczowe punkty struktury projektu `Booking system`
 
-1. Clone the repository
+1. **auth/** - Moduł odpowiedzialny za autoryzację użytkowników, w tym komponenty do logowania, rejestracji i zarządzania użytkownikami. Zawiera również strażnika (`auth.guard.ts`) chroniącego dostęp do wybranych tras.
+
+2. **reservation/** - Moduł odpowiedzialny za zarządzanie rezerwacjami. Zawiera komponenty umożliwiające tworzenie, edytowanie i przeglądanie rezerwacji, a także widoki kalendarza, listy rezerwacji oraz szczegółów rezerwacji.
+
+3. **shared/** - Zawiera współdzielone komponenty, które mogą być używane w wielu miejscach w aplikacji, takie jak stopka (`footer`), nagłówek (`header`), komponent ładowania (`loading`), a także komponent do obsługi dialogów potwierdzających.
+
+4. **services/** - Zawiera serwisy, które realizują logikę biznesową i komunikację z backendem, w tym np. `auth.service.ts` do obsługi autoryzacji użytkowników oraz `reservation.service.ts` do obsługi rezerwacji.
+
+5. **store/** - Implementuje zarządzanie stanem aplikacji przy użyciu architektury opartej na `NgRx`. Zawiera pliki takie jak `actions`, `reducers`, `effects`, `selectors` oraz pliki stanu (`state`) dla autoryzacji oraz rezerwacji.
+
+6. **components/** - Znajduje się w różnych modułach i definiuje widoki oraz logikę związaną z poszczególnymi elementami interfejsu użytkownika.
+
+7. **models/** - Przechowuje modele danych, które opisują strukturę danych używanych w aplikacji, np. `auth.model.ts` dla danych użytkowników czy `reservations.model.ts` dla danych rezerwacji.
+
+8. **config/** - Zawiera pliki konfiguracyjne, takie jak konfiguracje dla formatu dat, ustawienia paska powiadomień (`snack-bar.config.ts`) oraz konfiguracje użytkowników.
+
+9. **app.component.ts, app.component.html, app.component.scss** - Główny komponent aplikacji, który stanowi punkt wejścia i strukturę aplikacji.
+
+10. **main.ts** - Główny punkt wejściowy aplikacji Angular, odpowiedzialny za bootstrapowanie głównego modułu aplikacji.
+
+---
+
+## Instalacja i uruchomienie
+
+1. Klonowanie repozytorium
 
 ```bash
 git clone https://github.com/Anatolii-Stoliarenko/churchApp.git
 cd churchApp
 ```
 
-2. Install dependencies
+2. Instalacja zależności
 
 ```bash
 npm install
 ```
 
-3. Run the application
+3. Uruchomienie aplikacji
 
 ```bash
 ng serve
 ```
 
-The application will be available at http://localhost:4200/.
+Aplikacja będzie dostępna pod adresem http://localhost:4200/.
 
 ---
 
-## How It Works
+## Sposób działania
 
-1. The user registers and logs into the application.
-2. After logging in, options for making reservations and viewing events are available.
-3. The user can create, edit, and view reservations, as well as utilize the details and calendar features.
-
----
-
-## License
-
-The LICENSE file contains information regarding the project's license.
+1. Użytkownik rejestruje się i loguje do aplikacji.
+2. Po zalogowaniu dostępne są opcje rezerwacji i przeglądania wydarzeń.
+3. Użytkownik może tworzyć, edytować i przeglądać rezerwacje, a także korzystać z funkcji wyświetlania szczegółów i kalendarza.
 
 ---
 
-## Contact
+## Dalszy rozwój
 
-If you have any questions about the project or its setup, contact via:
+1. Walidacje danych: Dodanie walidacji dla pól rezerwacji.
+2. Integracja API: Integracja z zewnętrznymi API dla powiadomień.
+3. Testy jednostkowe: Dodanie testów jednostkowych dla komponentów i serwisów.
+
+---
+
+## Licencja
+
+Plik LICENSE zawiera informacje dotyczące licencji projektu.
+
+---
+
+## Kontakt
+
+Jeśli masz jakiekolwiek pytania dotyczące projektu lub jego konfiguracji, skontaktuj się poprzez:
 
 1. **Email**: [anatolii.stoliarenko@gmail.com](mailto:anatolii.stoliarenko@gmail.com)
-2. **Website**: [https://anatolii-stoliarenko.webflow.io/](https://anatolii-stoliarenko.webflow.io/)
+2. **Strona**: [https://anatolii-stoliarenko.webflow.io/](https://anatolii-stoliarenko.webflow.io/)
