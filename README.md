@@ -1,6 +1,6 @@
 # Booking system
 
-**Polska wersja**: Zobacz [README.md](README.md)
+**Polska wersja**: Zobacz [README.pl.md](README.pl.md)
 
 ## Project Description
 
