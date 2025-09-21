@@ -1,0 +1,22 @@
+[data-theme="dark"] {
+  --primary-color: #0c0e13;
+  --accent-color: #ffff00;
+
+  --warn-color: var(--accent-color);
+  --info-color: var(--accent-color);
+  --success-color: var(--accent-color);
+  --warning-color: var(--accent-color);
+
+  --bg-color: #000000;
+  --surface-color: #000000;
+  --text-primary-color: var(--accent-color);
+  --text-secondary-color: var(--accent-color);
+
+  --border-primary: var(--accent-color);
+  --border-surface: var(--accent-color);
+  --border--accent: var(--accent-color);
+
+  --gradient-primary: var(--accent-color);
+  --button-primary: var(--accent-color);
+  --button-primary-text: var(--primary-color);
+}

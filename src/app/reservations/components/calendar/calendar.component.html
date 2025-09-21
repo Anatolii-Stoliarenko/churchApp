@@ -1,0 +1,10 @@
+@if (showCalendar){
+<mat-calendar
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [startAt]="selectedDate"
+    [selected]="selectedDate"
+    (selectedChange)="select($event)"
+    [dateClass]="dateClass"
+></mat-calendar>
+}

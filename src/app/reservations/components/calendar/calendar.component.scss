@@ -1,0 +1,132 @@
+@import '../../../../styles/variables';
+
+//future date
+$available-date: #caf5ce; // Light green background
+$text-available-date: #388e3c; // Dark green text (Material Design green)
+
+$reserved-partial-day: #ecc6f2; // Light purple background
+$text-partial-day: #7b1fa2; // Dark purple text (Material Design purple)
+
+$reserved-full-day: #ffebee; // Light red background
+$text-full-day: #d32f2f; // Dark red text (Material Design red)
+
+//past date
+$past-date: #e0e0e0;
+$text-past-date: #6e6e6e;
+
+$past-reserved-partial-day: #c0c0c0;
+$text-past-reserved-partial-day: #7f7f7f;
+
+$past-reserved-full-day: #d3d3d3;
+$text-past-reserved-full-day: #505050;
+
+mat-card {
+    background-color: white;
+    margin-bottom: 15px;
+}
+
+p {
+    text-align: center;
+    margin-left: 12px;
+    font-size: 12px;
+}
+
+p {
+    font-weight: bold;
+}
+
+//available
+::ng-deep .mat-calendar-body-cell.available-date .mat-calendar-body-cell-content {
+    background-color: $available-date;
+    color: $text-available-date;
+}
+
+//reserved-full-day
+::ng-deep .mat-calendar-body-cell.reserved-full-day .mat-calendar-body-cell-content {
+    background-color: $reserved-full-day;
+    color: $text-full-day;
+}
+
+//reserved-partial-day
+::ng-deep .mat-calendar-body-cell.reserved-partial-day .mat-calendar-body-cell-content {
+    background-color: $reserved-partial-day;
+    color: $text-partial-day;
+}
+
+//Past days
+::ng-deep .mat-calendar-body-cell.past-date .mat-calendar-body-cell-content {
+    background-color: $past-date;
+    color: $text-past-date;
+}
+
+::ng-deep .mat-calendar-body-cell.past-reserved-full-day .mat-calendar-body-cell-content {
+    background-color: $reserved-full-day;
+    color: $text-past-reserved-full-day;
+}
+
+::ng-deep .mat-calendar-body-cell.past-reserved-partial-day .mat-calendar-body-cell-content {
+    background-color: $past-reserved-partial-day;
+    color: $text-past-reserved-partial-day;
+}
+
+//SELECTED DATE
+
+//future
+::ng-deep .mat-calendar-body-cell.selected-date-available-date .mat-calendar-body-cell-content {
+    --initial-color: #caf5ce; /* Angular Material primary blue color */
+    color: #388e3c; /* Text color */
+    animation: flashSelectedDate 1.5s infinite; /* Continuous animation */
+}
+
+::ng-deep .mat-calendar-body-cell.selected-date-reserved-partial-day .mat-calendar-body-cell-content {
+    --initial-color: #ecc6f2; /* Reserved partial day color */
+    color: #7b1fa2; /* White text for contrast */
+    animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep .mat-calendar-body-cell.selected-date-reserved-full-day .mat-calendar-body-cell-content {
+    --initial-color: #ff8888; /* Reserved full day color */
+    color: #ffffff; /* White text for contrast */
+    animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+//past
+::ng-deep .mat-calendar-body-cell.selected-date-past .mat-calendar-body-cell-content {
+    --initial-color: #e0e0e0; /* Past reserved full day color */
+    color: #6e6e6e; /* White text for contrast */
+    animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep .mat-calendar-body-cell.selected-date-past-reserved-partial-day .mat-calendar-body-cell-content {
+    --initial-color: #c0c0c0; /* Past reserved partial day color */
+    color: #ffffff; /* White text for contrast */
+    animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+::ng-deep .mat-calendar-body-cell.selected-date-past-reserved-full-day .mat-calendar-body-cell-content {
+    --initial-color: #d3d3d3; /* Past reserved full day color */
+    color: #ffffff; /* White text for contrast */
+    animation: flashSelectedDate 1.5s infinite; /* Apply the animation */
+}
+
+@keyframes flashSelectedDate {
+    0% {
+        background-color: var(--initial-color);
+    }
+    50% {
+        background-color: #005cbb;
+        color: white;
+    }
+    100% {
+        background-color: var(--initial-color);
+    }
+}
+
+// ::ng-deep .mat-calendar-body-label {
+//   display: none;
+// }
+
+::ng-deep .mat-calendar-controls {
+    margin-top: 0px !important;
+    padding: 0;
+}

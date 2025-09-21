@@ -4,84 +4,60 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { UtilsService } from '../../shared/services/utils.service';
-import {
-  CurrentUserInterface,
-  LoginInterface,
-  LoginResponse,
-  RegisterInterface,
-} from '../models/auth.model';
-import { ApiService } from '../../shared/services/api.service';
-import { PersistenceService } from '../../shared/services/persistence.service';
+import { CurrentUserInterface, LoginInterface, LoginResponse, RegisterInterface } from '../models/auth.model';
 import { AppState } from '../../shared/store/appState.interface';
 import * as authactions from '../store/auth.actions';
-import { ApiResponse } from '../../reservation/models/reservations.model';
+import { ApiResponse } from '../../reservations/models/reservations.model';
+import { ApiService } from '../../core/services/api.service';
+import { LocalStorageService } from '../../core/services/local-storage.service';
+import { SessionStorageService } from '../../core/services/session-storage.service';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class AuthService {
-  utilsService = inject(UtilsService);
-  api = inject(ApiService);
-  router = inject(Router);
-  persistenceService = inject(PersistenceService);
-  store = inject(Store<AppState>);
+    utilsService = inject(UtilsService);
+    apiService = inject(ApiService);
+    router = inject(Router);
+    store = inject(Store<AppState>);
+    // private readonly _localStorageService = inject(LocalStorageService);
+    private readonly _sessionStorageService = inject(SessionStorageService);
 
-  getCurrentUser(): CurrentUserInterface | null {
-    return this.persistenceService.getItem<CurrentUserInterface>('currentUser');
-  }
-
-  restoreUser(): void {
-    const currentUser = this.getCurrentUser();
-    const token = this.persistenceService.getItem<string>('authToken');
-
-    if (currentUser && token) {
-      this.store.dispatch(
-        authactions.loginSuccess({
-          user: currentUser,
-          token: token,
-          message: '',
-        })
-      );
+    getCurrentUser(): CurrentUserInterface | null {
+        return this._sessionStorageService.getItem<CurrentUserInterface>('currentUser');
     }
-  }
 
-  logout(): void {
-    const currentUser = this.getCurrentUser();
-    if (currentUser)
-      this.store.dispatch(
-        authactions.logout({
-          message: `${currentUser.name}`,
-        })
-      );
-    return;
-  }
+    restoreUser(): void {
+        const currentUser = this.getCurrentUser();
+        const token = this._sessionStorageService.getItem<string>('authToken');
 
-  login(data: LoginInterface): Observable<LoginResponse> {
-    return this.api.login(data);
-  }
+        if (currentUser && token) {
+            this.store.dispatch(
+                authactions.loginSuccess({
+                    user: currentUser,
+                    token: token,
+                    message: '',
+                }),
+            );
+        }
+    }
 
-  registerEffect(data: RegisterInterface): Observable<ApiResponse> {
-    return this.api.register(data);
-  }
+    logout(): void {
+        const currentUser = this.getCurrentUser();
+        if (currentUser)
+            this.store.dispatch(
+                authactions.logout({
+                    message: `${currentUser.name}`,
+                }),
+            );
+        return;
+    }
 
-  // register(data: UserInterface): void {
-  //   const user: UserInterface = {
-  //     name: data.name,
-  //     email: data.email,
-  //     password: data.password,
-  //   };
-  //   this.api.register(user).subscribe({
-  //     next: (response) => {
-  //       this.utilsService.snackBarSuccess(`${response.message}`);
-  //       this.utilsService.greenConsole(`${user.name} successfully registered`);
-  //     },
-  //     error: (error) => {
-  //       console.error('Failed to register', error);
-  //       this.utilsService.snackBarError('Failed to register');
-  //     },
-  //     complete: () => {
-  //       this.router.navigate(['/login']);
-  //     },
-  //   });
-  // }
+    register(user: RegisterInterface): Observable<ApiResponse> {
+        return this.apiService.post<ApiResponse>('register', user);
+    }
+
+    login(payload: LoginInterface): Observable<LoginResponse> {
+        return this.apiService.post<LoginResponse>('login', payload);
+    }
 }

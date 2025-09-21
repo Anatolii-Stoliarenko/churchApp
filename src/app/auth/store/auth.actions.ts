@@ -19,7 +19,6 @@ export enum ActionTypes {
   REGISTER_FAILURE = '[Auth] Register failure',
 }
 
-//Login
 export const login = createAction(
   ActionTypes.LOGIN,
   props<{ payload: LoginInterface }>()
@@ -40,7 +39,6 @@ export const logout = createAction(
   props<{ message: string }>()
 );
 
-//Register
 export const register = createAction(
   ActionTypes.REGISTER,
   props<{ payload: RegisterInterface }>()

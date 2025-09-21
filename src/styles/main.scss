@@ -1,2 +1,77 @@
-// // Imports all global styles
+@forward './themes/index.scss';
 
+@forward './reset.scss';
+@forward './variables.scss';
+@forward './mixins.scss';
+@forward './utilities.scss';
+
+body {
+    background-color: var(--accent-color);
+    height: 100vh;
+}
+
+$pending: #fff9c4;
+$aproved: #c8e6c9;
+$rejected: #ffcdd2;
+
+$max-width: 430px;
+$min-width: 320px;
+
+body,
+html {
+    width: 100%;
+    margin: 0;
+}
+
+.container {
+    min-width: $min-width;
+    max-width: $max-width;
+    padding-bottom: 0px;
+    margin-top: 0px;
+}
+
+mat-card {
+    width: inherit;
+    margin: 0px 5px 1rem;
+    background-color: white !important;
+}
+
+@media (min-width: 432px) {
+    body {
+        display: flex;
+        justify-content: center;
+    }
+    .login {
+        max-width: 250px;
+    }
+}
+
+.mat-expansion-panel-body .ng-tns-c857250080-25 {
+    padding: 0 0px 0px !important;
+}
+
+mat-expansion-panel-body {
+    padding: 0 0px 0px !important;
+}
+
+.no-reservations {
+    width: inherit;
+    margin: 0px;
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1.5rem;
+    color: #757575;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 2px dashed #ccc;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-reservations p {
+    margin: 5px;
+}

@@ -2,20 +2,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { AuthService } from './auth/services/auth.service';
-import { BottomComponent } from "./shared/components/footer/footer.component";
-import { AdminComponent } from "./auth/components/admin/admin.component";
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BottomComponent, AdminComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  authService = inject(AuthService);
+  private readonly _authService = inject(AuthService);
+  private readonly _themeService = inject(ThemeService);
 
   ngOnInit(): void {
-    this.authService.restoreUser();
+    this._authService.restoreUser();
   }
 }

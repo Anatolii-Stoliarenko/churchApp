@@ -1,0 +1,138 @@
+<div class="container">
+  <app-header></app-header>
+
+  <ng-container *ngIf="isLoading$ | async; else content">
+    <app-loading></app-loading>
+  </ng-container>
+
+  <ng-template #content>
+    <mat-tab-group #tabGroup mat-stretch-tabs="true" mat-align-tabs="start">
+      <!-- Month Tab -->
+      <!-- <mat-tab label="Month"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>event</mat-icon></ng-template>
+
+        <br />
+        <mat-card class="con">
+          <app-calendar></app-calendar>
+
+          <ng-container
+            *ngIf="isLoadingUpdateReservation$ | async; else listTime"
+          >
+            <app-loading></app-loading>
+          </ng-container>
+
+          <!-- Reservation List -->
+          <ng-template #listTime>
+            <ng-container *ngIf="isChildVisible && selectedDay">
+              <app-list
+                *ngIf="reservation.length > 0; else noRes"
+                [reservation]="reservation"
+                [currentUser]="currentUser$ | async"
+              ></app-list>
+
+              <ng-template #noRes>
+                <div class="no-reservations">
+                  <!-- <mat-icon style="font-size: 48px">search_off</mat-icon> -->
+                  <p>No reservations found for the selected date</p>
+                </div>
+              </ng-template>
+            </ng-container>
+          </ng-template>
+        </mat-card>
+
+        <!-- Floating Action Buttons (FAB) -->
+        <div class="button-container">
+          <button
+            mat-fab
+            matTooltip="Open Booking"
+            color="primary"
+            class="floating-button"
+            (click)="goToReserveTab()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+
+          <button
+            mat-fab
+            matTooltip="View List"
+            color="primary"
+            class="floating-button"
+            (click)="goToList()"
+          >
+            <mat-icon>list</mat-icon>
+          </button>
+        </div>
+      </mat-tab>
+
+      <!-- Booking Tab (Visible for currentUser) -->
+
+      <!-- <mat-tab label="Booking"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>add</mat-icon></ng-template>
+        <br />
+        <app-create-reservation></app-create-reservation>
+
+        <!-- Floating Action Buttons (FAB) -->
+        <div class="button-container">
+          <!-- View Month Button -->
+          <button
+            mat-fab
+            matTooltip="View Month"
+            color="primary"
+            class="floating-button"
+            (click)="goToDay()"
+          >
+            <mat-icon>event</mat-icon>
+          </button>
+
+          <!-- View List Button -->
+          <button
+            mat-fab
+            matTooltip="View List"
+            color="primary"
+            class="floating-button"
+            (click)="goToList()"
+          >
+            <mat-icon>list</mat-icon>
+          </button>
+        </div>
+      </mat-tab>
+
+      <!-- List Tab -->
+      <!-- <mat-tab label="List"> -->
+      <mat-tab>
+        <ng-template mat-tab-label><mat-icon>list</mat-icon></ng-template>
+        <br />
+        <app-full-list></app-full-list>
+
+        <!-- Floating Action Buttons (FAB) -->
+        <div class="button-container">
+          <!-- View Month Button -->
+          <button
+            mat-fab
+            matTooltip="View Month"
+            color="primary"
+            class="floating-button"
+            (click)="goToDay()"
+          >
+            <mat-icon>event</mat-icon>
+          </button>
+
+          <!-- Open Booking Button (Visible for currentUser) -->
+          <button
+            mat-fab
+            matTooltip="Open Booking"
+            color="primary"
+            class="floating-button"
+            (click)="goToReserveTab()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+
+  <app-footer></app-footer>
+</div>

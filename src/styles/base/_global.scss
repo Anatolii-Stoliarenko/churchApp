@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  font-size: calc(100% * var(--font-size-scale));
+}
+
+html,
+body {
+  height: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-family-base);
+  background-color: var(--background-color);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  vertical-align: baseline;
+  overflow-x: hidden;
+}
+
+span,
+p {
+  font-size: 1rem;
+}
